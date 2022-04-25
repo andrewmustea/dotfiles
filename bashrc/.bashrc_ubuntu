@@ -1,0 +1,251 @@
+# ~/.bashrc: executed by bash(1) for non-login shells.
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# for examples
+
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+    *)   return;;
+esac
+
+# term
+TTY=$(tty)
+export GPG_TTY=$TTY
+
+# shell options
+shopt -s checkwinsize
+shopt -s histappend
+if ! shopt -oq posix; then
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        . /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
+    fi
+fi
+
+# history
+PROMPT_COMMAND="history -a"
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+# rust binaries
+rust_env="$HOME/.cargo/env"
+if [ -f "rust_env" ]; then
+    . "$rust_env"
+fi
+
+# use aliases with sudo and refresh when used
+alias sudo="sudo -v; sudo --preserve-env "
+
+# ls aliases
+alias ls="ls -hF --color=auto"
+alias ll="ls -l"
+alias la="ls -Al"
+alias l="ls -C"
+
+# mkdir
+alias mkdir="mkdir --parents"
+
+# vim & nvim
+export EDITOR="nvim"
+alias vi="nvim"
+alias nvi="nvim"
+alias nvimdiff="nvim -d"
+
+# less
+LESS_TERMCAP_mb="$(printf '\E[01;31m')"
+LESS_TERMCAP_md="$(printf '\E[01;38;5;74m')"
+LESS_TERMCAP_me="$(printf '\E[0m')"
+LESS_TERMCAP_se="$(printf '\E[0m')"
+LESS_TERMCAP_so="$(printf '\E[38;5;246m')"
+LESS_TERMCAP_ue="$(printf '\E[0m')"
+LESS_TERMCAP_us="$(printf '\E[04;38;5;146m')"
+
+export LESS_TERMCAP_mb
+export LESS_TERMCAP_md
+export LESS_TERMCAP_me
+export LESS_TERMCAP_se
+export LESS_TERMCAP_so
+export LESS_TERMCAP_ue
+export LESS_TERMCAP_us
+
+alias less='less -Q'
+alias man='man -P "less -Q"'
+
+# git
+alias gs="git status"
+alias gp="git pull"
+alias gst="git stash"
+alias gd="git difftool"
+alias gf="git fetch --all"
+alias gc="git commit"
+alias gca="git commit --amend"
+alias ga="git add"
+alias gb="git branch"
+
+get_branch() {
+    local branch_name
+    branch_name="$(git symbolic-ref HEAD)"
+    branch_name=${branch_name##refs/heads/}
+    echo "$branch_name"
+}
+
+update_branch() {
+    local branch_name
+    branch_name=$(get_branch)
+    if [ -z "$branch_name" ]; then
+        return 1
+    fi
+
+    if [ "$1" = "$branch_name" ]; then
+        git pull
+    else
+        printf "Temporarily checking out %s\n" "$1"
+        git checkout "$1"
+        git pull
+        printf "\nChecking back out %s\n" "$branch_name"
+        git checkout "$branch_name"
+    fi
+}
+
+update_master() {
+    if [ -z "$(get_branch)" ]; then
+        return 1
+    fi
+
+    local master
+    if [ $# -eq 0 ]; then
+        echo "No master branch given."
+        read -r -p "Default to branch \"master\"? [y/N] " response
+        case "$response" in
+            [yY][eE][sS]|[yY])
+                master="master"
+                ;;
+            *)
+                return 1
+                ;;
+        esac
+    elif [ $# -eq 1 ]; then
+        if git show-ref -q --heads "$1"; then
+            master=$1
+        else
+            printf "%s branch does not exist locally.\n" "$1"
+            return 1
+        fi
+    else
+        echo "Incorrect number of arguments."
+        echo "Usage: update_master [master branch name]"
+        return 1
+    fi
+
+    if [ "$(git status --porcelain | wc -l)" -eq "1" ]; then
+        echo "Changes detected. Temporarily stashing them..."
+        git stash save --include-untracked "Temporary $master update stash"
+        update_branch "$master"
+        echo "Reapplying temporary stash..."
+        git stash pop
+    else
+        update_branch "$master"
+    fi
+}
+
+# checkpatch
+alias ckp="./scripts/checkpatch.pl -g"
+
+# other functions
+psgrep() {
+    pgrep "$@" | xargs --no-run-if-empty ps -fp
+}
+
+pskill() {
+    local pid
+
+    pid=$(pgrep "$@" | xargs -r ps --no-headers -fp | awk '{ print $2 }')
+    printf "killing %s (process %s)...\n" "$1" "$pid"
+    kill -9 "$pid"
+}
+
+extract () {
+    if [ -f "$1" ] ; then
+        case $1 in
+            *.tar.bz2)   tar xvjf "$1"    ;;
+            *.tar.gz)    tar xvzf "$1"    ;;
+            *.bz2)       bunzip2 "$1"     ;;
+            *.rar)       unrar x "$1"     ;;
+            *.gz)        gunzip "$1"      ;;
+            *.tar)       tar xvf "$1"     ;;
+            *.tbz2)      tar xvjf "$1"    ;;
+            *.tgz)       tar xvzf "$1"    ;;
+            *.zip)       unzip "$1"       ;;
+            *.Z)         uncompress "$1"  ;;
+            *.7z)        7z x "$1"        ;;
+            *)           printf "don't know how to extract '%s'...\n" "$1" ;;
+        esac
+    else
+        printf "'%s' is not a valid file!\n" "$1"
+    fi
+}
+
+
+
+# Ubuntu
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+fi
+
+# set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+    xterm-color|*-256color) color_prompt=yes;;
+esac
+
+# uncomment for a colored prompt, if the terminal has the capability; turned
+# off by default to not distract the user: the focus in a terminal window
+# should be on the output of commands, not on the prompt
+force_color_prompt=yes
+if [ -n "$force_color_prompt" ]; then
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+        # We have color support; assume it's compliant with Ecma-48
+        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+        # a case would tend to support setf rather than setaf.)
+        color_prompt=yes
+    else
+        color_prompt=
+    fi
+fi
+
+if [ "$color_prompt" = yes ]; then
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+else
+    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+fi
+unset color_prompt force_color_prompt
+
+# If this is an xterm set the title to user@host:dir
+case "$TERM" in
+xterm*|rxvt*)
+    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    ;;
+*)
+    ;;
+esac
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+# colored GCC warnings and errors
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
