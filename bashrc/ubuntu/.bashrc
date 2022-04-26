@@ -152,6 +152,9 @@ update_master() {
 # checkpatch
 alias ckp="./scripts/checkpatch.pl -g"
 
+# chmod and permissions commands
+alias mx='chmod a+x'
+
 # other functions
 psgrep() {
     pgrep "$@" | xargs --no-run-if-empty ps -fp
