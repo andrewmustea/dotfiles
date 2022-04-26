@@ -1,15 +1,12 @@
 set runtimepath^=~/.vim runtimepath+=~/.vim/after
 let &packpath=&runtimepath
 
-runtime! debian.vim
+# arch or debian runtime
+#runtime! arch.vim
+#runtime! debian.vim
 
 " python3
 let g:python3_host_prog = '/usr/bin/python3'
-
-" Source a global configuration file if available
-if filereadable('/etc/vim/vimrc.local')
-  source /etc/vim/vimrc.local
-endif
 
 filetype plugin indent on
 syntax on
@@ -32,6 +29,7 @@ set wildmenu
 set wildmode=list:longest
 set wrapscan
 
+" WSL windows clipboard
 let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
 if executable(s:clip)
     augroup WSLYank
