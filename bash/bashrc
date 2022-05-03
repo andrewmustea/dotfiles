@@ -46,11 +46,10 @@ alias l="ls -C"
 # mkdir
 alias mkdir="mkdir --parents"
 
-# vim & nvim
+# nvim
 export EDITOR="nvim"
-alias vi="nvim"
-alias nvi="nvim"
-alias nvimdiff="nvim -d"
+alias {vi,nvi}="nvim"
+alias {nvimdiff,nvd,vd}="nvim -d"
 
 # less
 LESS_TERMCAP_mb="$(printf '\E[01;31m')"
@@ -138,7 +137,7 @@ update_master() {
         return 1
     fi
 
-    if [ "$(git status --porcelain | wc -l)" -eq "1" ]; then
+    if [ "$(git status --porcelain | wc -l)" != "0" ]; then
         echo "Changes detected. Temporarily stashing them..."
         git stash save --include-untracked "Temporary $master update stash"
         update_branch "$master"
@@ -165,7 +164,6 @@ psgrep() {
 
 pskill() {
     local pid
-
     pid=$(pgrep "$@" | xargs -r ps --no-headers -fp | awk '{ print $2 }')
     printf "killing %s (process %s)...\n" "$1" "$pid"
     kill -9 "$pid"

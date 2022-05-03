@@ -1,0 +1,17 @@
+[core]
+	editor = nvim
+[credential]
+	helper = store
+    credentialStore = gpg
+[diff]
+    tool = nvimdiff
+[difftool]
+    prompt = false
+[difftool "nvimdiff"]
+    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
+[merge]
+    tool = nvim
+[mergetool]
+    prompt = false
+[mergetool "nvim"]
+    cmd = nvim -f -c \"Gdiffsplit!\" \"$MERGED\"
