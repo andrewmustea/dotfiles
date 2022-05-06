@@ -52,12 +52,6 @@ augroup amustea
     autocmd BufWritePre * call StripTrailingWhitespace()
 augroup end
 
-" Vim5 and later versions support syntax highlighting. Uncommenting the next
-" line enables syntax highlighting by default.
-if has('syntax')
-  syntax on
-endif
-
 " vim plug
 call plug#begin(stdpath('data') . '/plugged')
 Plug 'vim-airline/vim-airline'

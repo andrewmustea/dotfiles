@@ -1,8 +1,60 @@
-#!/bin/bash
-
 #
 # /etc/bash.bashrc
 #
+
+# Arch
+
+# prompt
+PS1='[\u@\h \W]\$ '
+
+case ${TERM} in
+    xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
+        PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
+    ;;
+    screen*)
+        PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033_%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
+    ;;
+esac
+
+# sanitize TERM:
+safe_term=${TERM//[^[:alnum:]]/?}
+match_lhs=""
+
+[ -f ~/.dir_colors ] && match_lhs="${match_lhs}$(cat ~/.dir_colors)"
+[ -f /etc/DIR_COLORS ] && match_lhs="${match_lhs}$(cat /etc/DIR_COLORS)"
+[[ -z ${match_lhs} ]] \
+    && type -P dircolors >/dev/null \
+    && match_lhs=$(dircolors --print-database)
+
+if [[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] ; then
+
+    if type -P dircolors >/dev/null ; then
+        if [ -f ~/.dir_colors ] ; then
+            eval "$(dircolors -b ~/.dir_colors)"
+        elif [ -f /etc/DIR_COLORS ] ; then
+            eval "$(dircolors -b /etc/DIR_COLORS)"
+        fi
+    fi
+
+    PS1="$(if [[ ${EUID} == 0 ]]; then echo '\[\033[01;31m\]\h'; else echo '\[\033[01;32m\]\u@\h'; fi)\[\033[00;37m\]:\[\033[01;34m\]\w\[\033[00;37m\]\$ "
+
+else
+    # show root@ when we do not have colors
+    PS1="\u@\h \w \$([[ \$? != 0 ]] "
+fi
+
+PS2="> "
+PS3="> "
+PS4="+ "
+
+# Try to keep environment pollution down, EPA loves us :-)
+unset safe_term match_lhs
+
+# Try to enable the "Command not found" hook ("pacman -S pkgfile" to install it).
+# See also: https://wiki.archlinux.org/index.php/Bash#The_.22command_not_found.22_hook
+[ -r /usr/share/doc/pkgfile/command-not-found.bash ] && . /usr/share/doc/pkgfile/command-not-found.bash
+
+
 
 # Ubuntu
 
