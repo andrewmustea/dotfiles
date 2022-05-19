@@ -13,6 +13,7 @@ syntax on
 set belloff=all
 set cursorline
 set expandtab
+set diffopt=internal,filler,closeoff,vertical,hiddenoff
 set history=1000
 set hlsearch
 set incsearch
@@ -29,7 +30,7 @@ set wildmenu
 set wildmode=list:longest
 set wrapscan
 
-" WSL windows clipboard
+" windows wsl clipboard
 let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
 if executable(s:clip)
     augroup WSLYank
@@ -38,14 +39,14 @@ if executable(s:clip)
     augroup END
 endif
 
-" remove trailing whitespace
-fun! StripTrailingWhitespace()
-    " Don't strip on these filetypes
-    if &ft =~# 'ruby\|javascript\|perl'
+function! StripTrailingWhitespace()
+    if &binary || &ft =~# 'ruby\|javascript\|perl\|diff'
         return
     endif
+    let l:save = winsaveview()
     %s/\s\+$//e
-endfun
+    call winrestview(l:save)
+endfunction
 
 augroup amustea
     autocmd!
@@ -56,6 +57,7 @@ augroup end
 call plug#begin(stdpath('data') . '/plugged')
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
+Plug 'andrewmustea/black_sun'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'airblade/vim-gitgutter'
@@ -63,16 +65,27 @@ Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'scrooloose/syntastic'
+Plug 'godlygeek/tabular'
 Plug 'pangloss/vim-javascript'
-Plug 'plasticboy/vim-markdown'
+Plug 'preservim/vim-markdown'
 Plug 'valloric/youcompleteme'
-Plug 'andrewmustea/black_sun'
 Plug 'syngan/vim-vimlint'
 Plug 'ynkdir/vim-vimlparser'
 Plug 'Kuniwak/vint'
 Plug 'bfrg/vim-cpp-modern'
-" Initialize plugin system
+Plug 'samoshkin/vim-mergetool'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'easymotion/vim-easymotion'
+Plug 'ervandew/supertab'
+Plug 'junegunn/fzf'
+Plug 'junegunn/fzf.vim'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'nathom/filetype.nvim'
 call plug#end()
+
+lua require('init')
 
 " colors
 set termguicolors
@@ -108,3 +121,4 @@ let g:cpp_member_highlight = 1
 " Put all standard C and C++ keywords under Vim's highlight group 'Statement'
 " (affects both C and C++ files)
 let g:cpp_simple_highlight = 1
+
