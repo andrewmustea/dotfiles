@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# ~/.bash_profile
+#
+
+[ -f ~/.bash_login ] && . ~/.bash_login
+
+[ -f ~/.bashrc ] && . ~/.bashrc
+
