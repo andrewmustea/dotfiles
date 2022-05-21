@@ -6,7 +6,8 @@ require("filetype").setup({
             gitconfig = "gitconfig",
         },
         complex = {
-            ["^[^.]*$"] = "sh"
+            ["^[^.]*$"] = "sh",
+            [".*bash.*"] = "sh"
         }
     }
 })
