@@ -12,13 +12,9 @@ esac
 
 
 # term
+#
 TTY=$(tty)
 export GPG_TTY=$TTY
-
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
 
 
 # Arch
@@ -39,8 +35,8 @@ esac
 safe_term=${TERM//[^[:alnum:]]/?}
 match_lhs=""
 
-[ -f ~/.dir_colors ] && match_lhs="${match_lhs}$(cat ~/.dir_colors)"
-[ -f /etc/DIR_COLORS ] && match_lhs="${match_lhs}$(cat /etc/DIR_COLORS)"
+[[ -f ~/.dir_colors ]] && match_lhs="${match_lhs}$(cat ~/.dir_colors)"
+[[ -f /etc/DIR_COLORS ]] && match_lhs="${match_lhs}$(cat /etc/DIR_COLORS)"
 [[ -z ${match_lhs} ]] \
     && type -P dircolors >/dev/null \
     && match_lhs=$(dircolors --print-database)
@@ -68,10 +64,15 @@ PS4="+ "
 
 unset safe_term match_lhs
 
-###
+##########
 
 
 # Ubuntu
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+fi
 
 # set a fancy prompt (non-color, overwrite the one in /etc/profile)
 # but only if not SUDOing and have SUDO_PS1 set; then assume smart user.
@@ -89,12 +90,14 @@ case "$TERM" in
         ;;
 esac
 
-###
+#########
 
 
 # shell options
+#
 shopt -s checkwinsize
 shopt -s histappend
+shopt -s extglob
 if ! shopt -oq posix; then
     if [ -f /usr/share/bash-completion/bash_completion ]; then
         . /usr/share/bash-completion/bash_completion
@@ -122,16 +125,22 @@ fi
 
 
 # history
+#
 PROMPT_COMMAND="history -a"
-HISTSIZE=1000
-HISTFILESIZE=2000
+HISTSIZE=10000
+HISTFILESIZE=10000
+export HISTCONTROL=ignorespace:ignoredups
+export HISTIGNORE="history:ls:pwd:"
 
 
+# sudo
+#
 # refresh sudo and export environment
 alias sudo="sudo -v; sudo --preserve-env "
 
 
 # ls
+#
 alias ls="ls -hF --color=auto"
 alias ll="ls -l"
 alias la="ls -Al"
@@ -139,10 +148,12 @@ alias l="ls -C"
 
 
 # mkdir
+#
 alias mkdir="mkdir --parents"
 
 
 # colors
+#
 alias dir="dir --color=auto"
 alias grep="grep --color=auto"
 alias fgrep="fgrep --color=auto"
@@ -155,6 +166,7 @@ export GCC_COLORS
 
 
 # nvim
+#
 export EDITOR="nvim"
 alias {vi,nvi}="nvim"
 alias {nvimdiff,nvd,vd}="nvim -d"
@@ -186,6 +198,7 @@ alias man='man -P "less -Q"'
 
 
 # environments
+#
 fzf_env="$HOME/.fzf.bash"
 [ -f "$fzf_env" ] && . "$fzf_env"
 
@@ -194,6 +207,7 @@ rust_env="$HOME/.cargo/env"
 
 
 # git
+#
 alias gs='git status'
 alias gf='git fetch --all'
 alias gp='git pull'
@@ -277,13 +291,17 @@ update_master() {
 
 
 # ips and ssh targets
-alias myip="curl -s checkip.amazonaws.com"
+#
+alias myip='curl -s checkip.amazonaws.com'
 
-# chmod and permissions commands
+
+# permissions
+#
 alias mx='chmod a+x'
 
 
-# other functions
+# other
+#
 psgrep() {
     pgrep "$@" | xargs --no-run-if-empty ps -fp
 }

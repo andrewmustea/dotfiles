@@ -12,6 +12,7 @@ esac
 
 
 # term
+#
 TTY=$(tty)
 export GPG_TTY=$TTY
 
@@ -39,8 +40,10 @@ esac
 
 
 # shell options
+#
 shopt -s checkwinsize
 shopt -s histappend
+shopt -s extglob
 if ! shopt -oq posix; then
     if [ -f /usr/share/bash-completion/bash_completion ]; then
         . /usr/share/bash-completion/bash_completion
@@ -49,7 +52,6 @@ if ! shopt -oq posix; then
     fi
 fi
 
-# if the command-not-found package is installed, use it
 if [ -x /usr/lib/command-not-found ] || \
 [ -x /usr/share/command-not-found/command-not-found ]; then
     command_not_found_handle() {
@@ -69,16 +71,22 @@ fi
 
 
 # history
+#
 PROMPT_COMMAND="history -a"
-HISTSIZE=1000
-HISTFILESIZE=2000
+HISTSIZE=10000
+HISTFILESIZE=10000
+export HISTCONTROL=ignorespace:ignoredups
+export HISTIGNORE="history:ls:pwd:"
 
 
+# sudo
+#
 # refresh sudo and export environment
 alias sudo="sudo -v; sudo --preserve-env "
 
 
 # ls
+#
 alias ls="ls -hF --color=auto"
 alias ll="ls -l"
 alias la="ls -Al"
@@ -86,10 +94,12 @@ alias l="ls -C"
 
 
 # mkdir
+#
 alias mkdir="mkdir --parents"
 
 
 # colors
+#
 alias dir="dir --color=auto"
 alias grep="grep --color=auto"
 alias fgrep="fgrep --color=auto"
@@ -102,6 +112,7 @@ export GCC_COLORS
 
 
 # nvim
+#
 export EDITOR="nvim"
 alias {vi,nvi}="nvim"
 alias {nvimdiff,nvd,vd}="nvim -d"
@@ -133,6 +144,7 @@ alias man='man -P "less -Q"'
 
 
 # environments
+#
 fzf_env="$HOME/.fzf.bash"
 [ -f "$fzf_env" ] && . "$fzf_env"
 
@@ -141,6 +153,7 @@ rust_env="$HOME/.cargo/env"
 
 
 # git
+#
 alias gs='git status'
 alias gf='git fetch --all'
 alias gp='git pull'
@@ -224,14 +237,17 @@ update_master() {
 
 
 # ips and ssh targets
+#
 alias myip='curl -s checkip.amazonaws.com'
 
 
-# chmod and permissions commands
+# permissions
+#
 alias mx='chmod a+x'
 
 
-# other functions
+# other
+#
 psgrep() {
     pgrep "$@" | xargs --no-run-if-empty ps -fp
 }
