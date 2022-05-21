@@ -168,6 +168,8 @@ alias gdt='git difftool'
 alias gdh='git diff HEAD'
 alias gdth='git difftool HEAD'
 alias gmt='git mergetool'
+alias rebase_origin='git fetch --all && git rebase origin/master master'
+alias rebase_upstream='git fetch --all && git rebase upstream/master master'
 
 get_branch() {
     local branch_name
