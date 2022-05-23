@@ -14,30 +14,40 @@ esac
 
 # Arch
 
-# prompt
-PS1='[\u@\h \W]\$ '
+# terminal prompt
+#
+# bash colors
+export GREEN="\[\033[0;32m\]"
+export CYAN="\[\033[0;36m\]"
+export RED="\[\033[0;31m\]"
+export PURPLE="\[\033[0;35m\]"
+export BROWN="\[\033[0;33m\]"
+export LIGHT_GRAY="\[\033[0;37m\]"
+export LIGHT_BLUE="\[\033[1;34m\]"
+export LIGHT_GREEN="\[\033[1;32m\]"
+export LIGHT_CYAN="\[\033[1;36m\]"
+export LIGHT_RED="\[\033[1;31m\]"
+export LIGHT_PURPLE="\[\033[1;35m\]"
+export YELLOW="\[\033[1;33m\]"
+export WHITE="\[\033[1;37m\]"
+export RESTORE="\[\033[0m\]" #0m restores to the terminal's default color
 
-case ${TERM} in
-    xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
-        PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
-    ;;
-    screen*)
-        PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033_%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
-    ;;
-esac
+# check if we have a colors database file
+colors_database=""
+if [[ -f ~/.dir_colors ]]; then
+    colors_database="${colors_database}$(cat ~/.dir_colors)"
+elif [[ -f /etc/DIR_COLORS ]]; then
+    colors_database="${colors_database}$(cat /etc/DIR_COLORS)"
+fi
 
-# sanitize TERM:
-safe_term=${TERM//[^[:alnum:]]/?}
-match_lhs=""
+# if there are no colors files, then use dircolors default database
+if [[ -z ${colors_database} ]] && type -P dircolors >/dev/null; then
+    colors_database=$(dircolors --print-database)
+fi
 
-[[ -f ~/.dir_colors ]] && match_lhs="${match_lhs}$(cat ~/.dir_colors)"
-[[ -f /etc/DIR_COLORS ]] && match_lhs="${match_lhs}$(cat /etc/DIR_COLORS)"
-[[ -z ${match_lhs} ]] \
-    && type -P dircolors >/dev/null \
-    && match_lhs=$(dircolors --print-database)
-
-if [[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] ; then
-
+# apply bash prompt colors if available
+term_type=${TERM//[^[:alnum:]]/?}
+if [[ $'\n'${colors_database} == *$'\n'"TERM "${term_type}* ]]; then
     if type -P dircolors >/dev/null ; then
         if [ -f ~/.dir_colors ] ; then
             eval "$(dircolors -b ~/.dir_colors)"
@@ -46,18 +56,29 @@ if [[ $'\n'${match_lhs} == *$'\n'"TERM "${safe_term}* ]] ; then
         fi
     fi
 
-    PS1="$(if [[ ${EUID} == 0 ]]; then echo '\[\033[01;31m\]\h'; else echo '\[\033[01;32m\]\u@\h'; fi)\[\033[00;37m\]:\[\033[01;34m\]\w\[\033[00;37m\]\$ "
-
+    if [[ "$(id -u)" -eq 0 ]]; then
+        PS1="$LIGHT_RED\u@\h"
+    else
+        PS1="$LIGHT_GREEN\u@\h"
+    fi
+    PS1+="$LIGHT_GRAY:$LIGHT_BLUE\w$LIGHT_GRAY\$ "
 else
-    # show root@ when we do not have colors
-    PS1="\u@\h \w \$([[ \$? != 0 ]] "
+    PS1='\u@\h:\w\$ '
 fi
 
 PS2="> "
 PS3="> "
 PS4="+ "
 
-unset safe_term match_lhs
+case ${TERM} in
+    xterm*|rxvt*|Eterm|aterm|kterm|gnome*|screen*)
+        PS1="\[\e]0;${PROMPT_COMMAND:+($PROMPT_COMMAND)}\u@\h:\w\a\]$PS1"
+        ;;
+    *)
+        ;;
+esac
+
+unset term_type colors_database
 
 ##########
 
