@@ -1,15 +1,12 @@
-set runtimepath^=~/.vim runtimepath+=~/.vim/after
-let &packpath=&runtimepath
-
+" nvim.init
+"
 # arch or debian runtime
 #runtime! arch.vim
 #runtime! debian.vim
 
-" python3
-let g:python3_host_prog = '/usr/bin/python3'
-
+" settings
+"
 filetype plugin indent on
-syntax on
 set belloff=all
 set cursorline
 set expandtab
@@ -30,28 +27,6 @@ set wildmenu
 set wildmode=list:longest
 set wrapscan
 
-" windows wsl clipboard
-let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
-if executable(s:clip)
-    augroup WSLYank
-        autocmd!
-        autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
-    augroup END
-endif
-
-function! StripTrailingWhitespace()
-    if &binary || &ft =~# 'ruby\|javascript\|perl\|diff'
-        return
-    endif
-    let l:save = winsaveview()
-    %s/\s\+$//e
-    call winrestview(l:save)
-endfunction
-
-augroup amustea
-    autocmd!
-    autocmd BufWritePre * call StripTrailingWhitespace()
-augroup end
 
 " vim plug
 call plug#begin(stdpath('data') . '/plugged')
@@ -85,16 +60,58 @@ Plug 'ctrlpvim/ctrlp.vim'
 Plug 'nathom/filetype.nvim'
 call plug#end()
 
+
+" lua
+"
 lua require('init')
 
-" colors
+
+" syntax colors
+"
+syntax on
 set termguicolors
 colorscheme black_sun
 
-" airline theme
+
+" python3
+"
+let g:python3_host_prog = '/usr/bin/python3'
+
+
+" functions
+"
+" remove whitepsace on save
+function! StripTrailingWhitespace()
+    if &binary || &ft =~# 'ruby\|javascript\|perl\|diff'
+        return
+    endif
+    let l:save = winsaveview()
+    %s/\s\+$//e
+    call winrestview(l:save)
+endfunction
+
+augroup amustea
+    autocmd!
+    autocmd BufWritePre * call StripTrailingWhitespace()
+augroup end
+
+" windows wsl clipboard
+let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
+if executable(s:clip)
+    augroup WSLYank
+        autocmd!
+        autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
+    augroup END
+endif
+
+
+" airline
+"
 let g:airline_theme='black_sun'
 
+
 " syntastic
+"
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:syntastic_aggregate_errors = 1
@@ -103,7 +120,7 @@ let g:syntastic_id_checkers = 1
 "let g:syntastic_debug = 3
 "let g:syntastic_debug_file = '~/.vim/syntastic.log'
 
-let g:syntastic_sh_checkers=['bashate', 'checkbashisms', 'sh', 'shellcheck', 'shfmt']
+let g:syntastic_sh_checkers=['bashate', 'sh', 'shellcheck', 'shfmt']
 let g:syntastic_vim_checkers=['vimlint', 'vint']
 
 let g:syntastic_mode_map = {
@@ -111,7 +128,9 @@ let g:syntastic_mode_map = {
     \ 'active_filetypes': [],
     \ 'passive_filetypes': [] }
 
+
 " vim-cpp-modern
+"
 " Enable highlighting of C++11 attributes
 let g:cpp_attributes_highlight = 1
 
