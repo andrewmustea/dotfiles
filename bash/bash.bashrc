@@ -44,9 +44,8 @@ if [[ -z ${colors_database} ]] && type -P dircolors >/dev/null; then
 fi
 
 # apply bash prompt colors if available
-term_type=${TERM//[^[:alnum:]]/?}
-if [[ $term_type == +(xterm-color|*-256color) ]] || \
-    [[ $'\n'${colors_database} == *$'\n'"TERM "${term_type}* ]]; then
+if [[ ${TERM} == +(xterm-color|*-256color) ]] || \
+    [[ $'\n'${colors_database} == *'\n'${TERM}* ]]; then
     if type -P dircolors >/dev/null ; then
         if [ -f ~/.dir_colors ] ; then
             eval "$(dircolors -b ~/.dir_colors)"
@@ -64,6 +63,7 @@ if [[ $term_type == +(xterm-color|*-256color) ]] || \
 else
     PS1='\u@\h:\w\$ '
 fi
+unset colors_database
 
 PS2="> "
 PS3="> "
@@ -76,8 +76,6 @@ case ${TERM} in
     *)
         ;;
 esac
-
-unset term_type colors_database
 
 
 # shell options
