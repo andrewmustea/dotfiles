@@ -69,15 +69,6 @@ PS2="> "
 PS3="> "
 PS4="+ "
 
-# color prompt if available and not root
-if [[ "$EUID" -ne 0 ]] && [[ -x /usr/bin/tput ]] && \
-    tput setaf 1>/dev/null; then
-    PS1="$(printf "%s%s" "\${debian_chroot:+(\$debian_chroot)}" \
-        '\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ ')"
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-
 case ${TERM} in
     xterm*|rxvt*|Eterm|aterm|kterm|gnome*|screen*)
         PS1="\[\e]0;${PROMPT_COMMAND:+($PROMPT_COMMAND)}\u@\h:\w\a\]$PS1"
