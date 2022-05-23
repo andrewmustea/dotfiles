@@ -4,17 +4,12 @@
 # /etc/bash.bashrc
 #
 
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
     *)   return;;
 esac
-
-
-# term
-#
-TTY=$(tty)
-export GPG_TTY=$TTY
 
 
 # Arch
@@ -74,17 +69,19 @@ if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-# set a fancy prompt (non-color, overwrite the one in /etc/profile)
-# but only if not SUDOing and have SUDO_PS1 set; then assume smart user.
-if ! [ -n "${SUDO_USER}" ] && [ -n "${SUDO_PS1}" ]; then
+# color prompt if available and not root
+if [[ "$EUID" -ne 0 ]] && [[ -x /usr/bin/tput ]] && \
+    tput setaf 1>/dev/null; then
+    PS1="$(printf "%s%s" "\${debian_chroot:+(\$debian_chroot)}" \
+        '\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ ')"
+else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
 
-# Commented out, don't overwrite xterm -T "title" -n "icontitle" by default.
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
     xterm*|rxvt*)
-        PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD}\007"'
+        PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
         ;;
     *)
         ;;
@@ -126,39 +123,39 @@ fi
 
 # history
 #
-PROMPT_COMMAND="history -a"
+PROMPT_COMMAND='history -a'
 HISTSIZE=10000
 HISTFILESIZE=10000
 export HISTCONTROL=ignorespace:ignoredups
-export HISTIGNORE="history:ls:pwd:"
+export HISTIGNORE='history:ls:pwd:'
 
 
 # sudo
 #
 # refresh sudo and export environment
-alias sudo="sudo -v; sudo --preserve-env "
+alias sudo='sudo -v; sudo --preserve-env '
 
 
 # ls
 #
-alias ls="ls -hF --color=auto"
-alias ll="ls -l"
-alias la="ls -Al"
-alias l="ls -C"
+alias ls='ls -hF --color=auto'
+alias ll='ls -l'
+alias la='ls -Al'
+alias l='ls -C'
 
 
 # mkdir
 #
-alias mkdir="mkdir --parents"
+alias mkdir='mkdir --parents'
 
 
 # colors
 #
-alias dir="dir --color=auto"
-alias grep="grep --color=auto"
-alias fgrep="fgrep --color=auto"
-alias egrep="egrep --color=auto"
-alias dmesg="dmesg --color"
+alias dir='dir --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias dmesg='dmesg --color'
 
 GCC_COLORS="$(printf "error=01;31:warning=01;35:note=01;%s"\
     "36:caret=01;32:locus=01:quote=01")"
@@ -167,10 +164,10 @@ export GCC_COLORS
 
 # nvim
 #
-export EDITOR="nvim"
-alias {vi,nvi}="nvim"
-alias {nvimdiff,nvd,vd}="nvim -d"
-alias remove_nvim_swap="rm -rf ~/.local/share/nvim/swap/"
+export EDITOR='nvim'
+alias {vi,nvi}='nvim'
+alias {vd,nvd,nvimdiff}='nvim -d'
+alias nvim_remove_swap='rm -rf ~/.local/share/nvim/swap/'
 
 
 # less
@@ -225,70 +222,17 @@ alias gmt='git mergetool'
 alias rebase_origin='git fetch --all && git rebase origin/master master'
 alias rebase_upstream='git fetch --all && git rebase upstream/master master'
 
-get_branch() {
+get_branch_name() {
     local branch_name
-    branch_name="$(git symbolic-ref HEAD)"
-    branch_name=${branch_name##refs/heads/}
-    echo "$branch_name"
-}
-
-update_master() {
-    update_branch() {
-        local branch_name
-        branch_name=$(get_branch)
-        if [ -z "$branch_name" ]; then
-            return 1
-        fi
-
-        if [ $# -eq 0 ] || [ "$1" = "$branch_name" ]; then
-            git pull
-        else
-            printf "Temporarily checking out %s\n" "$1"
-            git checkout "$1"
-            git pull
-            printf "\nChecking back out %s\n" "$branch_name"
-            git checkout "$branch_name"
-        fi
-    }
-
-    if [ -z "$(get_branch)" ]; then
+    if [[ $# -gt 1 ]]; then
+        echo 'Too many arguments'
         return 1
-    fi
-
-    local master
-    if [ $# -eq 0 ]; then
-        echo "No master branch given."
-        read -r -p "Default to branch \"master\"? [y/N] " response
-        case "$response" in
-            [yY][eE][sS]|[yY])
-                master="master"
-                ;;
-            *)
-                return 1
-                ;;
-        esac
-    elif [ $# -eq 1 ]; then
-        if ! git show-ref -q --heads "$1"; then
-            printf "%s branch does not exist locally.\n" "$1"
-            return 1
-        fi
-
-        master=$1
+    elif [[ $# -eq 1 ]]; then
+        branch_name="$(git -C "$1" symbolic-ref HEAD)"
     else
-        echo "Incorrect number of arguments."
-        echo "Usage: update_master [master branch name]"
-        return 1
+        branch_name="$(git symbolic-ref HEAD)"
     fi
-
-    if [ "$(git status --porcelain | wc -l)" != "0" ]; then
-        echo "Changes detected. Temporarily stashing them..."
-        git stash save --include-untracked "Temporary $master update stash"
-        update_branch "$master"
-        echo "Reapplying temporary stash..."
-        git stash pop
-    else
-        update_branch "$master"
-    fi
+    echo "${branch_name##refs/heads/}"
 }
 
 
