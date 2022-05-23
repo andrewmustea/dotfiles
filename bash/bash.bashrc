@@ -12,8 +12,6 @@ case $- in
 esac
 
 
-# Arch
-
 # terminal prompt
 #
 # bash colors
@@ -47,7 +45,8 @@ fi
 
 # apply bash prompt colors if available
 term_type=${TERM//[^[:alnum:]]/?}
-if [[ $'\n'${colors_database} == *$'\n'"TERM "${term_type}* ]]; then
+if [[ $term_type == +(xterm-color|*-256color) ]] || \
+    [[ $'\n'${colors_database} == *$'\n'"TERM "${term_type}* ]]; then
     if type -P dircolors >/dev/null ; then
         if [ -f ~/.dir_colors ] ; then
             eval "$(dircolors -b ~/.dir_colors)"
@@ -70,26 +69,6 @@ PS2="> "
 PS3="> "
 PS4="+ "
 
-case ${TERM} in
-    xterm*|rxvt*|Eterm|aterm|kterm|gnome*|screen*)
-        PS1="\[\e]0;${PROMPT_COMMAND:+($PROMPT_COMMAND)}\u@\h:\w\a\]$PS1"
-        ;;
-    *)
-        ;;
-esac
-
-unset term_type colors_database
-
-##########
-
-
-# Ubuntu
-
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
-
 # color prompt if available and not root
 if [[ "$EUID" -ne 0 ]] && [[ -x /usr/bin/tput ]] && \
     tput setaf 1>/dev/null; then
@@ -99,16 +78,15 @@ else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
 
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-    xterm*|rxvt*)
-        PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+case ${TERM} in
+    xterm*|rxvt*|Eterm|aterm|kterm|gnome*|screen*)
+        PS1="\[\e]0;${PROMPT_COMMAND:+($PROMPT_COMMAND)}\u@\h:\w\a\]$PS1"
         ;;
     *)
         ;;
 esac
 
-#########
+unset term_type colors_database
 
 
 # shell options
