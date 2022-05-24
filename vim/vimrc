@@ -29,6 +29,7 @@ set wrapscan
 
 
 " vim plug
+"
 call plug#begin('~/.vim/plugged')
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -60,7 +61,6 @@ Plug 'ctrlpvim/ctrlp.vim'
 call plug#end()
 
 
-" colors
 " syntax colors
 "
 syntax on
