@@ -1,7 +1,7 @@
 # Setup fzf
 # ---------
 if [[ ! "$PATH" == "$HOME/.fzf/bin*" ]]; then
-    export PATH="${PATH:+${PATH}:}$HOME/.fzf/bin*"
+    export PATH="${PATH:+${PATH}:}$HOME/.fzf/bin"
 fi
 
 # Auto-completion
@@ -13,7 +13,7 @@ fi
 . "$HOME/.fzf/shell/key-bindings.bash"
 
 # Colors
-# ------------
+# ------
 FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
     --color=fg:#888888,bg:#0c0c0c,hl:#b030a0 \
     --color=fg+:#bbbbbb,bg+:#151a1e,hl+:#36a3d9 \
