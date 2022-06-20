@@ -1,7 +1,7 @@
 [core]
-	editor = nvim
+    editor = nvim
 [credential]
-	helper = store
+    helper = store
     credentialStore = gpg
 [diff]
     tool = nvimdiff
@@ -19,5 +19,5 @@
 [mergetool "nvim_mergetool"]
     cmd = nvim -f -c "MergetoolStart" "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
 [url "https://"]
-	insteadOf = git://
+    insteadOf = git://
 
