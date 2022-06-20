@@ -174,3 +174,8 @@ let g:cpp_member_highlight = 1
 " (affects both C and C++ files)
 let g:cpp_simple_highlight = 1
 
+
+" vim-yoink
+"
+let g:yoinkIncludeDeleteOperations = 1
+
