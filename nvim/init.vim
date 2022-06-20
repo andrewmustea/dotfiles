@@ -6,6 +6,7 @@
 
 " settings
 "
+let g:is_bash = 1
 filetype plugin indent on
 set belloff=all
 set cursorline
@@ -31,6 +32,8 @@ set wrapscan
 " vim plug
 "
 call plug#begin(stdpath('data') . '/plugged')
+Plug 'glts/vim-magnum'
+Plug 'godlygeek/tabular'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'andrewmustea/black_sun'
@@ -40,8 +43,10 @@ Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-sleuth'
+Plug 'tpope/vim-speeddating'
+Plug 'tpope/vim-unimpaired'
 Plug 'scrooloose/syntastic'
-Plug 'godlygeek/tabular'
 Plug 'pangloss/vim-javascript'
 Plug 'preservim/vim-markdown'
 Plug 'valloric/youcompleteme'
@@ -59,6 +64,10 @@ Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'nathom/filetype.nvim'
+Plug 'glts/vim-radical'
+Plug 'svermeulen/vim-cutlass'
+Plug 'svermeulen/vim-subversive'
+Plug 'svermeulen/vim-yoink'
 call plug#end()
 
 
@@ -79,9 +88,8 @@ colorscheme black_sun
 let g:python3_host_prog = '/usr/bin/python3'
 
 
-" functions
-"
 " remove whitepsace on save
+"
 function! StripTrailingWhitespace()
     if &binary || &ft =~# 'ruby\|javascript\|perl\|diff'
         return
@@ -96,7 +104,9 @@ augroup amustea
     autocmd BufWritePre * call StripTrailingWhitespace()
 augroup end
 
+
 " windows wsl clipboard
+"
 let s:clip = '/mnt/c/Windows/System32/clip.exe'  " change this path according to your mount point
 if executable(s:clip)
     augroup WSLYank
