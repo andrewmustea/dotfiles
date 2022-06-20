@@ -55,11 +55,10 @@ if [[ ${TERM} == +(xterm-color|*-256color) ]] || \
     fi
 
     if [[ "$(id -u)" -eq 0 ]]; then
-        PS1="$LIGHT_RED\u@\h"
+        PS1="$LIGHT_RED\u@\h$LIGHT_GRAY:$LIGHT_BLUE\w$LIGHT_GRAY# "
     else
-        PS1="$LIGHT_GREEN\u@\h"
+        PS1="$LIGHT_GREEN\u@\h$LIGHT_GRAY:$LIGHT_BLUE\w$LIGHT_GRAY\$ "
     fi
-    PS1+="$LIGHT_GRAY:$LIGHT_BLUE\w$LIGHT_GRAY\$ "
 else
     PS1='\u@\h:\w\$ '
 fi
@@ -180,53 +179,6 @@ alias man='man -P "less -Q"'
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-
-# environments
-#
-fzf_env="$HOME/.fzf.bash"
-[ -f "$fzf_env" ] && . "$fzf_env"
-
-rust_env="$HOME/.cargo/env"
-[ -f "$rust_env" ] && . "$rust_env"
-
-
-# git
-#
-alias gs='git status'
-alias gf='git fetch --all'
-alias gp='git pull'
-alias gst='git stash'
-alias ga='git add'
-alias gaa='git add .'
-alias gc='git commit'
-alias gca='git commit --amend'
-alias gb='git branch'
-alias gd='git diff'
-alias gdt='git difftool'
-alias gdh='git diff HEAD'
-alias gdth='git difftool HEAD'
-alias gmt='git mergetool'
-alias rebase_origin='git fetch --all && git rebase origin/master master'
-alias rebase_upstream='git fetch --all && git rebase upstream/master master'
-
-get_branch_name() {
-    local branch_name
-    if [[ $# -gt 1 ]]; then
-        echo 'Too many arguments'
-        return 1
-    elif [[ $# -eq 1 ]]; then
-        branch_name="$(git -C "$1" symbolic-ref HEAD)"
-    else
-        branch_name="$(git symbolic-ref HEAD)"
-    fi
-    echo "${branch_name##refs/heads/}"
-}
-
-
-# ips and ssh targets
-#
-alias myip='curl -s checkip.amazonaws.com'
 
 
 # permissions
