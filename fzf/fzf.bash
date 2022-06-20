@@ -1,16 +1,18 @@
+#!/usr/bin/env bash
+
 # Setup fzf
 # ---------
-if [[ ! "$PATH" == "$HOME/.fzf/bin*" ]]; then
+if [[ "$PATH" != *$HOME/.fzf/bin* ]]; then
     export PATH="${PATH:+${PATH}:}$HOME/.fzf/bin"
 fi
 
 # Auto-completion
 # ---------------
-[[ $- == *i* ]] && . "$HOME/.fzf/shell/completion.bash" 2> /dev/null
+[[ $- == *i* ]] && source "$HOME/.fzf/shell/completion.bash" 2> /dev/null
 
 # Key bindings
 # ------------
-. "$HOME/.fzf/shell/key-bindings.bash"
+source "$HOME/.fzf/shell/key-bindings.bash"
 
 # Colors
 # ------
@@ -20,3 +22,4 @@ FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS \
     --color=info:#508040,prompt:#8030e0,pointer:#f06722 \
     --color=marker:#0040bb,spinner:#b02828,header:#0078c8"
 export FZF_DEFAULT_OPTS
+
