@@ -121,13 +121,35 @@ let g:syntastic_id_checkers = 1
 "let g:syntastic_debug = 3
 "let g:syntastic_debug_file = '~/.vim/syntastic.log'
 
+let g:syntastic_asm_checkers = ['gcc']
+let g:syntastic_c_checkers = ['cppcheck', 'cppclean', 'flawfinder', 'gcc', 'make', 'oclint', 'sparse', 'splint']
+let g:syntastic_cmake_checkers=['cmakelint']
+let g:syntastic_cpp_checkers = ['cppcheck', 'cppclean', 'cpplint', 'flawfinder', 'gcc', 'oclint']
+let g:syntastic_cuda_checkers = ['nvcc']
+let g:syntastic_go_checkers = ['go', 'gofmt']
+"haskell
+"HTML
+"Java
+"JavaScript
+"JSON
+let g:syntastic_lua_checkers = ['luac', 'luacheck']
+let g:syntastic_markdown_checkers=['mdl', 'proselint', 'remark_lint']
+let g:syntastic_python_checkers = ['bandit', 'flake8', 'mypy', 'prospector', 'py3kwarn', 'pycodestyle', 'pydocstyle', 'pyflakes', 'pylama', 'pylint', 'python']
 let g:syntastic_sh_checkers=['bashate', 'sh', 'shellcheck', 'shfmt']
+"text
+"TypeScript
+let g:syntastic_help_checkers=['proselint']
 let g:syntastic_vim_checkers=['vimlint', 'vint']
+"xml
+"yaml
+"zsh
 
 let g:syntastic_mode_map = {
     \ 'mode': 'passive',
     \ 'active_filetypes': [],
     \ 'passive_filetypes': [] }
+
+let g:syntastic_cpp_cpplint_exec = "cpplint"
 
 
 " vim-cpp-modern
