@@ -1,5 +1,3 @@
-#!/bin/bash
-
 #
 # ~/.bashrc
 #
@@ -19,9 +17,9 @@ shopt -s histappend
 shopt -s extglob
 if ! shopt -oq posix; then
     if [ -f /usr/share/bash-completion/bash_completion ]; then
-        . /usr/share/bash-completion/bash_completion
+        source /usr/share/bash-completion/bash_completion
     elif [ -f /etc/bash_completion ]; then
-        . /etc/bash_completion
+        source /etc/bash_completion
     fi
 fi
 
@@ -48,8 +46,8 @@ fi
 PROMPT_COMMAND='history -a'
 HISTSIZE=10000
 HISTFILESIZE=10000
-export HISTCONTROL=ignorespace:ignoredups
-export HISTIGNORE='history:ls:pwd:'
+export HISTCONTROL=ignoredups
+export HISTIGNORE='history:pwd:ls:ll:la:l:'
 
 
 # sudo
@@ -93,6 +91,7 @@ alias nvim_remove_swap='rm -rf ~/.local/share/nvim/swap/'
 
 
 # less
+#
 LESS_TERMCAP_mb="$(printf '\E[01;31m')"
 LESS_TERMCAP_md="$(printf '\E[01;38;5;74m')"
 LESS_TERMCAP_me="$(printf '\E[0m')"
@@ -116,13 +115,35 @@ alias man='man -P "less -Q"'
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 
+# python
+#
+alias {pip,pip3}='python3 -m pip'
+
+
+# wsl
+#
+if [[ "$(uname -r)" == *WSL* ]]; then
+    export IS_WSL=1
+fi
+
+
 # environments
 #
 fzf_env="$HOME/.fzf.bash"
-[ -f "$fzf_env" ] && . "$fzf_env"
+[ -f "$fzf_env" ] && source "$fzf_env"
 
 rust_env="$HOME/.cargo/env"
-[ -f "$rust_env" ] && . "$rust_env"
+[ -f "$rust_env" ] && source "$rust_env"
+
+go_env="/usr/local/go/bin"
+if [[ "$PATH" != *$go_env* ]]; then
+    export PATH="${PATH:+${PATH}:}$go_env"
+    export GOPATH=$HOME/.go
+fi
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
 
 
 # git
@@ -141,13 +162,32 @@ alias gdt='git difftool'
 alias gdh='git diff HEAD'
 alias gdth='git difftool HEAD'
 alias gmt='git mergetool'
-alias rebase_origin='git fetch --all && git rebase origin/master master'
-alias rebase_upstream='git fetch --all && git rebase upstream/master master'
+alias git_last_message='git show -s --format=%s'
+alias git_reset_last='git reset HEAD~1'
+
+rebase_origin() {
+    local branch="master"
+    if [[ $# -gt 0 ]]; then
+        branch="$1"
+    fi
+    git fetch --all
+    git rebase "origin/$branch" "$branch"
+}
+
+rebase_upstream() {
+    local branch="master"
+    if [[ $# -gt 0 ]]; then
+        branch="$1"
+    fi
+    git fetch --all
+    git rebase "upstream/$branch" "$branch"
+}
 
 get_branch_name() {
     local branch_name
     if [[ $# -gt 1 ]]; then
-        echo 'Too many arguments'
+        echo "error: too many arguments: $*"
+        echo "usage: get_branch_name [DIR]"
         return 1
     elif [[ $# -eq 1 ]]; then
         branch_name="$(git -C "$1" symbolic-ref HEAD)"
@@ -157,6 +197,47 @@ get_branch_name() {
     echo "${branch_name##refs/heads/}"
 }
 
+update_past_commit() {
+    if [[ $# -ne 1 ]]; then
+        echo "error: bad argument(s): '$*'"
+        echo "usage: update_past_commit <commit-id>"
+        return 1
+    fi
+
+    git rebase --interactive "$1"^
+}
+
+add_exclude() {
+    local repo=$PWD
+    if [[ $# -eq 2 ]]; then
+        repo=$2
+    elif [[ $# -ne 1 ]]; then
+        echo "error: bad arguments: '$*'"
+        echo 'usage: add_exclude <exclude-line> [repo-directory]'
+        return 1
+    fi
+
+    local config="$repo/.git/info/exclude"
+    if [[ -z "$config" ]]; then
+        echo "error: config not found: '$config'"
+        return 1
+    fi
+
+    if ! grep -q "^${1}$" "$config"; then
+        echo "adding '$1' to '$config'"
+        echo "$1" >> "$config"
+    else
+        echo "'$1' already exists in '$config'"
+    fi
+}
+
+add_exclude_vscode() {
+    local repo=$PWD
+    if [[ $# -gt 1 ]]; then
+        repo=$1
+    fi
+    add_exclude '.vscode/' "$repo"
+}
 
 # ips and ssh targets
 #
@@ -170,6 +251,14 @@ alias mx='chmod a+x'
 
 # other
 #
+print_path() {
+    if [[ $IS_WSL -eq 1 ]]; then
+        printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/.*$'
+    else
+        printf "%s\n" "${PATH//:/$'\n'}"
+    fi
+}
+
 psgrep() {
     pgrep "$@" | xargs --no-run-if-empty ps -fp
 }
@@ -177,7 +266,7 @@ psgrep() {
 pskill() {
     local pid
     pid=$(pgrep "$@" | xargs -r ps --no-headers -fp | awk '{ print $2 }')
-    printf "killing %s (process %s)...\n" "$1" "$pid"
+    echo "killing $1 (process $pid)..."
     kill -9 "$pid"
 }
 
@@ -195,10 +284,10 @@ extract () {
             *.zip)       unzip "$1"       ;;
             *.Z)         uncompress "$1"  ;;
             *.7z)        7z x "$1"        ;;
-            *)           printf "don't know how to extract '%s'...\n" "$1" ;;
+            *)           echo "don't know how to extract '$1'...";;
         esac
     else
-        printf "'%s' is not a valid file!\n" "$1"
+        echo "'$1' is not a valid file!"
     fi
 }
 
