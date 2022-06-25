@@ -6,7 +6,7 @@
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
-    *)   return;;
+    *) return ;;
 esac
 
 
@@ -23,10 +23,10 @@ if ! shopt -oq posix; then
     fi
 fi
 
-if [ -x /usr/lib/command-not-found ] || \
-[ -x /usr/share/command-not-found/command-not-found ]; then
+if [ -x /usr/lib/command-not-found ] \
+    || [ -x /usr/share/command-not-found/command-not-found ]; then
     command_not_found_handle() {
-	    # check because c-n-f could've been removed in the meantime
+        # check because c-n-f could've been removed in the meantime
         if [ -x /usr/lib/command-not-found ]; then
             /usr/lib/command-not-found -- "$1"
             return $?
@@ -77,7 +77,7 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias dmesg='dmesg --color'
 
-GCC_COLORS="$(printf "error=01;31:warning=01;35:note=01;%s"\
+GCC_COLORS="$(printf "error=01;31:warning=01;35:note=01;%s" \
     "36:caret=01;32:locus=01:quote=01")"
 export GCC_COLORS
 
@@ -127,23 +127,48 @@ if [[ "$(uname -r)" == *WSL* ]]; then
 fi
 
 
-# environments
+# environments and path
 #
-fzf_env="$HOME/.fzf.bash"
-[ -f "$fzf_env" ] && source "$fzf_env"
+home_bin="$HOME/.local/bin"
+if [[ "$PATH" != *$home_bin* ]]; then
+    export PATH="${PATH:+${PATH}:}$home_bin"
+fi
 
-rust_env="$HOME/.cargo/env"
-[ -f "$rust_env" ] && source "$rust_env"
-
-go_env="/usr/local/go/bin"
-if [[ "$PATH" != *$go_env* ]]; then
-    export PATH="${PATH:+${PATH}:}$go_env"
+go_bin="/usr/local/go/bin"
+if [[ -d "$go_bin" ]] && [[ "$PATH" != *$go_bin* ]]; then
+    export PATH="${PATH:+${PATH}:}$go_bin"
     export GOPATH=$HOME/.go
 fi
 
+lua_lsp="$HOME/.lsp/lua-language-server/bin"
+if [[ -d "$lua_lsp" ]]; then
+    export PATH="${PATH:+${PATH}:}$lua_lsp"
+    alias luamake=$lua_lsp/../3rd/luamake/luamake
+fi
+
+ovl_env="$HOME/scripts/ovl_init.bash"
+[[ -f "$ovl_env" ]] && source "$ovl_env"
+
+fzf_env="$HOME/.fzf.bash"
+[[ -f "$fzf_env" ]] && source "$fzf_env"
+
+rust_env="$HOME/.cargo/env"
+[[ -f "$rust_env" ]] && source "$rust_env"
+
+hask_env="$HOME/.ghcup/env"
+[[ -f "$hask_env" ]] && source $hask_env
+
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+[[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
+[[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
+
+print_path() {
+    if [[ $IS_WSL -eq 1 ]]; then
+        printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/'
+    else
+        printf "%s\n" "${PATH//:/$'\n'}"
+    fi
+}
 
 
 # git
@@ -164,47 +189,53 @@ alias gdth='git difftool HEAD'
 alias gmt='git mergetool'
 alias git_last_message='git show -s --format=%s'
 alias git_reset_last='git reset HEAD~1'
+alias rebase_origin='rebase_remote origin'
+alias rebase_upstream='rebase_remote upstream'
 
-rebase_origin() {
-    local branch="master"
-    if [[ $# -gt 0 ]]; then
-        branch="$1"
-    fi
-    git fetch --all
-    git rebase "origin/$branch" "$branch"
-}
 
-rebase_upstream() {
-    local branch="master"
-    if [[ $# -gt 0 ]]; then
-        branch="$1"
-    fi
-    git fetch --all
-    git rebase "upstream/$branch" "$branch"
-}
 
 get_branch_name() {
-    local branch_name
-    if [[ $# -gt 1 ]]; then
-        echo "error: too many arguments: $*"
-        echo "usage: get_branch_name [DIR]"
-        return 1
-    elif [[ $# -eq 1 ]]; then
-        branch_name="$(git -C "$1" symbolic-ref HEAD)"
-    else
-        branch_name="$(git symbolic-ref HEAD)"
+    local dir=$PWD
+    if [[ $# != 0 ]]; then
+        dir="$1"
     fi
-    echo "${branch_name##refs/heads/}"
+
+    git -C "$dir" rev-parse --abbrev-ref HEAD
 }
 
-update_past_commit() {
-    if [[ $# -ne 1 ]]; then
-        echo "error: bad argument(s): '$*'"
+edit_past_commit() {
+    if [[ $# == 0 ]]; then
+        echo "error: missing commit-id"
         echo "usage: update_past_commit <commit-id>"
         return 1
     fi
 
     git rebase --interactive "$1"^
+}
+
+rebase_remote() {
+    if [[ $# -eq 0 ]]; then
+        echo 'error: need remote name'
+        echo 'usage: rebase_remote <remote> [branch]'
+    fi
+
+    local current_branch
+    current_branch=$(get_branch_name "$2")
+    if [[ -z "$current_branch" ]]; then
+        return 1
+    fi
+
+    local branch="master"
+    if [[ $# -gt 1 ]]; then
+        branch="$2"
+    fi
+
+    git fetch --all
+    git rebase "$1/$branch" "$branch"
+
+    if [[ "$current_branch" != "$branch" ]]; then
+        git checkout "$current_branch"
+    fi
 }
 
 add_exclude() {
@@ -225,7 +256,7 @@ add_exclude() {
 
     if ! grep -q "^${1}$" "$config"; then
         echo "adding '$1' to '$config'"
-        echo "$1" >> "$config"
+        echo "$1" >>"$config"
     else
         echo "'$1' already exists in '$config'"
     fi
@@ -241,6 +272,7 @@ add_exclude_vscode() {
 
 # ips and ssh targets
 #
+alias pingpath='mtr'
 alias myip='curl -s checkip.amazonaws.com'
 
 
@@ -251,14 +283,6 @@ alias mx='chmod a+x'
 
 # other
 #
-print_path() {
-    if [[ $IS_WSL -eq 1 ]]; then
-        printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/.*$'
-    else
-        printf "%s\n" "${PATH//:/$'\n'}"
-    fi
-}
-
 psgrep() {
     pgrep "$@" | xargs --no-run-if-empty ps -fp
 }
@@ -270,21 +294,21 @@ pskill() {
     kill -9 "$pid"
 }
 
-extract () {
-    if [ -f "$1" ] ; then
+extract() {
+    if [ -f "$1" ]; then
         case $1 in
-            *.tar.bz2)   tar xvjf "$1"    ;;
-            *.tar.gz)    tar xvzf "$1"    ;;
-            *.bz2)       bunzip2 "$1"     ;;
-            *.rar)       unrar x "$1"     ;;
-            *.gz)        gunzip "$1"      ;;
-            *.tar)       tar xvf "$1"     ;;
-            *.tbz2)      tar xvjf "$1"    ;;
-            *.tgz)       tar xvzf "$1"    ;;
-            *.zip)       unzip "$1"       ;;
-            *.Z)         uncompress "$1"  ;;
-            *.7z)        7z x "$1"        ;;
-            *)           echo "don't know how to extract '$1'...";;
+            *.tar.bz2) tar xvjf "$1" ;;
+            *.tar.gz) tar xvzf "$1" ;;
+            *.bz2) bunzip2 "$1" ;;
+            *.rar) unrar x "$1" ;;
+            *.gz) gunzip "$1" ;;
+            *.tar) tar xvf "$1" ;;
+            *.tbz2) tar xvjf "$1" ;;
+            *.tgz) tar xvzf "$1" ;;
+            *.zip) unzip "$1" ;;
+            *.Z) uncompress "$1" ;;
+            *.7z) 7z x "$1" ;;
+            *) echo "don't know how to extract '$1'..." ;;
         esac
     else
         echo "'$1' is not a valid file!"
