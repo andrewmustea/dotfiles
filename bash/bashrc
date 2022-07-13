@@ -82,6 +82,12 @@ GCC_COLORS="$(printf "error=01;31:warning=01;35:note=01;%s" \
 export GCC_COLORS
 
 
+# gpg
+#
+GPG_TTY=$(tty)
+export GPG_TTY
+
+
 # nvim
 #
 export EDITOR='nvim'
@@ -108,8 +114,8 @@ export LESS_TERMCAP_so
 export LESS_TERMCAP_ue
 export LESS_TERMCAP_us
 
-alias less='less -Q'
-alias man='man -P "less -Q"'
+alias less='less -QR'
+alias man='man -P "less -QR"'
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -140,10 +146,9 @@ if [[ -d "$go_bin" ]] && [[ "$PATH" != *$go_bin* ]]; then
     export GOPATH=$HOME/.go
 fi
 
-lua_lsp="$HOME/.lsp/lua-language-server/bin"
-if [[ -d "$lua_lsp" ]]; then
+lua_lsp="$HOME/.local/lib/lsp/lua-language-server/bin"
+if [[ -d "$lua_lsp" ]] && [[ "$PATH" != *$lua_lsp* ]]; then
     export PATH="${PATH:+${PATH}:}$lua_lsp"
-    alias luamake=$lua_lsp/../3rd/luamake/luamake
 fi
 
 ovl_env="$HOME/scripts/ovl_init.bash"
@@ -156,14 +161,17 @@ rust_env="$HOME/.cargo/env"
 [[ -f "$rust_env" ]] && source "$rust_env"
 
 hask_env="$HOME/.ghcup/env"
-[[ -f "$hask_env" ]] && source $hask_env
+[[ -f "$hask_env" ]] && source "$hask_env"
 
 export NVM_DIR="$HOME/.nvm"
 [[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
 [[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
 
+whereis rmtrash &>/dev/null && alias rm='rmtrash'
+whereis rmdirtrash &>/dev/null && alias rmdir='rmdirtrash'
+
 print_path() {
-    if [[ $IS_WSL -eq 1 ]]; then
+    if [[ -n "$WSLENV" ]]; then
         printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/'
     else
         printf "%s\n" "${PATH//:/$'\n'}"
@@ -174,7 +182,8 @@ print_path() {
 # git
 #
 alias gs='git status'
-alias gf='git fetch --all'
+alias gf='git fetch'
+alias gfa='git fetch --all'
 alias gp='git pull'
 alias gst='git stash'
 alias ga='git add'
@@ -183,9 +192,11 @@ alias gc='git commit'
 alias gca='git commit --amend'
 alias gb='git branch'
 alias gd='git diff'
-alias gdt='git difftool'
 alias gdh='git diff HEAD'
+alias gds='git diff --staged'
+alias gdt='git difftool'
 alias gdth='git difftool HEAD'
+alias gdts='git diff --staged'
 alias gmt='git mergetool'
 alias git_last_message='git show -s --format=%s'
 alias git_reset_last='git reset HEAD~1'
@@ -272,6 +283,7 @@ add_exclude_vscode() {
 
 # ips and ssh targets
 #
+
 alias pingpath='mtr'
 alias myip='curl -s checkip.amazonaws.com'
 
