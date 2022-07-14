@@ -91,7 +91,6 @@ Plug 'numToStr/Comment.nvim'
 Plug 'rstacruz/vim-closer'
 Plug 'svermeulen/vim-subversive'
 Plug 'svermeulen/vim-yoink'
-Plug 'tpope/vim-endwise'
 Plug 'tpope/vim-unimpaired'
 
 " movement and targets
