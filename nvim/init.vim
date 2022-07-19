@@ -9,21 +9,22 @@
 let g:is_bash = 1
 filetype plugin indent off
 set belloff=all
+set clipboard=unnamedplus
 set cursorline
-set expandtab
 set diffopt=internal,filler,closeoff,vertical,hiddenoff
+set expandtab
 set history=1000
 set hlsearch
 set incsearch
 set noshowmode
 set number
 set ruler
-set spr
 set shiftwidth=4
 set showcmd
 set showmatch
 set smartcase
 set smartindent
+set spr
 set tabstop=4
 set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 set wildmenu
@@ -53,17 +54,6 @@ augroup strip_whitespace
     autocmd!
     autocmd BufWritePre * call StripTrailingWhitespace()
 augroup end
-
-" windows wsl clipboard
-if exists($WSLENV)
-    let s:clip = '/mnt/c/Windows/System32/clip.exe'
-    if executable(s:clip)
-        augroup wsl_yank
-            autocmd!
-            autocmd TextYankPost * if v:event.operator ==# 'y' | call system(s:clip, @0) | endif
-        augroup END
-    endif
-endif
 
 " search for visual selection
 vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
