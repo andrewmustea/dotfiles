@@ -143,7 +143,7 @@ fi
 go_bin="/usr/local/go/bin"
 if [[ -d "$go_bin" ]] && [[ "$PATH" != *$go_bin* ]]; then
     export PATH="${PATH:+${PATH}:}$go_bin"
-    export GOPATH=$HOME/.go
+    export GOPATH=$HOME/.local/go
 fi
 
 lua_lsp="$HOME/.local/lib/lsp/lua-language-server/bin"
@@ -162,13 +162,6 @@ rust_env="$HOME/.cargo/env"
 
 hask_env="$HOME/.ghcup/env"
 [[ -f "$hask_env" ]] && source "$hask_env"
-
-export NVM_DIR="$HOME/.nvm"
-[[ -s "$NVM_DIR/nvm.sh" ]] && source "$NVM_DIR/nvm.sh"
-[[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
-
-whereis rmtrash &>/dev/null && alias rm='rmtrash'
-whereis rmdirtrash &>/dev/null && alias rmdir='rmdirtrash'
 
 print_path() {
     if [[ -n "$WSLENV" ]]; then
@@ -280,6 +273,7 @@ add_exclude_vscode() {
     fi
     add_exclude '.vscode/' "$repo"
 }
+
 
 # ips and ssh targets
 #
