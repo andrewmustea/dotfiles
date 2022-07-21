@@ -254,23 +254,32 @@ if !exists('g:vscode')
 
     let g:syntastic_asm_checkers = ['gcc']
     let g:syntastic_c_checkers = ['cppcheck', 'cppclean', 'flawfinder', 'gcc', 'make', 'oclint', 'sparse', 'splint']
+    "cs
     let g:syntastic_cmake_checkers=['cmakelint']
     let g:syntastic_cpp_checkers = ['cppcheck', 'cppclean', 'cpplint', 'flawfinder', 'gcc', 'oclint']
+    let g:syntastic_css_checkers = ['csslint', 'mixedindentlint', 'prettycss', 'stylelint']
     let g:syntastic_cuda_checkers = ['nvcc']
     let g:syntastic_go_checkers = ['go', 'gofmt']
     let g:syntastic_haskell_checkers = ['hlint', 'scan']
-    "HTML
-    "Java
-    "JavaScript
-    "JSON
+    let g:syntastic_html_checkers = ['eslint', 'tidy', 'htmlhint', 'jshint', 'proselint', 'stylelint', 'textlint', 'validator', 'w3']
+    "java
+    "javascript
+    "json
+    "less
+    "llvm
     let g:syntastic_lua_checkers = ['luac', 'luacheck']
     let g:syntastic_markdown_checkers = ['mdl', 'proselint', 'remark_lint']
+    "perl
     let g:syntastic_python_checkers = ['bandit', 'flake8', 'mypy', 'prospector', 'py3kwarn', 'pycodestyle', 'pydocstyle', 'pyflakes', 'pylama', 'pylint', 'python']
+    "ruby
     let g:syntastic_sh_checkers = ['bashate', 'sh', 'shellcheck']
     "text
-    "TypeScript
+    "typescript
+    "verilog
+    "vhdl
     let g:syntastic_help_checkers=['proselint']
     let g:syntastic_vim_checkers=['vimlint', 'vint']
+    let g:syntastic_vue_checkers=['eslint', 'stylelint']
     "xml
     "yaml
     "zsh
@@ -281,6 +290,10 @@ if !exists('g:vscode')
         \ 'passive_filetypes': [] }
 
     let g:syntastic_cpp_cpplint_exec = 'cpplint'
+
+    let g:syntastic_css_stylelint_args = '--config /usr/lib/node_modules/stylelint-config-standard/'
+    let g:syntastic_html_stylelint_args = '--config ~/.config/stylelint/syntastic_html.json'
+    let g:syntastic_vue_stylelint_args = '--config ~/.config/stylelint/syntastic_vue.json'
 
     "let g:syntastic_debug = 3
     let g:syntastic_debug_file = '~/.cache/syntastic/syntastic.log'
