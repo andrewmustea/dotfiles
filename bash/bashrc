@@ -126,13 +126,6 @@ alias man='man -P "less -QR"'
 alias {pip,pip3}='python3 -m pip'
 
 
-# wsl
-#
-if [[ "$(uname -r)" == *WSL* ]]; then
-    export IS_WSL=1
-fi
-
-
 # environments and path
 #
 home_bin="$HOME/.local/bin"
@@ -243,26 +236,26 @@ rebase_remote() {
 }
 
 add_exclude() {
-    local repo=$PWD
+    local repo_config="$PWD"
     if [[ $# -eq 2 ]]; then
-        repo=$2
+        repo_config=$2
     elif [[ $# -ne 1 ]]; then
         echo "error: bad arguments: '$*'"
         echo 'usage: add_exclude <exclude-line> [repo-directory]'
         return 1
     fi
 
-    local config="$repo/.git/info/exclude"
-    if [[ -z "$config" ]]; then
-        echo "error: config not found: '$config'"
+    repo_config+='/.git/info/exclude'
+    if [[ -z "$repo_config" ]]; then
+        echo "error: repo_config not found: '$repo_config'"
         return 1
     fi
 
-    if ! grep -q "^${1}$" "$config"; then
-        echo "adding '$1' to '$config'"
-        echo "$1" >>"$config"
+    if ! grep -q "^${1}\$" "$repo_config"; then
+        echo "adding '$1' to '$repo_config'"
+        echo "$1" >> "$repo_config"
     else
-        echo "'$1' already exists in '$config'"
+        echo "'$1' already exists in '$repo_config'"
     fi
 }
 
@@ -305,6 +298,7 @@ extract() {
         case $1 in
             *.tar.bz2) tar xvjf "$1" ;;
             *.tar.gz) tar xvzf "$1" ;;
+            *.tar.xz) tar xvf "$1" ;;
             *.bz2) bunzip2 "$1" ;;
             *.rar) unrar x "$1" ;;
             *.gz) gunzip "$1" ;;
