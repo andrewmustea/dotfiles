@@ -1,0 +1,3 @@
+[submodule "bat/themes/black_sun"]
+	path = bat/themes/black_sun
+	url = https://github.com/andrewmustea/black_sun.tm
