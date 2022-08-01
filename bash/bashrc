@@ -15,6 +15,7 @@ esac
 shopt -s checkwinsize
 shopt -s histappend
 shopt -s extglob
+shopt -s expand_aliases
 if ! shopt -oq posix; then
     if [ -f /usr/share/bash-completion/bash_completion ]; then
         source /usr/share/bash-completion/bash_completion
@@ -158,13 +159,39 @@ hask_env="$HOME/.ghcup/env"
 
 which nala &>/dev/null && alias apt='nala'
 
-print_path() {
-    if [[ -n "$WSLENV" ]]; then
-        printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/'
-    else
-        printf "%s\n" "${PATH//:/$'\n'}"
+
+# projects
+#
+PROJECTS_DIR="$HOME/projects"
+export PROJECTS_DIR
+
+ascii_art="$PROJECTS_DIR/ascii_art"
+[[ -d "$ascii_art" ]] && source "$ascii_art/ascii.bash"
+
+
+# wsl settings
+#
+if [[ -n "$WSLENV" ]]; then
+    winver="$(powershell.exe \[System.Environment\]::OSVersion.Version.Major)"
+
+    if [[ "${winver%$'\r'}" == 10 ]]; then
+        iproute="$(ip route show default)"
+        DISPLAY="$(echo "$iproute" | sed -n 's/.*via \([^ ]\+\).*$/\1/p'):0"
+        LIBGL_ALWAYS_INDIRECT=0
+        GALLIUM_DRIVER=llvmpipe
+        export DISPLAY
+        export LIBGL_ALWAYS_INDIRECT
+        export GALLIUM_DRIVER
     fi
-}
+
+    print_path() {
+        printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/'
+    }
+else
+    print_path() {
+        printf "%s\n" "${PATH//:/$'\n'}"
+    }
+fi
 
 
 # git
