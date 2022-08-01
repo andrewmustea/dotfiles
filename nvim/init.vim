@@ -239,8 +239,8 @@ if !exists('g:vscode')
 
 
     function! s:check_back_space() abort
-      let col = col('.') - 1
-      return !col || getline('.')[col - 1]  =~? '\s'
+        let col = col('.') - 1
+        return !col || getline('.')[col - 1]  =~? '\s'
     endfunction
 
     " Insert <tab> when previous text is space, refresh completion if not.
@@ -254,12 +254,12 @@ if !exists('g:vscode')
     inoremap <silent><expr> <c-space> coc#refresh()
 
     " <CR> or <ENTER> triggers completion
-    inoremap <expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<CR>"
+    " inoremap <expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<CR>"
     " inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
     " inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 
-    " " syntastic
+    " syntastic
     " "
     " let g:syntastic_asm_checkers = ['gcc']
     " let g:syntastic_c_checkers = ['cppcheck', 'cppclean', 'flawfinder', 'gcc', 'make', 'oclint', 'sparse', 'splint']
