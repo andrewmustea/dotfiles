@@ -125,7 +125,10 @@ alias man='man -P "less -QR"'
 # python
 #
 alias {pip,pip3}='python3 -m pip'
-
+pip-update-all() {
+    pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1 | \
+        xargs -n1 pip install -U
+}
 
 # environments and path
 #
@@ -175,6 +178,7 @@ if [[ -n "$WSLENV" ]]; then
     winver="$(powershell.exe \[System.Environment\]::OSVersion.Version.Major)"
 
     if [[ "${winver%$'\r'}" == 10 ]]; then
+        xauth -q merge $(wslpath $(powershell.exe -command 'echo "${env:USERPROFILE}"' | sed 's/[\r]//g'))/.Xauthority
         iproute="$(ip route show default)"
         DISPLAY="$(echo "$iproute" | sed -n 's/.*via \([^ ]\+\).*$/\1/p'):0"
         LIBGL_ALWAYS_INDIRECT=0
