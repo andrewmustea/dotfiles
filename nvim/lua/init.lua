@@ -15,6 +15,7 @@ require("filetype").setup({
       ["env"] = "sh",
       ["gitconfig"] = "gitconfig",
       [".luacheckrc"] = "lua",
+      ["profile"] = "sh",
       ["vimrc"] = "vim"
     }
   }
@@ -136,7 +137,7 @@ if vim.g.vscode == nil then
           end
           return string.format("(%s)", opts.id)
         end,
-      diagnostics = "coc",
+      diagnostics = false,
       diagnostics_update_in_insert = false,
       diagnostics_indicator =
         function(count, level, diagnostics_dict, context)
@@ -221,10 +222,13 @@ if vim.g.vscode == nil then
   }
 
 
-  -- syntastic
+  -- ale
   --
-  if vim.fn.expand("%"):match("^.*bash[^.]*$") then
-    vim.g.syntastic_sh_shellcheck_args = "-s bash"
+  if vim.bo.filetype:match("lua") then
+    local luacheckrc = vim.fn.expand("%:p:h") .. "/.luacheckrc"
+    if vim.fn.filereadable(luacheckrc) then
+      vim.g.ale_lua_luacheck_options = "--config " .. luacheckrc
+    end
   end
 end
 

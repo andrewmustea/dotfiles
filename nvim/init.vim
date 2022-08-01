@@ -14,6 +14,7 @@ set diffopt=internal,filler,closeoff,vertical,hiddenoff
 set expandtab
 set history=1000
 set hlsearch
+set ignorecase
 set incsearch
 set noshowmode
 set number
@@ -23,7 +24,7 @@ set showcmd
 set showmatch
 set smartcase
 set smartindent
-set spr
+set splitright
 set tabstop=4
 set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 set wildmenu
@@ -41,7 +42,7 @@ augroup END
 
 " remove trailing whitepsace on save
 function! StripTrailingWhitespace()
-    if &binary || &ft =~# 'ruby\|javascript\|perl\|diff'
+    if &binary || &filetype =~# 'ruby\|javascript\|perl\|diff'
         return
     endif
     let l:save = winsaveview()
@@ -142,12 +143,9 @@ if !exists('g:vscode')
     Plug 'junegunn/fzf.vim'
     Plug 'ibhagwan/fzf-lua', {'branch': 'main'}
 
-    " syntastic and linters
-    Plug 'Kuniwak/vint'
-    Plug 'folke/trouble.nvim'
-    Plug 'scrooloose/syntastic'
-    Plug 'syngan/vim-vimlint'
-    Plug 'ynkdir/vim-vimlparser'
+    " linting
+    Plug 'dense-analysis/ale'
+    " Plug 'folke/trouble.nvim'
 
     " vimwiki
     Plug 'vimwiki/vimwiki'
@@ -229,85 +227,67 @@ if !exists('g:vscode')
 
     " coc.nvim
     "
+    let g:coc_global_extensions = ['coc-clangd', 'coc-clang-format-style-options', 'coc-cmake', 'coc-css',
+                              \    'coc-diagnostic', 'coc-eslint', 'coc-explorer', 'coc-fzf-preview', 'coc-git',
+                              \    'coc-go', 'coc-golines', 'coc-highlight', 'coc-html', 'coc-htmlhint',
+                              \    'coc-html-css-support', 'coc-java', 'coc-jedi', 'coc-json', 'coc-lists',
+                              \    'coc-markdownlint', 'coc-markdown-preview-enhanced', 'coc-markmap', 'coc-perl',
+                              \    'coc-prettier', 'coc-pydocstring', 'coc-pyright', 'coc-python', 'coc-rls',
+                              \    'coc-rome', 'coc-rust-analyzer', 'coc-sh', 'coc-stylelintplus', 'coc-stylelint',
+                              \    'coc-snippets', 'coc-sql', 'coc-tsserver', 'coc-vimlsp', 'coc-xml', 'coc-yaml',
+                              \    'coc-yank']
+
+
     function! s:check_back_space() abort
       let col = col('.') - 1
       return !col || getline('.')[col - 1]  =~? '\s'
     endfunction
 
+    " Insert <tab> when previous text is space, refresh completion if not.
     inoremap <silent><expr> <TAB>
-          \ pumvisible() ? "\<C-n>" :
-          \ <SID>check_back_space() ? "\<TAB>" :
-          \ coc#refresh()
+        \ coc#pum#visible() ? coc#pum#next(1):
+        \ <SID>check_back_space() ? "\<Tab>" :
+        \ coc#refresh()
+    inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
+    " <c-space> triggers completion
     inoremap <silent><expr> <c-space> coc#refresh()
 
-    inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-    inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+    " <CR> or <ENTER> triggers completion
+    inoremap <expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<CR>"
+    " inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+    " inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 
 
-    " syntastic
+    " " syntastic
+    " "
+    " let g:syntastic_asm_checkers = ['gcc']
+    " let g:syntastic_c_checkers = ['cppcheck', 'cppclean', 'flawfinder', 'gcc', 'make', 'oclint', 'sparse', 'splint']
+    " let g:syntastic_cmake_checkers=['cmakelint']
+    " let g:syntastic_cpp_checkers = ['cppcheck', 'cppclean', 'cpplint', 'flawfinder', 'gcc', 'oclint']
+    " let g:syntastic_css_checkers = ['csslint', 'mixedindentlint', 'prettycss', 'stylelint']
+    " let g:syntastic_cuda_checkers = ['nvcc']
+    " let g:syntastic_go_checkers = ['go', 'gofmt']
+    " let g:syntastic_haskell_checkers = ['hlint', 'scan']
+    " let g:syntastic_html_checkers = ['eslint', 'tidy', 'htmlhint', 'jshint', 'proselint', 'stylelint', 'textlint', 'validator', 'w3']
+    " let g:syntastic_lua_checkers = ['luac', 'luacheck']
+    " let g:syntastic_markdown_checkers = ['mdl', 'proselint', 'remark_lint']
+    " let g:syntastic_python_checkers = ['bandit', 'flake8', 'mypy', 'prospector', 'py3kwarn', 'pycodestyle', 'pydocstyle', 'pyflakes', 'pylama', 'pylint', 'python']
+    " let g:syntastic_sh_checkers = ['bashate', 'sh', 'shellcheck']
+    " let g:syntastic_help_checkers=['proselint']
+    " let g:syntastic_vim_checkers=['vimlint', 'vint']
+    " let g:syntastic_vue_checkers=['eslint', 'stylelint']
+    " let g:syntastic_css_stylelint_args = '--config /usr/lib/node_modules/stylelint-config-standard/'
+    " let g:syntastic_html_stylelint_args = '--config ~/.config/stylelint/syntastic_html.json'
+    " let g:syntastic_vue_stylelint_args = '--config ~/.config/stylelint/syntastic_vue.json'
+
+    " ale
     "
-    let g:syntastic_check_on_open = 0
-    let g:syntastic_check_on_wq = 0
-    let g:syntastic_aggregate_errors = 1
-    let g:syntastic_id_checkers = 1
-
-    let g:syntastic_asm_checkers = ['gcc']
-    let g:syntastic_c_checkers = ['cppcheck', 'cppclean', 'flawfinder', 'gcc', 'make', 'oclint', 'sparse', 'splint']
-    "cs
-    let g:syntastic_cmake_checkers=['cmakelint']
-    let g:syntastic_cpp_checkers = ['cppcheck', 'cppclean', 'cpplint', 'flawfinder', 'gcc', 'oclint']
-    let g:syntastic_css_checkers = ['csslint', 'mixedindentlint', 'prettycss', 'stylelint']
-    let g:syntastic_cuda_checkers = ['nvcc']
-    let g:syntastic_go_checkers = ['go', 'gofmt']
-    let g:syntastic_haskell_checkers = ['hlint', 'scan']
-    let g:syntastic_html_checkers = ['eslint', 'tidy', 'htmlhint', 'jshint', 'proselint', 'stylelint', 'textlint', 'validator', 'w3']
-    "java
-    "javascript
-    "json
-    "less
-    "llvm
-    let g:syntastic_lua_checkers = ['luac', 'luacheck']
-    let g:syntastic_markdown_checkers = ['mdl', 'proselint', 'remark_lint']
-    "perl
-    let g:syntastic_python_checkers = ['bandit', 'flake8', 'mypy', 'prospector', 'py3kwarn', 'pycodestyle', 'pydocstyle', 'pyflakes', 'pylama', 'pylint', 'python']
-    "ruby
-    let g:syntastic_sh_checkers = ['bashate', 'sh', 'shellcheck']
-    "text
-    "typescript
-    "verilog
-    "vhdl
-    let g:syntastic_help_checkers=['proselint']
-    let g:syntastic_vim_checkers=['vimlint', 'vint']
-    let g:syntastic_vue_checkers=['eslint', 'stylelint']
-    "xml
-    "yaml
-    "zsh
-
-    let g:syntastic_mode_map = {
-        \ 'mode': 'passive',
-        \ 'active_filetypes': [],
-        \ 'passive_filetypes': [] }
-
-    let g:syntastic_cpp_cpplint_exec = 'cpplint'
-
-    let g:syntastic_css_stylelint_args = '--config /usr/lib/node_modules/stylelint-config-standard/'
-    let g:syntastic_html_stylelint_args = '--config ~/.config/stylelint/syntastic_html.json'
-    let g:syntastic_vue_stylelint_args = '--config ~/.config/stylelint/syntastic_vue.json'
-
-    "let g:syntastic_debug = 3
-    let g:syntastic_debug_file = '~/.cache/syntastic/syntastic.log'
-
-    function! LuacheckConfig()
-        let s:luacheckrc = expand('%:p:h') . '/.luacheckrc'
-        if filereadable(s:luacheckrc)
-            let g:syntastic_lua_luacheck_args = '--config ' . s:luacheckrc
-        endif
-    endfunction
-
-    augroup syntastic_settings
-        autocmd!
-        autocmd FileType lua call LuacheckConfig()
-    augroup end
+    let g:ale_disable_lsp = 1
+    let g:ale_lint_on_text_changes = 0
+    let g:ale_lint_on_insert_leave = 0
+    let g:ale_lint_on_save = 1
+    let g:ale_lint_on_filetype_changed = 1
+    let g:ale_lint_on_enter =1
 endif
 
