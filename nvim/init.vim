@@ -97,7 +97,6 @@ Plug 'tpope/vim-unimpaired'
 " movement and targets
 Plug 'AndrewRadev/switch.vim'
 Plug 'ggandor/leap.nvim'
-Plug 'junegunn/vim-after-object'
 Plug 'mg979/vim-visual-multi'
 Plug 'phaazon/hop.nvim'
 Plug 'tpope/vim-repeat'
@@ -152,14 +151,6 @@ if !exists('g:vscode')
 endif
 
 call plug#end()
-
-
-" vim-after-object
-"
-augroup vim_after_object
-    autocmd!
-    autocmd VimEnter * call after_object#enable('=', ':', '-', '#', ' ')
-augroup end
 
 
 " vim-easy-align
@@ -238,48 +229,44 @@ if !exists('g:vscode')
                               \    'coc-yank']
 
 
-    function! s:check_back_space() abort
-        let col = col('.') - 1
-        return !col || getline('.')[col - 1]  =~? '\s'
-    endfunction
-
-    " Insert <tab> when previous text is space, refresh completion if not.
+    " Use tab for trigger completion with characters ahead and navigate.
+    " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+    " other plugin before putting this into your config.
     inoremap <silent><expr> <TAB>
-        \ coc#pum#visible() ? coc#pum#next(1):
-        \ <SID>check_back_space() ? "\<Tab>" :
-        \ coc#refresh()
+          \ coc#pum#visible() ? coc#pum#next(1):
+          \ CheckBackspace() ? "\<Tab>" :
+          \ coc#refresh()
     inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+    " Make <CR> to accept selected completion item or notify coc.nvim to format
+    " <C-g>u breaks current undo, please make your own choice.
+    " inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+    "                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+    function! CheckBackspace() abort
+        let col = col('.') - 1
+        return !col || getline('.')[col - 1]  =~# '\s'
+    endfunction
 
     " <c-space> triggers completion
     inoremap <silent><expr> <c-space> coc#refresh()
 
-    " <CR> or <ENTER> triggers completion
-    " inoremap <expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<CR>"
-    " inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
-    " inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+    " Use `[g` and `]g` to navigate diagnostics
+    " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+    nmap <silent> [g <Plug>(coc-diagnostic-prev)
+    nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
+    " Use K to show documentation in preview window.
+    nnoremap <silent> K :call ShowDocumentation()<CR>
 
-    " syntastic
-    " "
-    " let g:syntastic_asm_checkers = ['gcc']
-    " let g:syntastic_c_checkers = ['cppcheck', 'cppclean', 'flawfinder', 'gcc', 'make', 'oclint', 'sparse', 'splint']
-    " let g:syntastic_cmake_checkers=['cmakelint']
-    " let g:syntastic_cpp_checkers = ['cppcheck', 'cppclean', 'cpplint', 'flawfinder', 'gcc', 'oclint']
-    " let g:syntastic_css_checkers = ['csslint', 'mixedindentlint', 'prettycss', 'stylelint']
-    " let g:syntastic_cuda_checkers = ['nvcc']
-    " let g:syntastic_go_checkers = ['go', 'gofmt']
-    " let g:syntastic_haskell_checkers = ['hlint', 'scan']
-    " let g:syntastic_html_checkers = ['eslint', 'tidy', 'htmlhint', 'jshint', 'proselint', 'stylelint', 'textlint', 'validator', 'w3']
-    " let g:syntastic_lua_checkers = ['luac', 'luacheck']
-    " let g:syntastic_markdown_checkers = ['mdl', 'proselint', 'remark_lint']
-    " let g:syntastic_python_checkers = ['bandit', 'flake8', 'mypy', 'prospector', 'py3kwarn', 'pycodestyle', 'pydocstyle', 'pyflakes', 'pylama', 'pylint', 'python']
-    " let g:syntastic_sh_checkers = ['bashate', 'sh', 'shellcheck']
-    " let g:syntastic_help_checkers=['proselint']
-    " let g:syntastic_vim_checkers=['vimlint', 'vint']
-    " let g:syntastic_vue_checkers=['eslint', 'stylelint']
-    " let g:syntastic_css_stylelint_args = '--config /usr/lib/node_modules/stylelint-config-standard/'
-    " let g:syntastic_html_stylelint_args = '--config ~/.config/stylelint/syntastic_html.json'
-    " let g:syntastic_vue_stylelint_args = '--config ~/.config/stylelint/syntastic_vue.json'
+    function! ShowDocumentation()
+      if CocAction('hasProvider', 'hover')
+        call CocActionAsync('doHover')
+      else
+        call feedkeys('K', 'in')
+      endif
+    endfunction
+
 
     " ale
     "
