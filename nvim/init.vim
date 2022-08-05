@@ -174,107 +174,118 @@ let g:yoinkSavePersistently = 1
 lua require('init')
 
 
-" non-vscode plugin settings
+" vscode keybindings and finish
 "
-if !exists('g:vscode')
-    " syntax highlighting
-    "
-    syntax on
-    set termguicolors
-    colorscheme black_sun
-    command! ShowHighlights silent runtime syntax/hitest.vim
-    command! HighlightGroup echo synIDattr(synID(line("."),col("."),1),"name")
+if exists('g:vscode')
+    nnoremap <C-w>J <Cmd>call VSCodeNotify('workbench.action.moveEditorToBelowGroup')<CR>
+    xnoremap <C-w>J <Cmd>call VSCodeNotify('workbench.action.moveEditorToBelowGroup')<CR>
+    nnoremap <C-w>K <Cmd>call VSCodeNotify('workbench.action.moveEditorToAboveGroup')<CR>
+    xnoremap <C-w>K <Cmd>call VSCodeNotify('workbench.action.moveEditorToAboveGroup')<CR>
+    nnoremap <C-w>H <Cmd>call VSCodeNotify('workbench.action.moveEditorToLeftGroup')<CR>
+    xnoremap <C-w>H <Cmd>call VSCodeNotify('workbench.action.moveEditorToLeftGroup')<CR>
+    nnoremap <C-w>L <Cmd>call VSCodeNotify('workbench.action.moveEditorToRightGroup')<CR>
+    xnoremap <C-w>L <Cmd>call VSCodeNotify('workbench.action.moveEditorToRightGroup')<CR>
 
-
-    " bufferline.nvim
-    "
-    " These commands will navigate through buffers in order regardless of which mode you are using
-    " e.g. if you change the order of buffers :bnext and :bprevious will not respect the custom ordering
-    nnoremap <silent>[b :BufferLineCycleNext<CR>
-    nnoremap <silent>]b :BufferLineCyclePrev<CR>
-
-    " These commands will move the current buffer backwards or forwards in the bufferline
-    nnoremap <silent><mymap> :BufferLineMoveNext<CR>
-    nnoremap <silent><mymap> :BufferLineMovePrev<CR>
-
-    " These commands will sort buffers by directory, language, or a custom criteria
-    " nnoremap <silent>be :BufferLineSortByExtension<CR>
-    " nnoremap <silent>bd :BufferLineSortByDirectory<CR>
-    " nnoremap <silent><mymap> :lua require'bufferline'.sort_buffers_by(function (buf_a, buf_b) return buf_a.id < buf_b.id end)<CR>
-
-    " Buffer selection
-    nnoremap <silent> gb :BufferLinePick<CR>
-
-    nnoremap <silent><leader>1 <Cmd>BufferLineGoToBuffer 1<CR>
-    nnoremap <silent><leader>2 <Cmd>BufferLineGoToBuffer 2<CR>
-    nnoremap <silent><leader>3 <Cmd>BufferLineGoToBuffer 3<CR>
-    nnoremap <silent><leader>4 <Cmd>BufferLineGoToBuffer 4<CR>
-    nnoremap <silent><leader>5 <Cmd>BufferLineGoToBuffer 5<CR>
-    nnoremap <silent><leader>6 <Cmd>BufferLineGoToBuffer 6<CR>
-    nnoremap <silent><leader>7 <Cmd>BufferLineGoToBuffer 7<CR>
-    nnoremap <silent><leader>8 <Cmd>BufferLineGoToBuffer 8<CR>
-    nnoremap <silent><leader>9 <Cmd>BufferLineGoToBuffer 9<CR>
-
-
-    " coc.nvim
-    "
-    let g:coc_global_extensions = ['coc-clangd', 'coc-clang-format-style-options', 'coc-cmake', 'coc-css',
-                              \    'coc-diagnostic', 'coc-eslint', 'coc-explorer', 'coc-fzf-preview', 'coc-git',
-                              \    'coc-go', 'coc-golines', 'coc-highlight', 'coc-html', 'coc-htmlhint',
-                              \    'coc-html-css-support', 'coc-java', 'coc-jedi', 'coc-json', 'coc-lists',
-                              \    'coc-markdownlint', 'coc-markdown-preview-enhanced', 'coc-markmap', 'coc-perl',
-                              \    'coc-prettier', 'coc-pydocstring', 'coc-pyright', 'coc-python', 'coc-rls',
-                              \    'coc-rome', 'coc-rust-analyzer', 'coc-sh', 'coc-stylelintplus', 'coc-stylelint',
-                              \    'coc-snippets', 'coc-sql', 'coc-tsserver', 'coc-vimlsp', 'coc-xml', 'coc-yaml',
-                              \    'coc-yank']
-
-
-    " Use tab for trigger completion with characters ahead and navigate.
-    " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-    " other plugin before putting this into your config.
-    inoremap <silent><expr> <TAB>
-          \ coc#pum#visible() ? coc#pum#next(1):
-          \ CheckBackspace() ? "\<Tab>" :
-          \ coc#refresh()
-    inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
-
-    " Make <CR> to accept selected completion item or notify coc.nvim to format
-    " <C-g>u breaks current undo, please make your own choice.
-    " inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
-    "                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
-    function! CheckBackspace() abort
-        let col = col('.') - 1
-        return !col || getline('.')[col - 1]  =~# '\s'
-    endfunction
-
-    " <c-space> triggers completion
-    inoremap <silent><expr> <c-space> coc#refresh()
-
-    " Use `[g` and `]g` to navigate diagnostics
-    " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-    nmap <silent> [g <Plug>(coc-diagnostic-prev)
-    nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-    " Use K to show documentation in preview window.
-    nnoremap <silent> K :call ShowDocumentation()<CR>
-
-    function! ShowDocumentation()
-      if CocAction('hasProvider', 'hover')
-        call CocActionAsync('doHover')
-      else
-        call feedkeys('K', 'in')
-      endif
-    endfunction
-
-
-    " ale
-    "
-    let g:ale_disable_lsp = 1
-    let g:ale_lint_on_text_changes = 0
-    let g:ale_lint_on_insert_leave = 0
-    let g:ale_lint_on_save = 1
-    let g:ale_lint_on_filetype_changed = 1
-    let g:ale_lint_on_enter =1
+    finish
 endif
+
+
+" syntax highlighting
+"
+syntax on
+set termguicolors
+colorscheme black_sun
+command! ShowHighlights silent runtime syntax/hitest.vim
+command! HighlightGroup echo synIDattr(synID(line("."),col("."),1),"name")
+
+
+" bufferline.nvim
+"
+" These commands will navigate through buffers in order regardless of which mode you are using
+" e.g. if you change the order of buffers :bnext and :bprevious will not respect the custom ordering
+nnoremap <silent>[b :BufferLineCycleNext<CR>
+nnoremap <silent>]b :BufferLineCyclePrev<CR>
+
+" These commands will move the current buffer backwards or forwards in the bufferline
+nnoremap <silent><mymap> :BufferLineMoveNext<CR>
+nnoremap <silent><mymap> :BufferLineMovePrev<CR>
+
+" These commands will sort buffers by directory, language, or a custom criteria
+" nnoremap <silent>be :BufferLineSortByExtension<CR>
+" nnoremap <silent>bd :BufferLineSortByDirectory<CR>
+" nnoremap <silent><mymap> :lua require'bufferline'.sort_buffers_by(function (buf_a, buf_b) return buf_a.id < buf_b.id end)<CR>
+
+" Buffer selection
+nnoremap <silent> gb :BufferLinePick<CR>
+
+nnoremap <silent><leader>1 <Cmd>BufferLineGoToBuffer 1<CR>
+nnoremap <silent><leader>2 <Cmd>BufferLineGoToBuffer 2<CR>
+nnoremap <silent><leader>3 <Cmd>BufferLineGoToBuffer 3<CR>
+nnoremap <silent><leader>4 <Cmd>BufferLineGoToBuffer 4<CR>
+nnoremap <silent><leader>5 <Cmd>BufferLineGoToBuffer 5<CR>
+nnoremap <silent><leader>6 <Cmd>BufferLineGoToBuffer 6<CR>
+nnoremap <silent><leader>7 <Cmd>BufferLineGoToBuffer 7<CR>
+nnoremap <silent><leader>8 <Cmd>BufferLineGoToBuffer 8<CR>
+nnoremap <silent><leader>9 <Cmd>BufferLineGoToBuffer 9<CR>
+
+
+" coc.nvim
+"
+let g:coc_global_extensions = ['coc-clangd', 'coc-clang-format-style-options', 'coc-cmake', 'coc-css',
+                          \    'coc-diagnostic', 'coc-eslint', 'coc-explorer', 'coc-fzf-preview', 'coc-git',
+                          \    'coc-go', 'coc-golines', 'coc-highlight', 'coc-html', 'coc-htmlhint',
+                          \    'coc-html-css-support', 'coc-java', 'coc-jedi', 'coc-json', 'coc-lists',
+                          \    'coc-markdownlint', 'coc-markdown-preview-enhanced', 'coc-markmap', 'coc-perl',
+                          \    'coc-prettier', 'coc-pydocstring', 'coc-pyright', 'coc-python', 'coc-rls',
+                          \    'coc-rome', 'coc-rust-analyzer', 'coc-sh', 'coc-stylelintplus', 'coc-stylelint',
+                          \    'coc-snippets', 'coc-sql', 'coc-tsserver', 'coc-vimlsp', 'coc-xml', 'coc-yaml',
+                          \    'coc-yank']
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ coc#pum#visible() ? coc#pum#next(1):
+      \ CheckBackspace() ? "\<Tab>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+" Make <CR> to accept selected completion item or notify coc.nvim to format
+" <C-g>u breaks current undo, please make your own choice.
+" inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+"                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+function! CheckBackspace() abort
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" <c-space> triggers completion
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call ShowDocumentation()<CR>
+
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
+
+
+" ale
+"
+let g:ale_disable_lsp = 1
+let g:ale_lint_on_text_changes = 0
+let g:ale_lint_on_insert_leave = 0
+let g:ale_lint_on_save = 1
+let g:ale_lint_on_filetype_changed = 1
+let g:ale_lint_on_enter =1
 
