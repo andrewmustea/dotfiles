@@ -126,8 +126,8 @@ alias man='man -P "less -QR"'
 #
 alias {pip,pip3}='python3 -m pip'
 pip-update-all() {
-    pip list --outdated --format=freeze | grep -v '^\-e' | cut -d = -f 1 | \
-        xargs -n1 pip install -U
+    sudo -H pip list --outdated --format=freeze | grep -v '^\-e' | \
+        cut -d = -f 1 | xargs -n1 sudo -H pip install -U
 }
 
 # environments and path
@@ -143,13 +143,10 @@ if [[ -d "$go_bin" ]] && [[ "$PATH" != *$go_bin* ]]; then
     export GOPATH=$HOME/.local/go
 fi
 
-lua_lsp="$HOME/.local/lib/lsp/lua-language-server/bin"
+lua_lsp="$HOME/.local/share/applications/lua-language-server/bin"
 if [[ -d "$lua_lsp" ]] && [[ "$PATH" != *$lua_lsp* ]]; then
     export PATH="${PATH:+${PATH}:}$lua_lsp"
 fi
-
-ovl_env="$HOME/scripts/ovl_init.bash"
-[[ -f "$ovl_env" ]] && source "$ovl_env"
 
 fzf_env="$HOME/.fzf.bash"
 [[ -f "$fzf_env" ]] && source "$fzf_env"
@@ -307,7 +304,6 @@ add_exclude_vscode() {
 
 # ips and ssh targets
 #
-
 alias pingpath='mtr'
 alias myip='curl -s checkip.amazonaws.com'
 
