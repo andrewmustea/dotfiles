@@ -84,6 +84,7 @@ Plug 'dstein64/vim-startuptime'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'junegunn/vim-peekaboo'
 Plug 'nathom/filetype.nvim'
+Plug 'rmagatti/auto-session'
 
 " text manipulation
 Plug 'junegunn/vim-easy-align'
