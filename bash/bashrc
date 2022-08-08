@@ -137,6 +137,7 @@ export LESS_TERMCAP_so
 export LESS_TERMCAP_ue
 export LESS_TERMCAP_us
 
+export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
 alias less='less -QR'
 alias man='man -P "less -QR"'
 
