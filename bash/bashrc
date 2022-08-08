@@ -275,8 +275,6 @@ alias git_reset_last='git reset HEAD~1'
 alias rebase_origin='rebase_remote origin'
 alias rebase_upstream='rebase_remote upstream'
 
-
-
 get_branch_name() {
     local dir=$PWD
     if [[ $# != 0 ]]; then
