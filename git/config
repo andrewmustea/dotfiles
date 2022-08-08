@@ -25,6 +25,8 @@
     keepBackup = false
 [mergetool "nvim_mergetool"]
     cmd = nvim -f -c "MergetoolStart" "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
+[push]
+    autoSetupRemote = true
 [url "https://"]
     insteadOf = git://
 [delta "pompous-panther"]
