@@ -196,9 +196,6 @@ fi
 fzf_env="$XDG_CONFIG_HOME/fzf/fzf.bash"
 [[ -f "$fzf_env" ]] && source "$fzf_env"
 
-hask_env="$HOME/.ghcup/env"
-[[ -f "$hask_env" ]] && source "$hask_env"
-
 CARGO_HOME="$XDG_DATA_HOME"/cargo
 RUSTUP_HOME="$XDG_DATA_HOME"/rustup
 if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *:$CARGO_HOME/bin:* ]]; then
