@@ -178,18 +178,18 @@ export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME"/npm/npmrc
 # environments and path
 #
 home_bin="$HOME/.local/bin"
-if [[ "$PATH" != *:$home_bin:* ]]; then
+if [[ "$PATH" != *$home_bin* ]]; then
     export PATH="${PATH:+${PATH}:}$home_bin"
 fi
 
 go_bin="/usr/local/go/bin"
-if [[ -d "$go_bin" ]] && [[ "$PATH" != *:$go_bin:* ]]; then
+if [[ -d "$go_bin" ]] && [[ "$PATH" != *$go_bin* ]]; then
     export PATH="${PATH:+${PATH}:}$go_bin"
     export GOPATH=$HOME/.local/go
 fi
 
 lua_lsp="$XDG_DATA_HOME/lua-language-server/bin"
-if [[ -d "$lua_lsp" ]] && [[ "$PATH" != *:$lua_lsp:* ]]; then
+if [[ -d "$lua_lsp" ]] && [[ "$PATH" != *$lua_lsp* ]]; then
     export PATH="${PATH:+${PATH}:}$lua_lsp"
 fi
 
@@ -198,7 +198,7 @@ fzf_env="$XDG_CONFIG_HOME/fzf/fzf.bash"
 
 CARGO_HOME="$XDG_DATA_HOME"/cargo
 RUSTUP_HOME="$XDG_DATA_HOME"/rustup
-if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *:$CARGO_HOME/bin:* ]]; then
+if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *$CARGO_HOME/bin* ]]; then
     export CARGO_HOME
     export RUSTUP_HOME
     export PATH="$CARGO_HOME/bin:$PATH"
@@ -206,7 +206,7 @@ fi
 
 CABAL_CONFIG="$XDG_CONFIG_HOME"/cabal/config
 CABAL_DIR="$XDG_DATA_HOME"/cabal
-if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *:$CABAL_DIR/bin:* ]]; then
+if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *$CABAL_DIR/bin* ]]; then
     export CABAL_CONFIG
     export CABAL_DIR
     export PATH="$CABAL_DIR/bin:$PATH"
@@ -233,7 +233,7 @@ if [[ -n "$WSLENV" ]]; then
         winpath="$(powershell.exe -command "echo \"\${env:USERPROFILE}\"")"
         xauthfile="$(wslpath "$winpath" | sed 's/[\r]//g')/.Xauthority"
         if [[ -f "$xauthfile" ]]; then
-            touch ~/.Xauthority
+            touch "$XAUTHORITY"
             xauth -q merge "$xauthfile"
             DISPLAY="$(ip route show default | cut -d ' ' -f 3):0"
             LIBGL_ALWAYS_INDIRECT=0
