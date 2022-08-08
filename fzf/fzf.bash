@@ -1,18 +1,22 @@
 #!/usr/bin/env bash
 
+if [[ -z ${XDG_DATA_HOME} ]]; then
+    export XDG_DATA_HOME="$HOME/.local/share"
+fi
+
 # Setup fzf
 # ---------
-if [[ "$PATH" != *$HOME/.fzf/bin* ]]; then
-    export PATH="${PATH:+${PATH}:}$HOME/.fzf/bin"
+if [[ ! "$PATH" == *:$XDG_DATA_HOME/fzf/bin:* ]]; then
+    PATH="${PATH:+${PATH}:}$XDG_DATA_HOME/fzf/bin"
 fi
 
 # Auto-completion
 # ---------------
-[[ $- == *i* ]] && source "$HOME/.fzf/shell/completion.bash" 2> /dev/null
+[[ $- == *i* ]] && source "$XDG_DATA_HOME/fzf/shell/completion.bash" 2> /dev/null
 
 # Key bindings
 # ------------
-source "$HOME/.fzf/shell/key-bindings.bash"
+source "$XDG_DATA_HOME/fzf/shell/key-bindings.bash"
 
 # Colors
 # ------
