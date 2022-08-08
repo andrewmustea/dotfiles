@@ -37,11 +37,10 @@ require("leap").set_default_keymaps()
 require("hop").setup()
 
 
--- quit early if vscode
+-- skip to end if using vscode
 --
-
 if vim.g.vscode ~= nil then
-  os.exit()
+  goto done
 end
 
 -- nvim-tree
@@ -233,4 +232,6 @@ if vim.bo.filetype:match("lua") then
     vim.g.ale_lua_luacheck_options = "--config " .. luacheckrc
   end
 end
+
+::done::
 

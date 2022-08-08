@@ -174,17 +174,35 @@ let g:yoinkSavePersistently = 1
 lua require('init')
 
 
-" vscode keybindings and finish
+" vscode keybindings
 "
 if exists('g:vscode')
-    nnoremap <C-w>J <Cmd>call VSCodeNotify('workbench.action.moveEditorToBelowGroup')<CR>
-    xnoremap <C-w>J <Cmd>call VSCodeNotify('workbench.action.moveEditorToBelowGroup')<CR>
-    nnoremap <C-w>K <Cmd>call VSCodeNotify('workbench.action.moveEditorToAboveGroup')<CR>
-    xnoremap <C-w>K <Cmd>call VSCodeNotify('workbench.action.moveEditorToAboveGroup')<CR>
-    nnoremap <C-w>H <Cmd>call VSCodeNotify('workbench.action.moveEditorToLeftGroup')<CR>
-    xnoremap <C-w>H <Cmd>call VSCodeNotify('workbench.action.moveEditorToLeftGroup')<CR>
-    nnoremap <C-w>L <Cmd>call VSCodeNotify('workbench.action.moveEditorToRightGroup')<CR>
-    xnoremap <C-w>L <Cmd>call VSCodeNotify('workbench.action.moveEditorToRightGroup')<CR>
+    nnoremap <C-w><C-j> <Cmd>call VSCodeNotify('workbench.action.focusBelowGroup')<CR>
+    xnoremap <C-w><C-j> <Cmd>call VSCodeNotify('workbench.action.focusBelowGroup')<CR>
+    nnoremap <C-w><C-k> <Cmd>call VSCodeNotify('workbench.action.focusAboveGroup')<CR>
+    xnoremap <C-w><C-k> <Cmd>call VSCodeNotify('workbench.action.focusAboveGroup')<CR>
+    nnoremap <C-w><C-h> <Cmd>call VSCodeNotify('workbench.action.focusLeftGroup')<CR>
+    xnoremap <C-w><C-h> <Cmd>call VSCodeNotify('workbench.action.focusLeftGroup')<CR>
+    nnoremap <C-w><C-l> <Cmd>call VSCodeNotify('workbench.action.focusRightGroup')<CR>
+    xnoremap <C-w><C-l> <Cmd>call VSCodeNotify('workbench.action.focusRightGroup')<CR>
+
+    nnoremap <C-w><S-j> <Cmd>call VSCodeNotify('workbench.action.moveEditorToBelowGroup')<CR>
+    xnoremap <C-w><S-j> <Cmd>call VSCodeNotify('workbench.action.moveEditorToBelowGroup')<CR>
+    nnoremap <C-w><S-k> <Cmd>call VSCodeNotify('workbench.action.moveEditorToAboveGroup')<CR>
+    xnoremap <C-w><S-k> <Cmd>call VSCodeNotify('workbench.action.moveEditorToAboveGroup')<CR>
+    nnoremap <C-w><S-h> <Cmd>call VSCodeNotify('workbench.action.moveEditorToLeftGroup')<CR>
+    xnoremap <C-w><S-h> <Cmd>call VSCodeNotify('workbench.action.moveEditorToLeftGroup')<CR>
+    nnoremap <C-w><S-l> <Cmd>call VSCodeNotify('workbench.action.moveEditorToRightGroup')<CR>
+    xnoremap <C-w><S-l> <Cmd>call VSCodeNotify('workbench.action.moveEditorToRightGroup')<CR>
+
+    nnoremap <C-w><M-j> <Cmd>call VSCodeNotify('workbench.action.moveActiveEditorGroupDown')<CR>
+    xnoremap <C-w><M-j> <Cmd>call VSCodeNotify('workbench.action.moveActiveEditorGroupDown')<CR>
+    nnoremap <C-w><M-k> <Cmd>call VSCodeNotify('workbench.action.moveActiveEditorGroupUp')<CR>
+    xnoremap <C-w><M-k> <Cmd>call VSCodeNotify('workbench.action.moveActiveEditorGroupUp')<CR>
+    nnoremap <C-w><M-h> <Cmd>call VSCodeNotify('workbench.action.moveActiveEditorGroupLeft')<CR>
+    xnoremap <C-w><M-h> <Cmd>call VSCodeNotify('workbench.action.moveActiveEditorGroupLeft')<CR>
+    nnoremap <C-w><M-l> <Cmd>call VSCodeNotify('workbench.action.moveActiveEditorGroupRight')<CR>
+    xnoremap <C-w><M-l> <Cmd>call VSCodeNotify('workbench.action.moveActiveEditorGroupRight')<CR>
 
     finish
 endif
