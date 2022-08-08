@@ -42,6 +42,14 @@ if [ -x /usr/lib/command-not-found ] \
 fi
 
 
+# XDG
+#
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+
 # history
 #
 PROMPT_COMMAND='history -a'
@@ -49,6 +57,7 @@ HISTSIZE=10000
 HISTFILESIZE=10000
 export HISTCONTROL=ignoredups
 export HISTIGNORE='history:pwd:ls:ll:la:l:'
+export HISTFILE="${XDG_STATE_HOME}"/bash/history
 
 
 # sudo
@@ -83,10 +92,17 @@ GCC_COLORS="$(printf "error=01;31:warning=01;35:note=01;%s" \
 export GCC_COLORS
 
 
-# gpg
+# gpg and pass
 #
 GPG_TTY=$(tty)
 export GPG_TTY
+export GNUPGHOME="$XDG_DATA_HOME"/gnupg
+export PASSWORD_STORE_DIR="$XDG_DATA_HOME"/pass
+
+
+# wget
+#
+alias wget=wget --hsts-file="$XDG_DATA_HOME/wget-hsts"
 
 
 # nvim
@@ -130,32 +146,61 @@ pip-update-all() {
         cut -d = -f 1 | xargs -n1 sudo -H pip install -U
 }
 
+
+# azure
+#
+export AZURE_CONFIG_DIR="$XDG_DATA_HOME"/azure
+
+
+# ghcup
+#
+export GHCUP_USE_XDG_DIRS=true
+
+
+# npm
+#
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME"/npm/npmrc
+
+
 # environments and path
 #
 home_bin="$HOME/.local/bin"
-if [[ "$PATH" != *$home_bin* ]]; then
+if [[ "$PATH" != *:$home_bin:* ]]; then
     export PATH="${PATH:+${PATH}:}$home_bin"
 fi
 
 go_bin="/usr/local/go/bin"
-if [[ -d "$go_bin" ]] && [[ "$PATH" != *$go_bin* ]]; then
+if [[ -d "$go_bin" ]] && [[ "$PATH" != *:$go_bin:* ]]; then
     export PATH="${PATH:+${PATH}:}$go_bin"
     export GOPATH=$HOME/.local/go
 fi
 
-lua_lsp="$HOME/.local/share/applications/lua-language-server/bin"
-if [[ -d "$lua_lsp" ]] && [[ "$PATH" != *$lua_lsp* ]]; then
+lua_lsp="$XDG_DATA_HOME/lua-language-server/bin"
+if [[ -d "$lua_lsp" ]] && [[ "$PATH" != *:$lua_lsp:* ]]; then
     export PATH="${PATH:+${PATH}:}$lua_lsp"
 fi
 
 fzf_env="$HOME/.fzf.bash"
 [[ -f "$fzf_env" ]] && source "$fzf_env"
 
-rust_env="$HOME/.cargo/env"
-[[ -f "$rust_env" ]] && source "$rust_env"
-
 hask_env="$HOME/.ghcup/env"
 [[ -f "$hask_env" ]] && source "$hask_env"
+
+CARGO_HOME="$XDG_DATA_HOME"/cargo
+RUSTUP_HOME="$XDG_DATA_HOME"/rustup
+if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *:$CARGO_HOME/bin:* ]]; then
+    export CARGO_HOME
+    export RUSTUP_HOME
+    export PATH="$CARGO_HOME/bin:$PATH"
+fi
+
+CABAL_CONFIG="$XDG_CONFIG_HOME"/cabal/config
+CABAL_DIR="$XDG_DATA_HOME"/cabal
+if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *:$CABAL_DIR/bin:* ]]; then
+    export CABAL_CONFIG
+    export CABAL_DIR
+    export PATH="$CABAL_DIR/bin:$PATH"
+fi
 
 which nala &>/dev/null && alias apt='nala'
 
