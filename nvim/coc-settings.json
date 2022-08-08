@@ -1,3 +1,4 @@
 {
-    "suggest.noselect": true
+    "suggest.noselect": true,
+    "session.directory": "~/.local/share/nvim/sessions"
 }
