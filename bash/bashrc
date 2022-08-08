@@ -152,6 +152,12 @@ pip-update-all() {
 export AZURE_CONFIG_DIR="$XDG_DATA_HOME"/azure
 
 
+# gem
+#
+export GEM_HOME="${XDG_DATA_HOME}"/gem
+export GEM_SPEC_CACHE="${XDG_CACHE_HOME}"/gem
+
+
 # ghcup
 #
 export GHCUP_USE_XDG_DIRS=true
