@@ -180,7 +180,7 @@ if [[ -d "$lua_lsp" ]] && [[ "$PATH" != *:$lua_lsp:* ]]; then
     export PATH="${PATH:+${PATH}:}$lua_lsp"
 fi
 
-fzf_env="$HOME/.fzf.bash"
+fzf_env="$XDG_CONFIG_HOME/fzf/fzf.bash"
 [[ -f "$fzf_env" ]] && source "$fzf_env"
 
 hask_env="$HOME/.ghcup/env"
