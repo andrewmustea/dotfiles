@@ -152,6 +152,11 @@ alias man='man -P "less -QR"'
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 
+# diff
+#
+alias diffdir='diff -qr'
+
+
 # python
 #
 alias {pip,pip3}='python3 -m pip'
