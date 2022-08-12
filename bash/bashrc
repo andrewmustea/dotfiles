@@ -120,9 +120,10 @@ alias wget=wget --hsts-file="$XDG_DATA_HOME/wget-hsts"
 # nvim
 #
 export EDITOR='nvim'
+which vim &>/dev/null && alias vim='nvim'
 alias {vi,nvi}='nvim'
 alias {vd,nvd,nvimdiff}='nvim -d'
-alias nvim_remove_swap='rm -rf ~/.local/share/nvim/swap/'
+alias nvim-remove-swap='rm -rf ~/.local/share/nvim/swap/'
 
 
 # less
@@ -184,24 +185,29 @@ export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME"/npm/npmrc
 
 # environments and path
 #
-home_bin="$HOME/.local/bin"
-if [[ "$PATH" != *$home_bin* ]]; then
-    export PATH="${PATH:+${PATH}:}$home_bin"
+HOME_BIN="$HOME/.local/bin"
+if [[ "$PATH" != *$HOME_BIN* ]]; then
+    export PATH="${PATH:+${PATH}:}$HOME_BIN"
 fi
 
-go_bin="/usr/local/go/bin"
-if [[ -d "$go_bin" ]] && [[ "$PATH" != *$go_bin* ]]; then
-    export PATH="${PATH:+${PATH}:}$go_bin"
-    export GOPATH=$HOME/.local/go
+LUA_LSP="$XDG_DATA_HOME/lua-language-server/bin"
+if [[ -d "$LUA_LSP" ]] && [[ "$PATH" != *$LUA_LSP* ]]; then
+    export PATH="${PATH:+${PATH}:}$LUA_LSP"
 fi
 
-lua_lsp="$XDG_DATA_HOME/lua-language-server/bin"
-if [[ -d "$lua_lsp" ]] && [[ "$PATH" != *$lua_lsp* ]]; then
-    export PATH="${PATH:+${PATH}:}$lua_lsp"
-fi
+FZF_ENV="$XDG_CONFIG_HOME/fzf/fzf.bash"
+[[ -f "$FZF_ENV" ]] && source "$FZF_ENV"
 
-fzf_env="$XDG_CONFIG_HOME/fzf/fzf.bash"
-[[ -f "$fzf_env" ]] && source "$fzf_env"
+GO_BIN=/usr/local/go/bin
+if [[ -d "$GO_BIN" ]]; then
+    if [[ "$PATH" != *$GO_BIN* ]]; then
+        export PATH="${PATH:+${PATH}:}$GO_BIN"
+    fi
+    export GOPATH="$XDG_DATA_HOME"/go
+    if [[ -d "$GOPATH"/bin ]] && [[ "$PATH" != "*$GOPATH/bin*" ]]; then
+        export PATH="${PATH:+${PATH}:}$GOPATH/bin"
+    fi
+fi
 
 CARGO_HOME="$XDG_DATA_HOME"/cargo
 RUSTUP_HOME="$XDG_DATA_HOME"/rustup
@@ -227,8 +233,8 @@ which nala &>/dev/null && alias apt='nala'
 PROJECTS_DIR="$HOME/projects"
 export PROJECTS_DIR
 
-ascii_art="$PROJECTS_DIR/ascii_art"
-[[ -d "$ascii_art" ]] && source "$ascii_art/ascii.bash"
+ASCII_ART="$PROJECTS_DIR/ascii_art"
+[[ -d "$ASCII_ART" ]] && source "$ASCII_ART/ascii.bash"
 
 
 # wsl settings
@@ -251,11 +257,11 @@ if [[ -n "$WSLENV" ]]; then
         fi
     fi
 
-    print_path() {
+    print-path() {
         printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/'
     }
 else
-    print_path() {
+    print-path() {
         printf "%s\n" "${PATH//:/$'\n'}"
     }
 fi
@@ -280,12 +286,12 @@ alias gdt='git difftool'
 alias gdth='git difftool HEAD'
 alias gdts='git difftool --staged'
 alias gmt='git mergetool'
-alias git_last_message='git show -s --format=%s'
-alias git_reset_last='git reset HEAD~1'
-alias rebase_origin='rebase_remote origin'
-alias rebase_upstream='rebase_remote upstream'
+alias git-last-message='git show -s --format=%s'
+alias git-reset-last='git reset HEAD~1'
+alias rebase-origin='rebase-remote origin'
+alias rebase-upstream='rebase-remote upstream'
 
-get_branch_name() {
+get-branch-name() {
     local dir=$PWD
     if [[ $# != 0 ]]; then
         dir="$1"
@@ -294,24 +300,24 @@ get_branch_name() {
     git -C "$dir" rev-parse --abbrev-ref HEAD
 }
 
-edit_past_commit() {
+edit-past-commit() {
     if [[ $# == 0 ]]; then
         echo "error: missing commit-id"
-        echo "usage: update_past_commit <commit-id>"
+        echo "usage: update-past-commit <commit-id>"
         return 1
     fi
 
     git rebase --interactive "$1"^
 }
 
-rebase_remote() {
+rebase-remote() {
     if [[ $# -eq 0 ]]; then
         echo 'error: need remote name'
-        echo 'usage: rebase_remote <remote> [branch]'
+        echo 'usage: rebase-remote <remote> [branch]'
     fi
 
     local current_branch
-    current_branch=$(get_branch_name "$2")
+    current_branch=$(get-branch-name "$2")
     if [[ -z "$current_branch" ]]; then
         return 1
     fi
@@ -329,7 +335,7 @@ rebase_remote() {
     fi
 }
 
-add_exclude() {
+add-exclude() {
     local repo_config="$PWD"
     if [[ $# -eq 2 ]]; then
         repo_config=$2
@@ -353,12 +359,12 @@ add_exclude() {
     fi
 }
 
-add_exclude_vscode() {
+add-exclude-vscode() {
     local repo=$PWD
     if [[ $# -gt 1 ]]; then
         repo=$1
     fi
-    add_exclude '.vscode/' "$repo"
+    add-exclude '.vscode/' "$repo"
 }
 
 
