@@ -247,6 +247,14 @@ if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *$CARGO_HOME/bin* ]]; then
     export CARGO_HOME
     export RUSTUP_HOME
     export PATH="$CARGO_HOME/bin:$PATH"
+
+    # fd-find
+    if which fd &>/dev/null; then
+        # fzf replace find
+        export FZF_DEFAULT_COMMAND='command fd -HI --type file'
+        export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    fi
+
 fi
 
 
