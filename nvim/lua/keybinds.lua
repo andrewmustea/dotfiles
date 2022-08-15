@@ -1,14 +1,12 @@
 -- keybinds.lua
 --
-local g = vim.g
-
 local function map(mode, keys, exec, opts)
   vim.keymap.set(mode, keys, exec, opts or { silent = true, noremap = true })
 end
 
 -- mimic shell movements
-map("i", "<C-e>", "<Home>")
-map("i", "<C-a>", "<End>")
+map("i", "<C-e>", "<End>")
+map("i", "<C-a>", "<Home>")
 
 map("c", "<C-a>", "<Home>", { noremap = true })
 map("c", "<C-e>", "<End>", { noremap = true })
@@ -19,11 +17,19 @@ map("v", "//", "y/\\V<C-R>=escape(@\",'/\')<CR><CR>")
 -- undo in insert mode
 map("i", "<C-u>", "<ESC>ui", { noremap = true })
 
--- paste from + register
+-- paste from + register while in insert mode
 map("v", "<C-p>", "\"+p")
 
+-- dont yank on paste
+map("x", "p",
+  function()
+    return 'pgv"' .. vim.v.register .. "y"
+  end,
+  { noremap = true, expr = true }
+)
+
 -- vscode keybinds
-if g.vscode ~= nil then
+if vim.g.vscode ~= nil then
   local function workbench_action(action)
     return "<Cmd>call VSCodeNotify('workbench.action."..action.."')<CR>"
   end
