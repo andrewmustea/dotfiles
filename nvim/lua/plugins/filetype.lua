@@ -4,9 +4,10 @@
 require("filetype").setup({
   overrides = {
     literal = {
+      [".luacheckrc"] = "lua",
+      ["bashrc"] = "sh",
       ["env"] = "sh",
       ["gitconfig"] = "gitconfig",
-      [".luacheckrc"] = "lua",
       ["profile"] = "sh",
       ["vimrc"] = "vim"
     }
