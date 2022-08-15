@@ -1,12 +1,14 @@
 -- plugins.lua
 --
 
+
 -- automatically run :PackerCompile whenever plugins.lua is updated
 vim.api.nvim_create_autocmd('BufWritePost', {
     group = vim.api.nvim_create_augroup('PACKER', { clear = true }),
     pattern = 'plugins.lua',
     command = 'source <afile> | PackerCompile',
 })
+
 
 -- packer
 --
@@ -26,20 +28,12 @@ require("packer").startup(function(use)
   })
 
 
-  -- vim info
-  use("dstein64/vim-startuptime")
+  -- vim session info
   use("editorconfig/editorconfig-vim")
-  use("junegunn/vim-peekaboo")
   use({
     "nathom/filetype.nvim",
     config = function()
       require("plugins.filetype")
-    end
-  })
-  use({
-    "rmagatti/auto-session",
-    config = function()
-      require("plugins.auto-session")
     end
   })
 
@@ -67,6 +61,12 @@ require("packer").startup(function(use)
     end
   })
   use("tpope/vim-unimpaired")
+  use({
+    "gbprod/cutlass.nvim",
+    config = function()
+      require("plugins.cutlass")
+    end
+  })
 
 
   -- movement and targets
@@ -107,6 +107,7 @@ require("packer").startup(function(use)
   -- syntax higlighting
   use({
     "andrewmustea/black_sun",
+    after = { "bufferline.nvim", "lualine.nvim", "nvim-treesitter" },
     config = function()
       vim.api.nvim_command("colorscheme black_sun")
     end
@@ -130,17 +131,42 @@ require("packer").startup(function(use)
     { "nvim-treesitter/nvim-treesitter-textobjects", after = "nvim-treesitter" },
     { "nvim-treesitter/nvim-treesitter-refactor", after = "nvim-treesitter" }
   })
-  use("pangloss/vim-javascript")
-  use("preservim/vim-markdown")
-  use("rust-lang/rust.vim")
+  use({
+    "pangloss/vim-javascript",
+    ft = "javascript"
+  })
+  use({
+    "rust-lang/rust.vim",
+    ft = "rust"
+  })
 
 
-  -- vimdiff
-  use("rickhowe/spotdiff.vim")
-  use("AndrewRadev/linediff.vim")
+  -- vim session info
+  use({
+    "dstein64/vim-startuptime",
+    cmd = "StartupTime"
+  })
+  use({
+    "rmagatti/auto-session",
+    config = function()
+      require("plugins.auto-session")
+    end
+  })
+  use("tversteeg/registers.nvim")
 
 
-  -- status lines
+  -- diff
+  use({
+    "AndrewRadev/linediff.vim",
+    event = "DiffUpdated"
+  })
+  use({
+    "rickhowe/spotdiff.vim",
+    event = "DiffUpdated"
+  })
+
+
+  -- buffer and tab line
   use({
     "akinsho/bufferline.nvim",
     requires = "nvim-web-devicons",
@@ -148,27 +174,28 @@ require("packer").startup(function(use)
       require("plugins.bufferline")
     end
   })
+
+
+  -- lualine
   use({
-    "nvim-lualine/lualine.nvim",
-    requires = "nvim-web-devicons",
-    config = function()
-      require("plugins.lualine")
-    end
-  },
-  {
-    "j-hui/fidget.nvim",
-    requires = "lualine",
-    config = function()
-      require("fidget").setup()
-    end
+    {
+      "nvim-lualine/lualine.nvim",
+      requires = "nvim-web-devicons",
+      config = function()
+        require("plugins.lualine")
+      end
+    },
+    {
+      "j-hui/fidget.nvim",
+      requires = "lualine.nvim",
+      config = function()
+        require("fidget").setup()
+      end
+    }
   })
 
 
   -- git
-  use({
-    "junegunn/gv.vim",
-    requires = "vim-fugitive"
-  })
   use({
     "lewis6991/gitsigns.nvim",
     config = function()
@@ -176,7 +203,15 @@ require("packer").startup(function(use)
     end
   })
   use("samoshkin/vim-mergetool")
-  use("tpope/vim-fugitive")
+  use({
+    {
+      "tpope/vim-fugitive"
+    },
+    {
+      "junegunn/gv.vim",
+      requires = "vim-fugitive"
+    }
+  })
 
 
   -- lsp
@@ -198,14 +233,14 @@ require("packer").startup(function(use)
   })
 
 
-  -- fuzzy find
-  use("ctrlpvim/ctrlp.vim")
-  use("junegunn/fzf")
-  use("junegunn/fzf.vim")
+  -- fuzzy find file history
   use({
     "ibhagwan/fzf-lua",
     branch = "main",
-    requires = "nvim-web-devicons"
+    requires = "nvim-web-devicons",
+    config = function()
+      require("plugins.fzf-lua")
+    end
   })
 
 
@@ -218,8 +253,21 @@ require("packer").startup(function(use)
   })
 
 
+  -- markdown preview
+  use({
+    "iamcco/markdown-preview.nvim",
+    ft = { "markdown", "vimwiki" },
+    run = function()
+      vim.fn["mkdp#util#install"]()
+    end,
+  })
+
+
   -- vimwiki
-  use("vimwiki/vimwiki")
+  use({
+    "vimwiki/vimwiki",
+    ft = { "markdown", "vimwiki" }
+  })
 
   ::done::
 end)
