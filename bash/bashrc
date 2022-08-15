@@ -12,10 +12,25 @@ esac
 
 # shell options
 #
+shopt -s autocd
+shopt -s cdspell
+shopt -s checkhash
+shopt -s checkjobs
 shopt -s checkwinsize
-shopt -s histappend
-shopt -s extglob
+shopt -s cmdhist
+shopt -s dirspell
+shopt -s dotglob
 shopt -s expand_aliases
+shopt -s extglob
+shopt -s extquote
+shopt -s globstar
+shopt -s histappend
+shopt -s interactive_comments
+shopt -s no_empty_cmd_completion
+shopt -s progcomp
+shopt -s promptvars
+shopt -s sourcepath
+shopt -s xpg_echo
 if ! shopt -oq posix; then
     if [ -f /usr/share/bash-completion/bash_completion ]; then
         source /usr/share/bash-completion/bash_completion
