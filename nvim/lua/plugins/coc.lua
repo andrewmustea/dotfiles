@@ -15,7 +15,7 @@ vim.g.coc_global_extensions = {
   "coc-html-css-support", "coc-java", "coc-jedi", "coc-json", "coc-lists",
   "coc-markdownlint", "coc-markdown-preview-enhanced", "coc-markmap",
   "coc-perl", "coc-prettier", "coc-pydocstring", "coc-pyright", "coc-python",
-  "coc-rls", "coc-rome", "coc-rust-analyzer", "coc-sh", "coc-stylelintplus",
+  "coc-rome", "coc-rust-analyzer", "coc-sh", "coc-stylelintplus",
   "coc-stylelint", "coc-snippets", "coc-sql", "coc-tsserver", "coc-vimlsp",
   "coc-xml", "coc-yaml", "coc-yank"
 }
