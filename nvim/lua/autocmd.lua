@@ -13,9 +13,8 @@ api.nvim_create_user_command("ShowHighlights", "silent runtime syntax/hitest.vim
 api.nvim_create_user_command("HighlightGroup", "echo synIDattr(synID(line('.'),col('.'),1),'name')", { bang = true })
 
 -- split helpfiles vertically to the left
-local vert_help = api.nvim_create_augroup('vert_help', { clear = true })
 api.nvim_create_autocmd('BufEnter', {
-  group = vert_help,
+  group = api.nvim_create_augroup('vert_help', { clear = true }),
   pattern = {"*.txt"},
   callback =
     function()
@@ -26,9 +25,8 @@ api.nvim_create_autocmd('BufEnter', {
 })
 
 -- remove trailing whitespace on save
-local strip_whitespace = api.nvim_create_augroup('strip_whitespace', { clear = true })
 api.nvim_create_autocmd('BufWritePre', {
-  group = strip_whitespace,
+  group = api.nvim_create_augroup('strip_whitespace', { clear = true }),
   callback =
     function()
       local ignore_files = { ruby = true, javascript = true, perl = true, diff = true }
@@ -45,9 +43,8 @@ api.nvim_create_autocmd('BufWritePre', {
 if fn.has("wsl") then
   local clip = "/mnt/c/Windows/System32/clip.exe"
   if fn.executable(clip) then
-    local wsl_yank = api.nvim_create_augroup('wsl_yank', { clear = true })
     api.nvim_create_autocmd('TextYankPost', {
-      group = wsl_yank,
+      group = api.nvim_create_augroup('wsl_yank', { clear = true }),
       callback =
         function()
           if vim.v.event.operator == "y" then
