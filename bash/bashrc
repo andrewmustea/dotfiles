@@ -203,21 +203,30 @@ export GHCUP_USE_XDG_DIRS=true
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME"/npm/npmrc
 
 
-# environments and path
+# local home bin
 #
 HOME_BIN="$HOME/.local/bin"
 if [[ "$PATH" != *$HOME_BIN* ]]; then
     export PATH="${PATH:+${PATH}:}$HOME_BIN"
 fi
 
+
+# lua lsp
+#
 LUA_LSP="$XDG_DATA_HOME/lua-language-server/bin"
 if [[ -d "$LUA_LSP" ]] && [[ "$PATH" != *$LUA_LSP* ]]; then
     export PATH="${PATH:+${PATH}:}$LUA_LSP"
 fi
 
+
+# fzf
+#
 FZF_ENV="$XDG_CONFIG_HOME/fzf/fzf.bash"
 [[ -f "$FZF_ENV" ]] && source "$FZF_ENV"
 
+
+# go
+#
 GO_BIN=/usr/local/go/bin
 if [[ -d "$GO_BIN" ]]; then
     if [[ "$PATH" != *$GO_BIN* ]]; then
@@ -229,6 +238,9 @@ if [[ -d "$GO_BIN" ]]; then
     fi
 fi
 
+
+# rust
+#
 CARGO_HOME="$XDG_DATA_HOME"/cargo
 RUSTUP_HOME="$XDG_DATA_HOME"/rustup
 if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *$CARGO_HOME/bin* ]]; then
@@ -237,6 +249,9 @@ if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *$CARGO_HOME/bin* ]]; then
     export PATH="$CARGO_HOME/bin:$PATH"
 fi
 
+
+# cabal
+#
 CABAL_CONFIG="$XDG_CONFIG_HOME"/cabal/config
 CABAL_DIR="$XDG_DATA_HOME"/cabal
 if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *$CABAL_DIR/bin* ]]; then
@@ -245,6 +260,9 @@ if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *$CABAL_DIR/bin* ]]; then
     export PATH="$CABAL_DIR/bin:$PATH"
 fi
 
+
+# nala
+#
 which nala &>/dev/null && alias apt='nala'
 
 
@@ -310,6 +328,7 @@ alias git-last-message='git show -s --format=%s'
 alias git-reset-last='git reset HEAD~1'
 alias rebase-origin='rebase-remote origin'
 alias rebase-upstream='rebase-remote upstream'
+
 
 get-branch-name() {
     local dir=$PWD
