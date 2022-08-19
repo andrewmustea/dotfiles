@@ -241,11 +241,9 @@ fi
 
 # rust
 #
-CARGO_HOME="$XDG_DATA_HOME"/cargo
-RUSTUP_HOME="$XDG_DATA_HOME"/rustup
+export CARGO_HOME="$XDG_DATA_HOME"/cargo
+export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
 if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *$CARGO_HOME/bin* ]]; then
-    export CARGO_HOME
-    export RUSTUP_HOME
     export PATH="$CARGO_HOME/bin:$PATH"
 
     # fd-find
@@ -260,11 +258,9 @@ fi
 
 # cabal
 #
-CABAL_CONFIG="$XDG_CONFIG_HOME"/cabal/config
-CABAL_DIR="$XDG_DATA_HOME"/cabal
+export CABAL_CONFIG="$XDG_CONFIG_HOME"/cabal/config
+export CABAL_DIR="$XDG_DATA_HOME"/cabal
 if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *$CABAL_DIR/bin* ]]; then
-    export CABAL_CONFIG
-    export CABAL_DIR
     export PATH="$CABAL_DIR/bin:$PATH"
 fi
 
