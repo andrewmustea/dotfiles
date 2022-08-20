@@ -233,7 +233,7 @@ if [[ -d "$GO_BIN" ]]; then
         export PATH="${PATH:+${PATH}:}$GO_BIN"
     fi
     export GOPATH="$XDG_DATA_HOME"/go
-    if [[ -d "$GOPATH"/bin ]] && [[ "$PATH" != "*$GOPATH/bin*" ]]; then
+    if [[ -d "$GOPATH"/bin ]] && [[ "$PATH" != *$GOPATH/bin* ]]; then
         export PATH="${PATH:+${PATH}:}$GOPATH/bin"
     fi
 fi
