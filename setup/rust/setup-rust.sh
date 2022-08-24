@@ -2,7 +2,7 @@
 
 # Setup rust and rust binaries
 
-if ! which cargo /dev/null 2>&1; then
+if ! which cargo >/dev/null 2>&1; then
     read -rp "Cargo not installed. Proceed to install? [Y/n] " response
     case "$response" in
         [yY] | [yY][eE][sS] | "")
