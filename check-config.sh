@@ -11,7 +11,7 @@
 git submodule update --init --recursive
 
 if ! [ -d ~/.config/bat ]; then
-    cp bat/ ~/.config/
+    cp -rf bat/ ~/.config/
 
     # maybe check if bat cache --build is done?
     which bat > /dev/null 2>&1 && bat cache --build
@@ -25,6 +25,7 @@ diff -qr bat/ ~/.config/bat/ && cp -rf bat "$XDG_DATA_HOME"
 diff bash/bashrc ~/.bashrc
 diff bash/bash.bashrc /etc/bash.bashrc
 diff bash/bash_profile ~/.bash_profile
+diff bash/bash_logout ~/.bash_logout
 
 
 # cabal
