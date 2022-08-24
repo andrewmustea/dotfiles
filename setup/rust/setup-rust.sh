@@ -24,11 +24,17 @@ if ! which cargo >/dev/null 2>&1; then
     [ -z "$XDG_STATE_HOME" ] && export XDG_STATE_HOME="$HOME/.local/state"
     [ -z "$XDG_CACHE_HOME" ] && export XDG_CACHE_HOME="$HOME/.cache"
 
+
+    export CARGO_HOME="$XDG_DATA_HOME"/cargo
+    export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
+
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | \
         sh -s -- --no-modify-path -y
 
     mkdir --parents ~/.local/share/bash-completion/completions
     rustup completions bash > ~/.local/share/bash-completion/completions/rustup
+
+    source "$XDG_DATA_HOME/cargo/env"
 fi
 
 cargo install \
