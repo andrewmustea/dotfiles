@@ -46,3 +46,11 @@ fi
 
 cabal install ShellCheck
 
+case ":$PATH:" in
+    *:"$XDG_STATE_HOME/cabal/bin":*)
+        ;;
+    *)
+        export PATH="$XDG_STATE_HOME/cabal/bin:$PATH"
+        ;;
+esac
+
