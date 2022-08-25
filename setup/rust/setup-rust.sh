@@ -3,7 +3,8 @@
 # Setup rust and rust binaries
 
 if ! which cargo >/dev/null 2>&1; then
-    read -rp "Cargo not installed. Proceed to install? [Y/n] " response
+    printf "Cargo not installed. Proceed to install? [Y/n] "
+    read -r response
     case "$response" in
         [yY] | [yY][eE][sS] | "")
             ;;
@@ -34,7 +35,7 @@ if ! which cargo >/dev/null 2>&1; then
     mkdir --parents ~/.local/share/bash-completion/completions
     rustup completions bash > ~/.local/share/bash-completion/completions/rustup
 
-    source "$XDG_DATA_HOME/cargo/env"
+    . "$XDG_DATA_HOME/cargo/env"
 fi
 
 cargo install \
