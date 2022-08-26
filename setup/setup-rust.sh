@@ -32,10 +32,12 @@ if ! which cargo >/dev/null 2>&1; then
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | \
         sh -s -- --no-modify-path -y
 
+    # source rust environment
+    . "$XDG_DATA_HOME/cargo/env"
+
+    # add rustup bash-completiona
     mkdir --parents ~/.local/share/bash-completion/completions
     rustup completions bash > ~/.local/share/bash-completion/completions/rustup
-
-    . "$XDG_DATA_HOME/cargo/env"
 fi
 
 cargo install \
@@ -44,4 +46,7 @@ cargo install \
 cargo install -f --git https://github.com/jez/as-tree
 
 cargo install-update --all
+
+# build bat bache
+bat cache --build
 
