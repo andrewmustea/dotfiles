@@ -73,10 +73,11 @@ fi
 # bash history
 #
 PROMPT_COMMAND='history -a'
-HISTSIZE=100000
+HISTSIZE=10000
 HISTFILESIZE=100000
 export HISTCONTROL=ignoredups
 export HISTIGNORE='history:pwd:ls:ll:la:l:'
+export HISTTIMEFORMAT='%F %T '
 export HISTFILE="${XDG_STATE_HOME}"/bash/history
 
 
