@@ -2,6 +2,7 @@
 
 # Setup haskell and haskell binaries
 
+# install haskell
 if ! which cabal >/dev/null 2>&1; then
     printf "Cabal not installed. Proceed to install? [Y/n] "
     read -r response
@@ -44,13 +45,14 @@ if ! which cabal >/dev/null 2>&1; then
     esac
 fi
 
-cabal install ShellCheck
-
-case ":$PATH:" in
-    *:"$XDG_STATE_HOME/cabal/bin":*)
-        ;;
-    *)
-        export PATH="$XDG_STATE_HOME/cabal/bin:$PATH"
-        ;;
-esac
+# install binaries
+if cabal install ShellCheck; then
+    case ":$PATH:" in
+        *:"$XDG_DATA_HOME/cabal/bin":*)
+            ;;
+        *)
+            export PATH="$XDG_DATA_HOME/cabal/bin:$PATH"
+            ;;
+    esac
+fi
 
