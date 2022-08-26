@@ -27,8 +27,6 @@
     cmd = nvim -f -c "MergetoolStart" "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
 [push]
     autoSetupRemote = true
-[url "https://"]
-    insteadOf = git://
 [delta "pompous-panther"]
     #author: https://github.com/andrewmustea
     blame-code-style = syntax
@@ -61,4 +59,6 @@
     line-numbers-plus-style = green
     plus-emph-style = "#bbbbbb" "#105010"
     plus-style = "#bbbbbb" "#003000"
+[url "https://"]
+    insteadOf = git://
 
