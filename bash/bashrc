@@ -261,14 +261,6 @@ export CARGO_HOME="$DATA"/cargo
 export RUSTUP_HOME="$DATA"/rustup
 if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *$CARGO_HOME/bin* ]]; then
     export PATH="$CARGO_HOME/bin:$PATH"
-
-    # fd-find
-    if which fd &>/dev/null; then
-        # fzf replace find
-        export FZF_DEFAULT_COMMAND='command fd -HI --type file'
-        export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-    fi
-
 fi
 
 
@@ -297,8 +289,24 @@ fi
 
 # fzf
 #
+FZF_DIR="$DATA/fzf"
 FZF_ENV="$CONFIG/fzf/fzf.bash"
-[[ -f "$FZF_ENV" ]] && source "$FZF_ENV"
+[[ -f "$FZF_ENV" ]] && [[ -x "$FZF_DIR/bin/fzf" ]] && source "$FZF_ENV"
+
+update-fzf() {
+    if ! [[ -d $FZF_DIR ]]; then
+        echo "Couldn't find fzf direcotry in '$FZF_DIR'"
+        exit 1
+    fi
+    git -C "$FZF_DIR" pull
+    "$FZF_DIR/install --xdg --bin"
+}
+
+# fzf uses fd-find
+if which fd &>/dev/null; then
+    export FZF_DEFAULT_COMMAND='command fd -HI --type file'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+fi
 
 
 # lua lsp
