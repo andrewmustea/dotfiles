@@ -366,19 +366,19 @@ alias rebase-origin='rebase-remote origin'
 alias rebase-upstream='rebase-remote upstream'
 
 
-# git functions
-#
+# print the branch name of the current directory or a given one
 get-branch-name() {
     local dir=$PWD
-    if [[ $# != 0 ]]; then
+    if [[ -n "$1" ]]; then
         dir="$1"
     fi
 
     git -C "$dir" rev-parse --abbrev-ref HEAD
 }
 
-edit-past-commit() {
-    if [[ $# == 0 ]]; then
+# run an interactive rebase starting at a given commit
+rebase-commit() {
+    if [[ -z "$1" ]]; then
         echo "error: missing commit-id"
         echo "usage: update-past-commit <commit-id>"
         return 1
@@ -387,6 +387,7 @@ edit-past-commit() {
     git rebase --interactive "$1"^
 }
 
+# rebase a branch on a given remote without having to manually stash any changes
 rebase-remote() {
     if [[ $# -eq 0 ]]; then
         echo 'error: need remote name'
@@ -412,6 +413,7 @@ rebase-remote() {
     fi
 }
 
+# add a line to a repositories .git/info/exclude
 add-exclude() {
     local repo_config="$PWD"
     if [[ $# -eq 2 ]]; then
@@ -436,9 +438,10 @@ add-exclude() {
     fi
 }
 
+# add the hidden .vscode directory to .git/info/exclude
 add-exclude-vscode() {
     local repo=$PWD
-    if [[ $# -gt 1 ]]; then
+    if [[ -n "$1" ]]; then
         repo=$1
     fi
     add-exclude '.vscode/' "$repo"
