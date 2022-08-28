@@ -57,17 +57,22 @@ fi
 
 # XDG defaults
 #
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_STATE_HOME="$HOME/.local/state"
-export XDG_CACHE_HOME="$HOME/.cache"
+export DATA="$HOME/.local/share"
+export CONFIG="$HOME/.config"
+export STATE="$HOME/.local/state"
+export CACHE="$HOME/.cache"
+export XDG_DATA_HOME=$DATA
+export XDG_CONFIG_HOME=$CONFIG
+export XDG_STATE_HOME=$STATE
+export XDG_CACHE_HOME=$CACHE
 
 if pidof "systemd" &>/dev/null; then
-    export XDG_RUNTIME_DIR="/run/user/$UID"
+    RUNTIME="/run/user/$UID"
 else
     mkdir --parents /tmp/user/${UID}
-    export XDG_RUNTIME_DIR="/tmp/user/$UID"
+    RUNTIME="/tmp/user/$UID"
 fi
+export XDG_RUNTIME_DIR=$RUNTIME
 
 
 # bash history
@@ -78,7 +83,7 @@ HISTFILESIZE=100000
 export HISTCONTROL=ignoredups
 export HISTIGNORE='history:pwd:ls:ll:la:l:'
 export HISTTIMEFORMAT='%F %T '
-export HISTFILE="${XDG_STATE_HOME}"/bash/history
+export HISTFILE="${STATE}"/bash/history
 
 
 # --------------------------------------------------
@@ -88,23 +93,23 @@ export HISTFILE="${XDG_STATE_HOME}"/bash/history
 
 # xauth
 #
-export XAUTHORITY="$XDG_RUNTIME_DIR"/Xauthority
+export XAUTHORITY="$RUNTIME"/Xauthority
 
 
 # wget
 #
-alias wget="wget --hsts-file=\"$XDG_DATA_HOME/wget-hsts\""
+alias wget="wget --hsts-file=\"$DATA/wget-hsts\""
 
 
 # azure
 #
-export AZURE_CONFIG_DIR="$XDG_DATA_HOME"/azure
-export AZURE_DEVOPS_CACHE_DIR="$XDG_CACHE_HOME"/azure-devops
+export AZURE_CONFIG_DIR="$DATA"/azure
+export AZURE_DEVOPS_CACHE_DIR="$CACHE"/azure-devops
 
 
 # npm
 #
-export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME"/npm/npmrc
+export NPM_CONFIG_USERCONFIG="$CONFIG"/npm/npmrc
 
 
 # --------------------------------------------------
@@ -142,8 +147,8 @@ export GCC_COLORS
 #
 GPG_TTY=$(tty)
 export GPG_TTY
-export GNUPGHOME="$XDG_DATA_HOME"/gnupg
-export PASSWORD_STORE_DIR="$XDG_DATA_HOME"/pass
+export GNUPGHOME="$DATA"/gnupg
+export PASSWORD_STORE_DIR="$DATA"/pass
 
 
 # diff
@@ -157,7 +162,7 @@ export EDITOR='nvim'
 which vim &>/dev/null && alias vim='nvim'
 alias {vi,nvi}='nvim'
 alias {vd,nvd,nvimdiff}='nvim -d'
-alias nvim-remove-swap='rm -rf ~/.local/share/nvim/swap/'
+alias nvim-remove-swap='rm -rf "$XDG_DATA_HOME/nvim/swap/"'
 
 
 # less
@@ -178,7 +183,7 @@ export LESS_TERMCAP_so
 export LESS_TERMCAP_ue
 export LESS_TERMCAP_us
 
-export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
+export LESSHISTFILE="$CACHE"/less/history
 alias less='less -QR'
 alias man='man -P "less -QR"'
 
@@ -240,8 +245,8 @@ pip-update-all() {
 
 # rust
 #
-export CARGO_HOME="$XDG_DATA_HOME"/cargo
-export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
+export CARGO_HOME="$DATA"/cargo
+export RUSTUP_HOME="$DATA"/rustup
 if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *$CARGO_HOME/bin* ]]; then
     export PATH="$CARGO_HOME/bin:$PATH"
 
@@ -262,7 +267,7 @@ if [[ -d "$GO_BIN" ]]; then
     if [[ "$PATH" != *$GO_BIN* ]]; then
         export PATH="${PATH:+${PATH}:}$GO_BIN"
     fi
-    export GOPATH="$XDG_DATA_HOME"/go
+    export GOPATH="$DATA"/go
     if [[ -d "$GOPATH"/bin ]] && [[ "$PATH" != *$GOPATH/bin* ]]; then
         export PATH="${PATH:+${PATH}:}$GOPATH/bin"
     fi
@@ -272,8 +277,7 @@ fi
 # haskell
 #
 export GHCUP_USE_XDG_DIRS=true
-export CABAL_CONFIG="$XDG_CONFIG_HOME"/cabal/config
-export CABAL_DIR="$XDG_DATA_HOME"/cabal
+export CABAL_DIR="$DATA"/cabal
 if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *$CABAL_DIR/bin* ]]; then
     export PATH="$CABAL_DIR/bin:$PATH"
 fi
@@ -281,13 +285,13 @@ fi
 
 # fzf
 #
-FZF_ENV="$XDG_CONFIG_HOME/fzf/fzf.bash"
+FZF_ENV="$CONFIG/fzf/fzf.bash"
 [[ -f "$FZF_ENV" ]] && source "$FZF_ENV"
 
 
 # lua lsp
 #
-LUA_LSP="$XDG_DATA_HOME/lua-language-server/bin"
+LUA_LSP="$DATA/lua-language-server/bin"
 if [[ -d "$LUA_LSP" ]] && [[ "$PATH" != *$LUA_LSP* ]]; then
     export PATH="${PATH:+${PATH}:}$LUA_LSP"
 fi
