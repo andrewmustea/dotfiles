@@ -86,6 +86,33 @@ export HISTTIMEFORMAT='%F %T '
 export HISTFILE="${STATE}"/bash/history
 
 
+# distro settings
+#
+DISTRO="$(grep "^ID=" /etc/os-release | awk -F "=" '{ print $2 }')"
+unset ARCH UBUNTU
+
+if [[ "$DISTRO" == "arch" ]]; then
+    export ARCH=1
+    PACKAGE_MANAGER=pacman
+    if which paru &>/dev/null; then
+        export PACKAGE_MANAGER=paru
+    elif which yay &>/dev/null; then
+        export PACKAGE_MANAGER=yay
+    else
+        echo "No AUR helper detected. Using pacman as the package manager."
+    fi
+
+    alias pac='"$PACKAGE_MANAGER"'
+    alias pacsearch='$PACKAGE_MANAGER -Ss'
+    alias pacquery='$PACKAGE_MANAGER -Q'
+elif [[ "$DISTRO" == "ubuntu" ]]; then
+    UBUNTU=1
+    which nala &>/dev/null && alias apt='nala'
+else
+    echo "Unknown Linux Distro: $DISTRO"
+fi
+
+
 # --------------------------------------------------
 # extra XDG settings
 # --------------------------------------------------
@@ -249,6 +276,7 @@ fi
 # python
 #
 alias {pip,pip3}='python3 -m pip'
+
 pip-update-all() {
     sudo -H pip list --outdated --format=freeze | grep -v '^\-e' | \
         cut -d = -f 1 | xargs -n1 sudo -H pip install -U
@@ -259,31 +287,33 @@ pip-update-all() {
 #
 export CARGO_HOME="$DATA"/cargo
 export RUSTUP_HOME="$DATA"/rustup
-if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *$CARGO_HOME/bin* ]]; then
-    export PATH="$CARGO_HOME/bin:$PATH"
-fi
+[[ -n "$UBUNTU" ]] && [[ -d "$CARGO_HOME/bin" ]] && \
+    [[ "$PATH" != *$CARGO_HOME/bin* ]] && export PATH="$CARGO_HOME/bin:$PATH"
 
 
 # go
 #
-GO_BIN=/usr/local/go/bin
-if [[ -d "$GO_BIN" ]]; then
-    if [[ "$PATH" != *$GO_BIN* ]]; then
-        export PATH="${PATH:+${PATH}:}$GO_BIN"
-    fi
-    export GOPATH="$DATA"/go
-    if [[ -d "$GOPATH"/bin ]] && [[ "$PATH" != *$GOPATH/bin* ]]; then
-        export PATH="${PATH:+${PATH}:}$GOPATH/bin"
+if [[ -n "$UBUNTU" ]]; then
+    GO_BIN=/usr/local/go/bin
+    if [[ -d "$GO_BIN" ]]; then
+        if [[ "$PATH" != *$GO_BIN* ]]; then
+            export PATH="${PATH:+${PATH}:}$GO_BIN"
+        fi
+        export GOPATH="$DATA"/go
+        if [[ -d "$GOPATH"/bin ]] && [[ "$PATH" != *$GOPATH/bin* ]]; then
+            export PATH="${PATH:+${PATH}:}$GOPATH/bin"
+        fi
     fi
 fi
 
 
 # haskell
 #
-export GHCUP_USE_XDG_DIRS=true
-export CABAL_DIR="$DATA"/cabal
-if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *$CABAL_DIR/bin* ]]; then
-    export PATH="$CABAL_DIR/bin:$PATH"
+if [[ -n "$UBUNTU" ]]; then
+    export CABAL_DIR="$DATA"/cabal
+    if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *$CABAL_DIR/bin* ]]; then
+        export PATH="$CABAL_DIR/bin:$PATH"
+    fi
 fi
 
 
@@ -315,11 +345,6 @@ LUA_LSP="$DATA/lua-language-server/bin"
 if [[ -d "$LUA_LSP" ]] && [[ "$PATH" != *$LUA_LSP* ]]; then
     export PATH="${PATH:+${PATH}:}$LUA_LSP"
 fi
-
-
-# nala
-#
-which nala &>/dev/null && alias apt='nala'
 
 
 # --------------------------------------------------
