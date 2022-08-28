@@ -146,6 +146,11 @@ require("packer").startup(function(use)
     ft = "rust",
     disable = vscode
   })
+  use({
+    "kergoth/vim-bitbake",
+    ft = "bb",
+    disable = vscode
+  })
 
 
   -- vim session info
