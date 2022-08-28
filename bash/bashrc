@@ -211,6 +211,18 @@ if [[ -n "$WSLENV" ]]; then
         fi
     fi
 
+    # windows paths
+    winpath="$(powershell.exe -command "echo \"\${env:USERPROFILE}\"")"
+
+    WIN_USER="$(wslpath "$winpath")"
+    export WIN_USER
+    export WIN_DOC="$WIN_USER/Documents"
+    export WIN_DOWN="$WIN_USER/Downloads"
+
+    alias win_user='cd "$WIN_USER"'
+    alias win_doc='cd "$WIN_DOC"'
+    alias win_down='cd "$WIN_DOWN"'
+
     print-path() {
         printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/'
     }
