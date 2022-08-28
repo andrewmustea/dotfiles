@@ -1,18 +1,17 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-if [[ -z ${XDG_DATA_HOME} ]]; then
-    export XDG_DATA_HOME="$HOME/.local/share"
-fi
+[[ -z ${XDG_DATA_HOME} ]] && export XDG_DATA_HOME="$HOME/.local/share"
 
 # Setup fzf
 # ---------
-if [[ ! "$PATH" == *$XDG_DATA_HOME/fzf/bin* ]]; then
+if [[ "$PATH" != *$XDG_DATA_HOME/fzf/bin* ]]; then
     PATH="${PATH:+${PATH}:}$XDG_DATA_HOME/fzf/bin"
 fi
 
 # Auto-completion
 # ---------------
-[[ $- == *i* ]] && source "$XDG_DATA_HOME/fzf/shell/completion.bash" 2> /dev/null
+[[ $- == *i* ]] && \
+    source "$XDG_DATA_HOME/fzf/shell/completion.bash" 2> /dev/null
 
 # Key bindings
 # ------------
