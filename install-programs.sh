@@ -189,14 +189,22 @@ fi
 # rust
 # --------------------
 
-[ "$DISTRO" != "arch" ] && ./rust/setup-rust.sh
+if [ "$DISTRO" = "arch" ]; then
+    dist_install rust
+else
+    ./rust/setup-rust.sh
+fi
 
 
 # --------------------
 # haskell
 # --------------------
 
-[ "$DISTRO" != "arch" ] && ./haskell/setup-haskell.sh
+if [ "$DISTRO" = "arch" ]; then
+    dist_install rust
+else
+    ./haskell/setup-haskell.sh
+fi
 
 
 # --------------------
