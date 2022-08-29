@@ -139,6 +139,11 @@ export AZURE_DEVOPS_CACHE_DIR="$CACHE"/azure-devops
 export NPM_CONFIG_USERCONFIG="$CONFIG"/npm/npmrc
 
 
+# gem
+#
+export GEM_SPEC_CACHE="${XDG_CACHE_HOME}"/gem
+
+
 # --------------------------------------------------
 # interactive bash settings
 # --------------------------------------------------
