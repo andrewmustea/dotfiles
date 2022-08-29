@@ -273,7 +273,8 @@ fi
 if ! which lua-language-server >/dev/null 2>&1; then
     dist_install ninja-build
     # check if gcc >= 9?
-    git clone  --depth=1 https://github.com/sumneko/lua-language-server "$XDG_DATA_HOME/lua-language-server"
+    git clone --depth=1 https://github.com/sumneko/lua-language-server \
+        "$XDG_DATA_HOME/lua-language-server"
     cd "$XDG_DATA_HOME/lua-language-server" || exit 1
     git submodule update --depth 1 --init --recursive
 
@@ -291,7 +292,11 @@ if ! which lua-language-server >/dev/null 2>&1; then
     esac
 fi
 
+
+# --------------------
 # vscode
+# --------------------
+
 MAXUSERWATCHES="fs.inotify.max_user_watches = 524288"
 if ! grep -q "$MAXUSERWATCHES" /etc/sysctl.conf; then
     echo "$MAXUSERWATCHES" | command sudo tee -a /etc/sysctl.conf
