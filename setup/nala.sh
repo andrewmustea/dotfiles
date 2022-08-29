@@ -17,13 +17,13 @@ echo "deb https://deb.volian.org/volian/ scar main" | \
 wget -qO - https://deb.volian.org/volian/scar.key | \
     command sudo tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > /dev/null
 
-apt update
+sudo apt update
 
 if [ "$RELEASE" -lt 22 ]; then
     echo "Installing nala-legacy..."
-    apt install nala-legacy
+    sudo apt install nala-legacy
 else
     echo "Installing nala..."
-    apt install nala
+    sudo apt install nala
 fi
 
