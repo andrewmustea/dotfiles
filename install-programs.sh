@@ -11,10 +11,12 @@
 
 DISTRO="$(grep "^ID=" /etc/os-release | awk -F "=" '{ print $2 }')"
 
+unset RELEASE
 if [ "$DISTRO" = "arch" ]; then
     alias dist_install="sudo pacman -S --noconfirm "
 elif [ "$DISTRO" = "ubuntu" ]; then
     alias dist_install="sudo apt install -y "
+    RELEASE=$(lsb_release -r | awk '{ split($2, a, "."); print a[1] }')
 else
     echo "Unknown or unimplemented distro: $DISTRO"
     exit 1
@@ -103,6 +105,18 @@ if [ "$DISTRO" = "ubuntu" ]; then
 
     # node
     curl -fsSL https://deb.nodesource.com/setup_18.x | command sudo bash
+
+    # sudo update
+    url_latest="https://api.github.com/repos/sudo-project/sudo/releases/latest"
+    info="$(curl -s "$url_latest")"
+    name="$(printf "%s" "$info" | grep "\"name\".*sudo_.*ubu$RELEASE" | \
+        awk '/name/ { gsub(/[",]/,""); print $2}')"
+    link="$(printf "%s" "$info" | grep "\"browser_download_url\".*$name" | \
+        awk '/browser_download_url/ { gsub(/[",]/,""); print $2}')"
+
+    wget -cq "$link" -P /tmp
+    sudo dpkg -i "/tmp/$name"
+    rm "/tmp/$name"
 fi
 
 
