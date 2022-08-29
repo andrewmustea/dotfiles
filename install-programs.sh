@@ -97,8 +97,8 @@ if [ "$DISTRO" = "ubuntu" ]; then
     # no motd
     sudo chmod -x /etc/update-motd.d/*
 
-    # eliminate snap (gross)
-    sudo apt purge snapd
+    # eliminate snap (gross) and motd
+    sudo apt purge snapd update-motd show-motd
     # ppas
     sudo add-apt-repository -y ppa:neovim-ppa/stable
     sudo add-apt-repository -y ppa:git-core/ppa
