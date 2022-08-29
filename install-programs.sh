@@ -91,6 +91,8 @@ git config --global user.email "$EMAIL"
 # --------------------
 
 if [ "$DISTRO" = "ubuntu" ]; then
+    # nala
+    ./setup/nala.sh
 
     # no motd
     sudo chmod -x /etc/update-motd.d/*
