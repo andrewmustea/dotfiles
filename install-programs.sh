@@ -141,17 +141,11 @@ git clone --depth 1 https://github.com/wbthomason/packer.nvim \
 # fzf
 # --------------------
 
-if [ "$DISTRO" != "arch" ]; then
-    if ! which fzf >/dev/null 2>&1; then
-        git clone https://github.com/junegunn/fzf.git "$XDG_DATA_HOME/fzf"
-        "$XDG_DATA_HOME/fzf/install" --xdg
-    else
-        git -C "$XDG_DATA_HOME/fzf" pull
-        "$XDG_DATA_HOME/fzf/install --xdg"
-    fi
-    cp fzf/fzf.bash "$XDG_CACHE_HOME/fzf/fzf.bash"
+if [ -n "$ARCH" ]; then
+    dist_install fzf
+else
+    ./setup/fzf.sh
 fi
-
 
 
 # --------------------
