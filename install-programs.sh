@@ -106,7 +106,7 @@ if [ "$DISTRO" = "ubuntu" ]; then
     sudo apt install git
 
     # node
-    curl -fsSL https://deb.nodesource.com/setup_18.x | command sudo bash
+    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo bash
 
     # sudo update
     url_latest="https://api.github.com/repos/sudo-project/sudo/releases/latest"
@@ -239,11 +239,12 @@ if [ "$DISTRO" = "ubuntu" ]; then
 
     curl -sL https://packages.microsoft.com/keys/microsoft.asc |
         gpg --dearmor |
-        command sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
+        sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
 
     AZ_REPO=$(lsb_release -cs)
-    echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" |
-    command sudo tee /etc/apt/sources.list.d/azure-cli.list
+    echo "deb [arch=amd64] \
+        https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" |
+    sudo tee /etc/apt/sources.list.d/azure-cli.list
 
     sudo apt update
     sudo apt install -y azure-cli
@@ -299,6 +300,6 @@ fi
 
 MAXUSERWATCHES="fs.inotify.max_user_watches = 524288"
 if ! grep -q "$MAXUSERWATCHES" /etc/sysctl.conf; then
-    echo "$MAXUSERWATCHES" | command sudo tee -a /etc/sysctl.conf
+    echo "$MAXUSERWATCHES" | sudo tee -a /etc/sysctl.conf
 fi
 
