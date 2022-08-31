@@ -322,6 +322,7 @@ fi
 
 # haskell
 #
+export STACK_ROOT="$XDG_DATA_HOME"/stack
 if [[ -n "$UBUNTU" ]]; then
     export CABAL_DIR="$DATA"/cabal
     if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *$CABAL_DIR/bin* ]]; then
