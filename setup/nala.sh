@@ -13,9 +13,10 @@ if [ "$RELEASE" -lt 20 ]; then
 fi
 
 echo "deb https://deb.volian.org/volian/ scar main" | \
-    command sudo tee /etc/apt/sources.list.d/volian-archive-scar-unstable.list
+    sudo tee /etc/apt/sources.list.d/volian-archive-scar-unstable.list
 wget -qO - https://deb.volian.org/volian/scar.key | \
-    command sudo tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > /dev/null
+    sudo tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > \
+    /dev/null
 
 sudo apt update
 
