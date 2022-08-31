@@ -8,7 +8,7 @@ fi
 
 RELEASE=$(lsb_release -r | awk '{ split($2, a, "."); print a[1] }')
 if [ "$RELEASE" -lt 20 ]; then
-    echo -e "Nala requires Ubuntu OS release >=20.04 \nExiting"
+    printf "Nala requires Ubuntu OS release >=20.04 \nExiting"
     exit 1
 fi
 
