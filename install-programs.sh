@@ -24,6 +24,88 @@ fi
 
 
 # --------------------
+# github functions
+# --------------------
+
+# get a json message of a repository's latest release
+# $1 - github repository [github_username/repository]
+get_latest_release_data() {
+    if [ -z "$1" ]; then
+        echo "Missing repository details"
+        echo "Usage: get_github_data <github_username/repository>"
+        exit 1
+    elif [ -n "$2" ]; then
+        echo "Too many arguments: $*"
+        echo "Usage: get_github_data <github_username/repository>"
+        exit 1
+    fi
+
+    curl -s "https://api.github.com/repos/$1/releases/latest"
+}
+
+# get name of latest release
+# $1 - github data json file
+# $2 - search pattern for name
+get_release_name() {
+    if [ -z "$2" ]; then
+        echo "Not enough arguments: $*"
+        echo "get_github_name <github_json> <search-pattern>"
+        exit 1
+    elif [ -n "$3" ]; then
+        echo "Too many arguments: $*"
+        echo "get_github_name <github_json> <search-pattern>"
+        exit 1
+    fi
+
+    printf "%s" "$1" | grep "\"name\".*$2" | \
+        awk '/name/ { gsub(/[",]/,""); print $2}'
+}
+
+# get the download url for a given github release and name
+# $1 - github data json file
+# $2 - name
+get_release_url() {
+    if [ -z "$1" ]; then
+        echo "Missing argument"
+        echo "Usage: get_release_url <github_json> <release_name>"
+        exit 1
+    elif [ -n "$3" ]; then
+        echo "Too many arugments: $*"
+        echo "Usage: get_release_url <github_json> <release_name>"
+        exit 1
+    fi
+
+    printf "%s" "$1" | grep "\"browser_download_url\".*$2" | \
+        awk '/browser_download_url/ { gsub(/[",]/,""); print $2}'
+}
+
+# get latest release from github
+# $1 - repository [github_name/repository]
+# $2 - search pattern for name
+# $3 - local save directory (optional)
+get_github_latest() {
+    dir="."
+    if [ -z "$2" ]; then
+        echo "Not enough arguments: $*"
+        echo "get-github-latest <repository> <search-pattern> [DIR]"
+        exit 1
+    elif [ -n "$4" ]; then
+        echo "Too many arguments: $*"
+        echo "get-github-latest <repository> <search-pattern> [DIR]"
+        exit 1
+    elif [ -n "$3" ]; then
+        dir=$3
+    fi
+
+    info="$(get_latest_release_data "$1")"
+    name="$(get_release_name "$info" "$2")"
+    link="$(get_release_url "$info" "$name")"
+
+    wget -cq "$link" -P "$dir"
+}
+
+
+# --------------------
 # check XDG
 # --------------------
 
@@ -109,16 +191,12 @@ if [ "$DISTRO" = "ubuntu" ]; then
     curl -fsSL https://deb.nodesource.com/setup_18.x | sudo bash
 
     # sudo update
-    url_latest="https://api.github.com/repos/sudo-project/sudo/releases/latest"
-    info="$(curl -s "$url_latest")"
-    name="$(printf "%s" "$info" | grep "\"name\".*sudo_.*ubu$RELEASE" | \
-        awk '/name/ { gsub(/[",]/,""); print $2}')"
-    link="$(printf "%s" "$info" | grep "\"browser_download_url\".*$name" | \
-        awk '/browser_download_url/ { gsub(/[",]/,""); print $2}')"
-
-    wget -cq "$link" -P /tmp
-    sudo dpkg -i "/tmp/$name"
-    rm "/tmp/$name"
+    sudo_ver="$(sudo --version | awk -F'[ .]' 'NR==1{ print $4 }')"
+    if [ "$sudo_ver" -lt 9 ]; then
+        get_github_latest "sudo-project/sudo" "sudo_.*ubu$RELEASE" "/tmp/sudo"
+        sudo dpkg -i "$(find "/tmp/sudo/" -name "sudo_*")"
+        rm -rf "/tmp/sudo"
+    fi
 fi
 
 
@@ -257,13 +335,14 @@ fi
 # --------------------
 
 if [ "$DISTRO" = "ubuntu" ]; then
-    wget -cq https://github.com/GitCredentialManager/git-credential-manager/releases/download/v2.0.785/gcm-linux_amd64.2.0.785.deb -P /tmp
-    sudo dpkg -i /tmp/gcm-linux_amd64.2.0.785.deb
-    rm /tmp/gcm-linux_amd64.2.0.785.deb
+    get_github_latest "GitCredentialManager/git-credential-manager" \
+        "amd64.*deb" "/tmp/gcm"
+    sudo dpkg -i "$(find "/tmp/sudo/" -name "gcm_*.deb")"
+    rm -rf "/tmp/sudo"
 
     git-credential-manager-core configure &&
-    git-credential-manager-core diagnose
-    # TODO delete diagnose log
+    git-credential-manager-core diagnose &&
+    rm gcm-diagnose.log
 fi
 
 
