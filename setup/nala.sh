@@ -3,13 +3,13 @@
 DISTRO="$(grep "^ID=" /etc/os-release | awk -F "=" '{ print $2 }')"
 if [ "$DISTRO" != "ubuntu" ]; then
     echo "Nala requires an Ubuntu release"
-    exit
+    exit 1
 fi
 
 RELEASE=$(lsb_release -r | awk '{ split($2, a, "."); print a[1] }')
 if [ "$RELEASE" -lt 20 ]; then
     echo -e "Nala requires Ubuntu OS release >=20.04 \nExiting"
-    exit
+    exit 1
 fi
 
 echo "deb https://deb.volian.org/volian/ scar main" | \
