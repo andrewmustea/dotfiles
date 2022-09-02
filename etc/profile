@@ -23,7 +23,7 @@ append_path '/usr/bin'
 
 # golang
 GO_BIN=/usr/local/go/bin
-[[ -d "$GO_BIN" ]] && append_path "$GO_BIN"
+[ -d "$GO_BIN" ] && append_path "$GO_BIN"
 
 # Force PATH to be environment
 export PATH
