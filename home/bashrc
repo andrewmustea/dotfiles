@@ -57,22 +57,24 @@ fi
 
 # XDG defaults
 #
-export DATA="$HOME/.local/share"
-export CONFIG="$HOME/.config"
-export STATE="$HOME/.local/state"
-export CACHE="$HOME/.cache"
-export XDG_DATA_HOME=$DATA
-export XDG_CONFIG_HOME=$CONFIG
-export XDG_STATE_HOME=$STATE
-export XDG_CACHE_HOME=$CACHE
+[[ -z "$XDG_DATA_HOME" ]] && export XDG_DATA_HOME=~/.local/share
+[[ -z "$XDG_CONFIG_HOME" ]] && export XDG_CONFIG_HOME=~/.config
+[[ -z "$XDG_STATE_HOME" ]] && export XDG_STATE_HOME="$HOME/.local/state"
+[[ -z "$XDG_CACHE_HOME" ]] && export XDG_CACHE_HOME="$HOME/.cache"
+export DATA="$XDG_DATA_HOME"
+export CONFIG="$XDG_CONFIG_HOME"
+export STATE="$XDG_STATE_HOME"
+export CACHE="$XDG_CACHE_HOME"
 
-if pidof "systemd" &>/dev/null; then
-    RUNTIME="/run/user/$UID"
-else
-    mkdir --parents /tmp/user/${UID}
-    RUNTIME="/tmp/user/$UID"
+if [[ -z "$XDG_RUNTIME_DIR" ]]; then
+    if pidof "systemd" &>/dev/null; then
+        RUNTIME="/run/user/$UID"
+    else
+        mkdir --parents /tmp/user/${UID}
+        RUNTIME="/tmp/user/$UID"
+    fi
+    export XDG_RUNTIME_DIR=$RUNTIME
 fi
-export XDG_RUNTIME_DIR=$RUNTIME
 
 
 # bash history
