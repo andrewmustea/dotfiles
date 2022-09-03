@@ -308,7 +308,7 @@ alias {pip,pip3}='python3 -m pip'
 
 pip-update-all() {
     sudo -H pip list --outdated --format=freeze | grep -v '^\-e' | \
-        cut -d = -f 1 | xargs -n1 sudo -H pip install -U
+        cut -d = -f 1 | xargs -n1 sudo -H pip install -U -I
 }
 
 
