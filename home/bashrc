@@ -364,7 +364,7 @@ FZF_ENV="$CONFIG/fzf/fzf.bash"
 update-fzf() {
     if ! [[ -d $FZF_DIR ]]; then
         echo "Couldn't find fzf direcotry in '$FZF_DIR'"
-        exit 1
+        return 1
     fi
     git -C "$FZF_DIR" pull
     "$FZF_DIR/install --xdg --bin"
