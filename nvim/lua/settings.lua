@@ -1,6 +1,7 @@
 -- nvim settings
 --
-local o   = vim.o
+local g = vim.g
+local o = vim.o
 
 -- highlighting
 o.syntax = true
@@ -60,12 +61,16 @@ o.diffopt = "internal,filler,closeoff,vertical,hiddenoff"
 -- number of lines to keep above and below cursor
 o.scrolloff = 8
 
--- save undo history in separate file
-o.undofile = true
 
 -- do not save when switching buffers
 o.hidden = true
 
 -- python3 provider
-vim.g.python3_host_prog = "/usr/bin/python3"
+g.python3_host_prog = "/usr/bin/python3"
+
+-- non-vscode options
+if g.vscode ~= nil then
+  -- save undo history in separate file
+  o.undofile = true
+end
 
