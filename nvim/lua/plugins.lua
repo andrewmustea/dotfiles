@@ -155,7 +155,7 @@ require("packer").startup(function(use)
   })
   use({
     "kergoth/vim-bitbake",
-    ft = "bb",
+    ft = "bitbake",
     cond = { not_vscode }
   })
 
