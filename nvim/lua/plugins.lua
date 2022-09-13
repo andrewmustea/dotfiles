@@ -207,7 +207,7 @@ require("packer").startup(function(use)
   use({
     {
       "nvim-lualine/lualine.nvim",
-      requires = "nvim-web-devicons",
+      requires = { "nvim-web-devicons", "auto-session" },
       cond = { not_vscode },
       config = function()
         require("plugins.lualine")
