@@ -4,11 +4,13 @@
 [credential]
     helper =
     helper = /usr/local/share/gcm-core/git-credential-manager-core
+    ; helper = /usr/share/git-credential-manager-core/git-credential-manager-core
     credentialStore = gpg
-[delta]
-    navigate = true  # use n and N to move between diff sections
-    light = false
-    features = pompous-panther
+    guiPrompt = false
+[url "https://"]
+    insteadOf = git://
+[push]
+    autoSetupRemote = true
 [diff]
     tool = nvimdiff
     colorMoved = default
@@ -25,8 +27,10 @@
     keepBackup = false
 [mergetool "nvim_mergetool"]
     cmd = nvim -f -c "MergetoolStart" "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
-[push]
-    autoSetupRemote = true
+[delta]
+    navigate = true  # use n and N to move between diff sections
+    light = false
+    features = pompous-panther
 [delta "pompous-panther"]
     #author: https://github.com/andrewmustea
     blame-code-style = syntax
@@ -59,6 +63,4 @@
     line-numbers-plus-style = green
     plus-emph-style = "#bbbbbb" "#105010"
     plus-style = "#bbbbbb" "#003000"
-[url "https://"]
-    insteadOf = git://
 
