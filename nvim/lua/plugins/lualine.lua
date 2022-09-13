@@ -15,7 +15,7 @@ require("lualine").setup {
     lualine_a = {"mode"},
     lualine_b = {"branch", "diff", "diagnostics"},
     lualine_c = {"filename"},
-    lualine_d = {require('auto-session-library').current_session_name},
+    lualine_d = {require("auto-session-library").current_session_name},
     lualine_x = {"filetype"},
     lualine_y = {"progress"},
     lualine_z = {"location"}
