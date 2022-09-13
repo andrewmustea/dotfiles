@@ -10,12 +10,17 @@ case $- in
 esac
 
 
+# --------------------------------------------------
 # shell options
+# --------------------------------------------------
+
+
+# shopt
 #
-shopt -s checkwinsize
-shopt -s histappend
-shopt -s extglob
-shopt -s expand_aliases
+shopt -s \
+    autocd cdspell checkhash checkjobs checkwinsize cmdhist dirspell dotglob \
+    expand_aliases extglob extquote globstar histappend interactive_comments \
+    no_empty_cmd_completion progcomp promptvars sourcepath xpg_echo
 if ! shopt -oq posix; then
     if [ -f /usr/share/bash-completion/bash_completion ]; then
         source /usr/share/bash-completion/bash_completion
@@ -24,6 +29,8 @@ if ! shopt -oq posix; then
     fi
 fi
 
+# command-not-found
+#
 if [ -x /usr/lib/command-not-found ] \
     || [ -x /usr/share/command-not-found/command-not-found ]; then
     command_not_found_handle() {
@@ -42,19 +49,93 @@ if [ -x /usr/lib/command-not-found ] \
 fi
 
 
-# history
+# XDG defaults
+#
+[[ -z "$XDG_DATA_HOME" ]] && export XDG_DATA_HOME=~/.local/share
+[[ -z "$XDG_CONFIG_HOME" ]] && export XDG_CONFIG_HOME=~/.config
+[[ -z "$XDG_STATE_HOME" ]] && export XDG_STATE_HOME="$HOME/.local/state"
+[[ -z "$XDG_CACHE_HOME" ]] && export XDG_CACHE_HOME="$HOME/.cache"
+export DATA="$XDG_DATA_HOME"
+export CONFIG="$XDG_CONFIG_HOME"
+export STATE="$XDG_STATE_HOME"
+export CACHE="$XDG_CACHE_HOME"
+
+if [[ -z "$XDG_RUNTIME_DIR" ]]; then
+    if pidof "systemd" &>/dev/null; then
+        RUNTIME="/run/user/$UID"
+    else
+        mkdir --parents /tmp/user/${UID}
+        RUNTIME="/tmp/user/$UID"
+    fi
+    export XDG_RUNTIME_DIR=$RUNTIME
+fi
+
+
+# bash history
 #
 PROMPT_COMMAND='history -a'
 HISTSIZE=10000
-HISTFILESIZE=10000
+HISTFILESIZE=100000
 export HISTCONTROL=ignoredups
 export HISTIGNORE='history:pwd:ls:ll:la:l:'
+export HISTTIMEFORMAT='%F %T '
+export HISTFILE="$STATE/bash/history"
 
 
-# sudo
+# Arch settings
+PACKAGE_MANAGER=pacman
+if which paru &>/dev/null; then
+    export PACKAGE_MANAGER=paru
+elif which yay &>/dev/null; then
+    export PACKAGE_MANAGER=yay
+else
+    echo "No AUR helper detected. Using pacman as the package manager."
+fi
+
+alias pac='"$PACKAGE_MANAGER"'
+alias pacsearch='$PACKAGE_MANAGER -Ss'
+alias pacquery='$PACKAGE_MANAGER -Q'
+
+
+# Ubuntu settings
 #
-# refresh sudo and export environment
-alias sudo='sudo -v; sudo --preserve-env '
+which nala &>/dev/null && alias apt='nala'
+
+
+# --------------------------------------------------
+# extra XDG settings
+# --------------------------------------------------
+
+
+# xauth
+#
+export XAUTHORITY="$RUNTIME"/Xauthority
+
+
+# wget
+#
+alias wget="wget --hsts-file=\"$DATA/wget-hsts\""
+
+
+# azure
+#
+export AZURE_CONFIG_DIR="$DATA"/azure
+export AZURE_DEVOPS_CACHE_DIR="$CACHE"/azure-devops
+
+
+# npm
+#
+export NPM_CONFIG_USERCONFIG="$CONFIG"/npm/npmrc
+
+
+# gem
+#
+export GEM_SPEC_CACHE="${XDG_CACHE_HOME}"/gem
+
+
+# --------------------------------------------------
+# interactive bash settings
+# --------------------------------------------------
 
 
 # ls
@@ -83,17 +164,26 @@ GCC_COLORS="$(printf "error=01;31:warning=01;35:note=01;%s" \
 export GCC_COLORS
 
 
-# gpg
+# gpg and pass
 #
 GPG_TTY=$(tty)
 export GPG_TTY
+export GNUPGHOME="$DATA"/gnupg
+export PASSWORD_STORE_DIR="$DATA"/pass
+
+
+# diff
+#
+alias diffdir='diff -qr'
 
 
 # nvim
 #
 export EDITOR='nvim'
+! which vim &>/dev/null && alias vim='nvim'
 alias {vi,nvi}='nvim'
 alias {vd,nvd,nvimdiff}='nvim -d'
+alias nvim-remove-swap='rm -rf "$XDG_DATA_HOME/nvim/swap/"'
 
 
 # less
@@ -114,6 +204,7 @@ export LESS_TERMCAP_so
 export LESS_TERMCAP_ue
 export LESS_TERMCAP_us
 
+export LESSHISTFILE="$CACHE"/less/history
 alias less='less -QR'
 alias man='man -P "less -QR"'
 
@@ -121,22 +212,174 @@ alias man='man -P "less -QR"'
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 
-# python
+# path
 #
-which nala &>/dev/null && alias apt='nala'
+print-path() {
+    printf "%s\n" "${PATH//:/$'\n'}"
+}
 
 
 # wsl settings
 #
-if [[ -n "$WSLENV" ]]; then
-    print_path() {
-        printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/'
-    }
-else
-    print_path() {
-        printf "%s\n" "${PATH//:/$'\n'}"
-    }
+# run powershell command
+run-ps() {
+    if [[ $# -eq 0 ]]; then
+        echo "Error: no command provided"
+        echo "Usage: run-ps <command-string>"
+        return 1
+    fi
+
+    pwsh="$(powershell.exe -command "$*" | sed 's/\\/\//g')"
+    echo "${pwsh%$'\r'}"
+}
+
+# get path from windows path
+get-winpath() {
+    if ! [[ $# -eq 1 ]]; then
+        echo "Error: bad arguments: $*"
+        echo "Usage: get-winpath <path>"
+        return 1
+    fi
+
+    winpath="$(wslpath "$1")"
+    echo "${winpath%$'\r'}"
+}
+
+# windows paths
+win_user="$(get-winpath "$(run-ps "echo \"\${env:USERPROFILE}\"")")"
+export win_user
+export win_doc="$win_user/Documents"
+export win_down="$win_user/Downloads"
+
+alias win_user='cd "$win_user"'
+alias win_doc='cd "$win_doc"'
+alias win_down='cd "$win_down"'
+
+# windows 10 x11 forwarding
+winver="$(run-ps "[System.Environment]::OSVersion.Version.Major")"
+if [[ "${winver}" == 10 ]]; then
+    winpath="$(run-ps "echo \"\${env:USERPROFILE}\"")"
+    xauthfile="$win_user/.Xauthority"
+    if [[ -f "$xauthfile" ]]; then
+        touch "$XAUTHORITY"
+        xauth -q merge "$xauthfile"
+        DISPLAY="$(ip route show default | cut -d ' ' -f 3):0"
+        LIBGL_ALWAYS_INDIRECT=0
+        GALLIUM_DRIVER=llvmpipe
+        export DISPLAY
+        export LIBGL_ALWAYS_INDIRECT
+        export GALLIUM_DRIVER
+    fi
 fi
+
+print-path() {
+    printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/'
+}
+
+
+# --------------------------------------------------
+# binaries
+# --------------------------------------------------
+
+
+# local home bin
+#
+HOME_BIN="$HOME/.local/bin"
+if [[ "$PATH" != *$HOME_BIN* ]]; then
+    export PATH="${PATH:+${PATH}:}$HOME_BIN"
+fi
+
+
+# python
+#
+alias {pip,pip3}='python3 -m pip'
+
+pip-update-all() {
+    sudo -H pip list --outdated --format=freeze | grep -v '^\-e' | \
+        cut -d = -f 1 | xargs -n1 sudo -H pip install -U -I
+}
+
+
+# rust
+#
+export CARGO_HOME="$DATA"/cargo
+export RUSTUP_HOME="$DATA"/rustup
+if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *$CARGO_HOME/bin* ]]; then
+    export PATH="$CARGO_HOME/bin:$PATH"
+
+    # bat cache
+    if ! [[ -d "$CACHE/bat" ]]; then
+        echo "Rebuilding bat cache..."
+        bat cache --build
+    fi
+fi
+
+
+# go
+#
+GO_BIN=/usr/local/go/bin
+if [[ -d "$GO_BIN" ]]; then
+    if [[ "$PATH" != *$GO_BIN* ]]; then
+        export PATH="${PATH:+${PATH}:}$GO_BIN"
+    fi
+    export GOPATH="$DATA"/go
+    if [[ -d "$GOPATH"/bin ]] && [[ "$PATH" != *$GOPATH/bin* ]]; then
+        export PATH="${PATH:+${PATH}:}$GOPATH/bin"
+    fi
+fi
+
+
+# haskell
+#
+export STACK_ROOT="$XDG_DATA_HOME"/stack
+export CABAL_DIR="$DATA"/cabal
+if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *$CABAL_DIR/bin* ]]; then
+    export PATH="$CABAL_DIR/bin:$PATH"
+fi
+
+
+# fzf
+#
+FZF_DIR="$DATA/fzf"
+FZF_ENV="$CONFIG/fzf/fzf.bash"
+[[ -f "$FZF_ENV" ]] && [[ -x "$FZF_DIR/bin/fzf" ]] && source "$FZF_ENV"
+
+update-fzf() {
+    if ! [[ -d $FZF_DIR ]]; then
+        echo "Couldn't find fzf direcotry in '$FZF_DIR'"
+        return 1
+    fi
+    git -C "$FZF_DIR" pull
+    "$FZF_DIR/install --xdg --bin"
+}
+
+# fzf can use fd-find
+if which fd &>/dev/null; then
+    export FZF_DEFAULT_COMMAND='command fd -HI --type file'
+    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+fi
+
+
+# lua lsp
+#
+LUA_LSP="$DATA/lua-language-server/bin"
+if [[ -d "$LUA_LSP" ]] && [[ "$PATH" != *$LUA_LSP* ]]; then
+    export PATH="${PATH:+${PATH}:}$LUA_LSP"
+fi
+
+
+# nvm
+#
+export NVM_DIR="$XDG_CONFIG_HOME/nvm"
+if [[ -d "$NVM_DIR" ]]; then
+    source "$NVM_DIR/nvm.sh"
+    source "$NVM_DIR/bash_completion"
+fi
+
+
+# --------------------------------------------------
+# other
+# --------------------------------------------------
 
 
 # ips and ssh targets
@@ -150,7 +393,7 @@ alias myip='curl -s checkip.amazonaws.com'
 alias mx='chmod a+x'
 
 
-# other
+# other functions
 #
 psgrep() {
     pgrep "$@" | xargs --no-run-if-empty ps -fp
