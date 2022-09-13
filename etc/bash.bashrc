@@ -10,6 +10,10 @@ case $- in
 esac
 
 
+# --------------------------------------------------
+# shell options
+# --------------------------------------------------
+
 # terminal prompt
 #
 # bash colors
@@ -75,12 +79,12 @@ case ${TERM} in
 esac
 
 
-# shell options
+# shopt
 #
-shopt -s checkwinsize
-shopt -s histappend
-shopt -s extglob
-shopt -s expand_aliases
+shopt -s \
+    autocd cdspell checkhash checkjobs checkwinsize cmdhist dirspell dotglob \
+    expand_aliases extglob extquote globstar histappend interactive_comments \
+    no_empty_cmd_completion progcomp promptvars sourcepath xpg_echo
 if ! shopt -oq posix; then
     if [ -f /usr/share/bash-completion/bash_completion ]; then
         source /usr/share/bash-completion/bash_completion
@@ -89,6 +93,14 @@ if ! shopt -oq posix; then
     fi
 fi
 
+
+# sudo
+#
+alias sudo='sudo -v; sudo --preserve-env '
+
+
+# command-not-found
+#
 if [ -x /usr/lib/command-not-found ] \
     || [ -x /usr/share/command-not-found/command-not-found ]; then
     command_not_found_handle() {
@@ -107,19 +119,77 @@ if [ -x /usr/lib/command-not-found ] \
 fi
 
 
-# history
+# XDG defaults
+#
+[[ -z "$XDG_DATA_HOME" ]] && export XDG_DATA_HOME=~/.local/share
+[[ -z "$XDG_CONFIG_HOME" ]] && export XDG_CONFIG_HOME=~/.config
+[[ -z "$XDG_STATE_HOME" ]] && export XDG_STATE_HOME="$HOME/.local/state"
+[[ -z "$XDG_CACHE_HOME" ]] && export XDG_CACHE_HOME="$HOME/.cache"
+export DATA="$XDG_DATA_HOME"
+export CONFIG="$XDG_CONFIG_HOME"
+export STATE="$XDG_STATE_HOME"
+export CACHE="$XDG_CACHE_HOME"
+
+if [[ -z "$XDG_RUNTIME_DIR" ]]; then
+    if pidof "systemd" &>/dev/null; then
+        RUNTIME="/run/user/$UID"
+    else
+        mkdir --parents /tmp/user/${UID}
+        RUNTIME="/tmp/user/$UID"
+    fi
+    export XDG_RUNTIME_DIR=$RUNTIME
+fi
+
+
+# bash history
 #
 PROMPT_COMMAND='history -a'
 HISTSIZE=10000
-HISTFILESIZE=10000
+HISTFILESIZE=100000
 export HISTCONTROL=ignoredups
 export HISTIGNORE='history:pwd:ls:ll:la:l:'
+export HISTTIMEFORMAT='%F %T '
+export HISTFILE="$STATE/bash/history"
 
 
-# sudo
+# Arch settings
+PACKAGE_MANAGER=pacman
+if which paru &>/dev/null; then
+    export PACKAGE_MANAGER=paru
+elif which yay &>/dev/null; then
+    export PACKAGE_MANAGER=yay
+else
+    echo "No AUR helper detected. Using pacman as the package manager."
+fi
+
+alias pac='"$PACKAGE_MANAGER"'
+alias pacsearch='$PACKAGE_MANAGER -Ss'
+alias pacquery='$PACKAGE_MANAGER -Q'
+
+
+# Ubuntu settings
 #
-# refresh sudo and export environment
-alias sudo='sudo -v; sudo --preserve-env '
+which nala &>/dev/null && alias apt='nala'
+
+
+# --------------------------------------------------
+# extra XDG settings
+# --------------------------------------------------
+
+
+# xauth
+#
+export XAUTHORITY="$RUNTIME"/Xauthority
+
+
+# wget
+#
+alias wget="wget --hsts-file=\"$DATA/wget-hsts\""
+
+
+# --------------------------------------------------
+# interactive bash settings
+# --------------------------------------------------
 
 
 # ls
@@ -148,15 +218,23 @@ GCC_COLORS="$(printf "error=01;31:warning=01;35:note=01;%s" \
 export GCC_COLORS
 
 
-# gpg
+# gpg and pass
 #
 GPG_TTY=$(tty)
 export GPG_TTY
+export GNUPGHOME="$DATA"/gnupg
+export PASSWORD_STORE_DIR="$DATA"/pass
+
+
+# diff
+#
+alias diffdir='diff -qr'
 
 
 # nvim
 #
 export EDITOR='nvim'
+! which vim &>/dev/null && alias vim='nvim'
 alias {vi,nvi}='nvim'
 alias {vd,nvd,nvimdiff}='nvim -d'
 
@@ -179,6 +257,7 @@ export LESS_TERMCAP_so
 export LESS_TERMCAP_ue
 export LESS_TERMCAP_us
 
+export LESSHISTFILE="$CACHE"/less/history
 alias less='less -QR'
 alias man='man -P "less -QR"'
 
@@ -186,22 +265,16 @@ alias man='man -P "less -QR"'
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 
-# python
+# path
 #
-which nala &>/dev/null && alias apt='nala'
+print-path() {
+    printf "%s\n" "${PATH//:/$'\n'}"
+}
 
 
-# wsl settings
-#
-if [[ -n "$WSLENV" ]]; then
-    print_path() {
-        printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/'
-    }
-else
-    print_path() {
-        printf "%s\n" "${PATH//:/$'\n'}"
-    }
-fi
+# --------------------------------------------------
+# other
+# --------------------------------------------------
 
 
 # ips and ssh targets
@@ -215,7 +288,7 @@ alias myip='curl -s checkip.amazonaws.com'
 alias mx='chmod a+x'
 
 
-# other
+# other functions
 #
 psgrep() {
     pgrep "$@" | xargs --no-run-if-empty ps -fp
