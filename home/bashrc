@@ -85,34 +85,27 @@ HISTFILESIZE=100000
 export HISTCONTROL=ignoredups
 export HISTIGNORE='history:pwd:ls:ll:la:l:'
 export HISTTIMEFORMAT='%F %T '
-export HISTFILE="${STATE}"/bash/history
+export HISTFILE="$STATE/bash/history"
 
 
-# distro settings
-#
-DISTRO="$(grep "^ID=" /etc/os-release | awk -F "=" '{ print $2 }')"
-unset ARCH UBUNTU
-
-if [[ "$DISTRO" == "arch" ]]; then
-    export ARCH=1
-    PACKAGE_MANAGER=pacman
-    if which paru &>/dev/null; then
-        export PACKAGE_MANAGER=paru
-    elif which yay &>/dev/null; then
-        export PACKAGE_MANAGER=yay
-    else
-        echo "No AUR helper detected. Using pacman as the package manager."
-    fi
-
-    alias pac='"$PACKAGE_MANAGER"'
-    alias pacsearch='$PACKAGE_MANAGER -Ss'
-    alias pacquery='$PACKAGE_MANAGER -Q'
-elif [[ "$DISTRO" == "ubuntu" ]]; then
-    UBUNTU=1
-    which nala &>/dev/null && alias apt='nala'
+# Arch settings
+PACKAGE_MANAGER=pacman
+if which paru &>/dev/null; then
+    export PACKAGE_MANAGER=paru
+elif which yay &>/dev/null; then
+    export PACKAGE_MANAGER=yay
 else
-    echo "Unknown Linux Distro: $DISTRO"
+    echo "No AUR helper detected. Using pacman as the package manager."
 fi
+
+alias pac='"$PACKAGE_MANAGER"'
+alias pacsearch='$PACKAGE_MANAGER -Ss'
+alias pacquery='$PACKAGE_MANAGER -Q'
+
+
+# Ubuntu settings
+#
+which nala &>/dev/null && alias apt='nala'
 
 
 # --------------------------------------------------
@@ -193,7 +186,7 @@ alias diffdir='diff -qr'
 # nvim
 #
 export EDITOR='nvim'
-which vim &>/dev/null && alias vim='nvim'
+! which vim &>/dev/null && alias vim='nvim'
 alias {vi,nvi}='nvim'
 alias {vd,nvd,nvimdiff}='nvim -d'
 alias nvim-remove-swap='rm -rf "$XDG_DATA_HOME/nvim/swap/"'
@@ -225,68 +218,69 @@ alias man='man -P "less -QR"'
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 
+# path
+#
+print-path() {
+    printf "%s\n" "${PATH//:/$'\n'}"
+}
+
+
 # wsl settings
 #
-if [[ -n "$WSLENV" ]]; then
-    # run powershell command
-    run-ps() {
-        if [[ $# -eq 0 ]]; then
-            echo "Error: no command provided"
-            echo "Usage: run-ps <command-string>"
-            return 1
-        fi
-
-        pwsh="$(powershell.exe -command "$*" | sed 's/\\/\//g')"
-        echo "${pwsh%$'\r'}"
-    }
-
-    # get path from windows path
-    get-winpath() {
-        if ! [[ $# -eq 1 ]]; then
-            echo "Error: bad arguments: $*"
-            echo "Usage: get-winpath <path>"
-            return 1
-        fi
-
-        winpath="$(wslpath "$1")"
-        echo "${winpath%$'\r'}"
-    }
-
-    # windows paths
-    win_user="$(get-winpath "$(run-ps "echo \"\${env:USERPROFILE}\"")")"
-    export win_user
-    export win_doc="$win_user/Documents"
-    export win_down="$win_user/Downloads"
-
-    alias win_user='cd "$win_user"'
-    alias win_doc='cd "$win_doc"'
-    alias win_down='cd "$win_down"'
-
-    # windows 10 x11 forwarding
-    winver="$(run-ps "[System.Environment]::OSVersion.Version.Major")"
-    if [[ "${winver}" == 10 ]]; then
-        winpath="$(run-ps "echo \"\${env:USERPROFILE}\"")"
-        xauthfile="$win_user/.Xauthority"
-        if [[ -f "$xauthfile" ]]; then
-            touch "$XAUTHORITY"
-            xauth -q merge "$xauthfile"
-            DISPLAY="$(ip route show default | cut -d ' ' -f 3):0"
-            LIBGL_ALWAYS_INDIRECT=0
-            GALLIUM_DRIVER=llvmpipe
-            export DISPLAY
-            export LIBGL_ALWAYS_INDIRECT
-            export GALLIUM_DRIVER
-        fi
+# run powershell command
+run-ps() {
+    if [[ $# -eq 0 ]]; then
+        echo "Error: no command provided"
+        echo "Usage: run-ps <command-string>"
+        return 1
     fi
 
-    print-path() {
-        printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/'
-    }
-else
-    print-path() {
-        printf "%s\n" "${PATH//:/$'\n'}"
-    }
+    pwsh="$(powershell.exe -command "$*" | sed 's/\\/\//g')"
+    echo "${pwsh%$'\r'}"
+}
+
+# get path from windows path
+get-winpath() {
+    if ! [[ $# -eq 1 ]]; then
+        echo "Error: bad arguments: $*"
+        echo "Usage: get-winpath <path>"
+        return 1
+    fi
+
+    winpath="$(wslpath "$1")"
+    echo "${winpath%$'\r'}"
+}
+
+# windows paths
+win_user="$(get-winpath "$(run-ps "echo \"\${env:USERPROFILE}\"")")"
+export win_user
+export win_doc="$win_user/Documents"
+export win_down="$win_user/Downloads"
+
+alias win_user='cd "$win_user"'
+alias win_doc='cd "$win_doc"'
+alias win_down='cd "$win_down"'
+
+# windows 10 x11 forwarding
+winver="$(run-ps "[System.Environment]::OSVersion.Version.Major")"
+if [[ "${winver}" == 10 ]]; then
+    winpath="$(run-ps "echo \"\${env:USERPROFILE}\"")"
+    xauthfile="$win_user/.Xauthority"
+    if [[ -f "$xauthfile" ]]; then
+        touch "$XAUTHORITY"
+        xauth -q merge "$xauthfile"
+        DISPLAY="$(ip route show default | cut -d ' ' -f 3):0"
+        LIBGL_ALWAYS_INDIRECT=0
+        GALLIUM_DRIVER=llvmpipe
+        export DISPLAY
+        export LIBGL_ALWAYS_INDIRECT
+        export GALLIUM_DRIVER
+    fi
 fi
+
+print-path() {
+    printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/'
+}
 
 
 # --------------------------------------------------
@@ -316,8 +310,7 @@ pip-update-all() {
 #
 export CARGO_HOME="$DATA"/cargo
 export RUSTUP_HOME="$DATA"/rustup
-if [[ -n "$UBUNTU" ]] && [[ -d "$CARGO_HOME/bin" ]] && \
-    [[ "$PATH" != *$CARGO_HOME/bin* ]]; then
+if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *$CARGO_HOME/bin* ]]; then
     export PATH="$CARGO_HOME/bin:$PATH"
 
     # bat cache
@@ -330,16 +323,14 @@ fi
 
 # go
 #
-if [[ -n "$UBUNTU" ]]; then
-    GO_BIN=/usr/local/go/bin
-    if [[ -d "$GO_BIN" ]]; then
-        if [[ "$PATH" != *$GO_BIN* ]]; then
-            export PATH="${PATH:+${PATH}:}$GO_BIN"
-        fi
-        export GOPATH="$DATA"/go
-        if [[ -d "$GOPATH"/bin ]] && [[ "$PATH" != *$GOPATH/bin* ]]; then
-            export PATH="${PATH:+${PATH}:}$GOPATH/bin"
-        fi
+GO_BIN=/usr/local/go/bin
+if [[ -d "$GO_BIN" ]]; then
+    if [[ "$PATH" != *$GO_BIN* ]]; then
+        export PATH="${PATH:+${PATH}:}$GO_BIN"
+    fi
+    export GOPATH="$DATA"/go
+    if [[ -d "$GOPATH"/bin ]] && [[ "$PATH" != *$GOPATH/bin* ]]; then
+        export PATH="${PATH:+${PATH}:}$GOPATH/bin"
     fi
 fi
 
@@ -347,11 +338,9 @@ fi
 # haskell
 #
 export STACK_ROOT="$XDG_DATA_HOME"/stack
-if [[ -n "$UBUNTU" ]]; then
-    export CABAL_DIR="$DATA"/cabal
-    if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *$CABAL_DIR/bin* ]]; then
-        export PATH="$CABAL_DIR/bin:$PATH"
-    fi
+export CABAL_DIR="$DATA"/cabal
+if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *$CABAL_DIR/bin* ]]; then
+    export PATH="$CABAL_DIR/bin:$PATH"
 fi
 
 
@@ -370,7 +359,7 @@ update-fzf() {
     "$FZF_DIR/install --xdg --bin"
 }
 
-# fzf uses fd-find
+# fzf can use fd-find
 if which fd &>/dev/null; then
     export FZF_DEFAULT_COMMAND='command fd -HI --type file'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
@@ -382,6 +371,15 @@ fi
 LUA_LSP="$DATA/lua-language-server/bin"
 if [[ -d "$LUA_LSP" ]] && [[ "$PATH" != *$LUA_LSP* ]]; then
     export PATH="${PATH:+${PATH}:}$LUA_LSP"
+fi
+
+
+# nvm
+#
+export NVM_DIR="$XDG_CONFIG_HOME/nvm"
+if [[ -d "$NVM_DIR" ]]; then
+    source "$NVM_DIR/nvm.sh"
+    source "$NVM_DIR/bash_completion"
 fi
 
 
