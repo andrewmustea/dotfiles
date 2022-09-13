@@ -74,6 +74,9 @@ case ${TERM} in
     xterm*|rxvt*|Eterm|aterm|kterm|gnome*|screen*)
         PS1="\[\e]0;${PROMPT_COMMAND:+($PROMPT_COMMAND)}\u@\h:\w\a\]$PS1"
         ;;
+  screen*)
+    PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033_%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
+    ;;
     *)
         ;;
 esac
