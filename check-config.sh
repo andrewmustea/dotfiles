@@ -48,7 +48,12 @@ diff git/config "$XDG_CONFIG_HOME/git/config"
 
 
 # gtk
-[ ! -d "$XDG_CONFIG_HOME/gtk-3.0" ] && cp -rf gtk-3.0 "$XDG_CONFIG_HOME"
+gtkfile="$XDG_CONFIG_HOME/gtk-3.0/settings.ini"
+if [ ! -f "$gtkfile" ]; then
+    cp -rf gtk-3.0 "$XDG_CONFIG_HOME"
+elif grep -F -x -v -f "$gtkfile" gtk-3.0/settings.ini; then
+    awk FNR!=1 gtk-3.0/settings.ini >> "$gtkfile"
+fi
 
 
 # npm
