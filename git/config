@@ -9,6 +9,8 @@
     guiPrompt = false
 [url "https://"]
     insteadOf = git://
+[credential "https://dev.azure.com"]
+    useHttpPath = true
 [push]
     autoSetupRemote = true
 [diff]
