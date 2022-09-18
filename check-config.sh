@@ -28,14 +28,7 @@ diff bash/bash_profile ~/.bash_profile
 diff bash/bash_logout ~/.bash_logout
 
 
-# cabal
-# TODO: cabal needs to be checked against the config in .local/share/cabal/config
-# might have to just only have a script that copies and replaces the directory locations
-[ ! -d "$XDG_CONFIG_HOME/cabal" ] && cp -rf cabal "$XDG_CONFIG_HOME"
-
-
 # fzf
-# git clone and pull fzf in .local/share/fzf/, install with ./install --xdg, then replace fzf config
 FZF_TARGET="${XDG_CONFIG_HOME:-$HOME/.config}"
 if [ -d "$FZF_TARGET" ]; then
     git -C "$FZF_TARGET" checkout master
@@ -59,7 +52,6 @@ diff git/config "$XDG_CONFIG_HOME/git/config"
 
 
 # npm
-# TODO: ask to copy before copying
 diff npm "$XDG_CONFIG_HOME/npm" && cp -rf npm "$XDG_CONFIG_HOME"
 
 
@@ -72,7 +64,4 @@ diff nvim "$XDG_CONFIG_HOME/nvim"
 # profile
 diff profile /etc/profile
 [ -f ~/.profile ] && diff profile/home_profile ~/.profile
-
-
-# TODO: enforce XDG compliance with vim
 
