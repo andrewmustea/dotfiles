@@ -22,10 +22,10 @@ diff -qr bat/ ~/.config/bat/ && cp -rf bat "$XDG_DATA_HOME"
 
 # bash
 # TODO: ask to check if you want to ignore, view diff, or just copy
-diff bash/bashrc ~/.bashrc
-diff bash/bash.bashrc /etc/bash.bashrc
-diff bash/bash_profile ~/.bash_profile
-diff bash/bash_logout ~/.bash_logout
+diff home/bashrc ~/.bashrc
+diff home/bash_profile ~/.bash_profile
+diff home/bash_logout ~/.bash_logout
+diff etc/bash.bashrc /etc/bash.bashrc
 
 
 # fzf
