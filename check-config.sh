@@ -5,6 +5,8 @@
 # XDG
 [ -z "$XDG_DATA_HOME" ] && export XDG_DATA_HOME=~/.local/share
 [ -z "$XDG_CONFIG_HOME" ] && export XDG_CONFIG_HOME=~/.config
+DATA=$XDG_DATA_HOME
+CONFIG=$XDG_CONFIG_HOME
 
 
 # bat
@@ -17,7 +19,7 @@ if ! [ -d ~/.config/bat ]; then
     which bat > /dev/null 2>&1 && bat cache --build
 fi
 
-diff -qr bat/ ~/.config/bat/ && cp -rf bat "$XDG_DATA_HOME"
+diff -qr bat/ ~/.config/bat/ && cp -rf bat "$DATA"
 
 
 # bash
@@ -29,7 +31,7 @@ diff etc/bash.bashrc /etc/bash.bashrc
 
 
 # fzf
-FZF_TARGET="${XDG_CONFIG_HOME:-$HOME/.config}"
+FZF_TARGET="${CONFIG:-$HOME/.config}"
 if [ -d "$FZF_TARGET" ]; then
     git -C "$FZF_TARGET" checkout master
     git -C "$FZF_TARGET" pull
@@ -43,25 +45,25 @@ cp fzf/fzf.bash "$FZF_TARGET/fzf.bash"
 
 
 # git
-# TODO: change to check if each of git configs lines exist in XDG_CONFIG_HOME
-diff git/config "$XDG_CONFIG_HOME/git/config"
+# TODO: change to check if each of git configs lines exist in CONFIG
+diff git/config "$CONFIG/git/config"
 
 
 # gtk
-gtkfile="$XDG_CONFIG_HOME/gtk-3.0/settings.ini"
+gtkfile="$CONFIG/gtk-3.0/settings.ini"
 if [ ! -f "$gtkfile" ]; then
-    cp -rf gtk-3.0 "$XDG_CONFIG_HOME"
+    cp -rf gtk-3.0 "$CONFIG"
 elif grep -F -x -v -f "$gtkfile" gtk-3.0/settings.ini; then
     awk FNR!=1 gtk-3.0/settings.ini >> "$gtkfile"
 fi
 
 
 # npm
-diff npm "$XDG_CONFIG_HOME/npm" && cp -rf npm "$XDG_CONFIG_HOME"
+diff npm "$CONFIG/npm" && cp -rf npm "$CONFIG"
 
 
 # nvim
-diff nvim "$XDG_CONFIG_HOME/nvim"
+diff nvim "$CONFIG/nvim"
 # TODO: ask to copy
 # TODO: get list of ALE linters and check if installed
 
