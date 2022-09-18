@@ -50,13 +50,16 @@ diff git/config "$CONFIG/git/config"
 
 
 # gtk
-gtkfile="$CONFIG/gtk-3.0/settings.ini"
-if [ ! -f "$gtkfile" ]; then
-    cp -rf gtk-3.0 "$CONFIG"
-elif grep -F -x -v -f "$gtkfile" gtk-3.0/settings.ini; then
-    awk FNR!=1 gtk-3.0/settings.ini >> "$gtkfile"
-fi
-
+set -- "gtk-3.0" "gtk-4.0"
+for dir in "$@"; do
+    gtkfile="$CONFIG/$dir/settings.ini"
+    if [ ! -f "$gtkfile" ]; then
+        mkdir -p "$CONFIG/$dir"
+        cp -rf "$dir/settings.ini" "$gtkfile"
+    elif grep -F -x -v -f "$gtkfile" "$dir/settings.ini"; then
+        awk FNR!=1 gtk-3.0/settings.ini >> "$gtkfile"
+    fi
+done
 
 # npm
 diff npm "$CONFIG/npm" && cp -rf npm "$CONFIG"
