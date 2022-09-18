@@ -1,3 +1,6 @@
 [submodule "bat/themes/black_sun"]
 	path = bat/themes/black_sun
 	url = https://github.com/andrewmustea/black_sun.tm
+[submodule "git/themes/gitk"]
+	path = git/themes/gitk
+	url = https://github.com/dracula/gitk.git
