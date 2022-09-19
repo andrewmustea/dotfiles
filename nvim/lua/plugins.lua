@@ -22,292 +22,297 @@ end
 --
 require("packer").startup(function(use)
   -- packer can manage itself
-  use("wbthomason/packer.nvim")
+  use "wbthomason/packer.nvim"
 
 
   -- libraries
-  use("glts/vim-magnum")
-  use("glts/vim-radical")
-  use({
-    "kyazdani42/nvim-web-devicons",
-    config = function()
-      require("nvim-web-devicons").get_icons()
-    end
-  })
+  use {
+    "glts/vim-magnum",
+    "glts/vim-radical",
+    { "kyazdani42/nvim-web-devicons",
+      cond = { not_vscode },
+      config = function()
+        require("nvim-web-devicons").get_icons()
+      end
+    }
+  }
 
 
   -- vim session info
-  use("editorconfig/editorconfig-vim")
-  use({
-    "nathom/filetype.nvim",
-    config = function()
-      require("plugins.filetype")
-    end
-  })
+  use {
+    "editorconfig/editorconfig-vim",
+    { "dstein64/vim-startuptime",
+      cmd = "StartupTime",
+      cond = { not_vscode }
+    },
+    { "nathom/filetype.nvim",
+      config = function()
+        require("plugins.filetype")
+      end
+    },
+    { "rmagatti/auto-session",
+      cond = { not_vscode },
+      config = function()
+        require("plugins.auto-session")
+      end
+    },
+    { "tversteeg/registers.nvim",
+      cond = { not_vscode }
+    }
+  }
 
 
   -- text manipulation
-  use({
-    "junegunn/vim-easy-align",
-    config = function()
-      require("plugins.vim-easy-align")
-    end
-  })
-  use("matze/vim-move")
-  use({
-    "numToStr/Comment.nvim",
-    config = function()
-      require("Comment").setup()
-    end
-  })
-  use("rstacruz/vim-closer")
-  use("svermeulen/vim-subversive")
-  use({
-    "svermeulen/vim-yoink",
-    config = function()
-      require("plugins.vim-yoink")
-    end
-  })
-  use("tpope/vim-unimpaired")
-  use({
-    "gbprod/cutlass.nvim",
-    config = function()
-      require("plugins.cutlass")
-    end
-  })
+  use {
+    "matze/vim-move",
+    "rstacruz/vim-closer",
+    "svermeulen/vim-subversive",
+    "tpope/vim-unimpaired",
+    { "gbprod/cutlass.nvim",
+      config = function()
+        require("plugins.cutlass")
+      end
+    },
+    { "junegunn/vim-easy-align",
+      config = function()
+        require("plugins.vim-easy-align")
+      end
+    },
+    { "numToStr/Comment.nvim",
+      config = function()
+        require("Comment").setup()
+      end
+    },
+    { "svermeulen/vim-yoink",
+      config = function()
+        require("plugins.vim-yoink")
+      end
+    }
+  }
 
 
   -- movement and targets
-  use("AndrewRadev/switch.vim")
-  use({
-    "ggandor/leap.nvim",
-    config = function()
-      require("leap").set_default_keymaps()
-    end
-  })
-  use("mg979/vim-visual-multi")
-  use({
-    "phaazon/hop.nvim",
-    config = function()
-      require("hop").setup()
-    end
-  })
-  use("tpope/vim-repeat")
-  use("tpope/vim-sleuth")
-  use("tpope/vim-speeddating")
-  use({
-    "tpope/vim-surround",
-    requires = "vim-repeat",
-  })
-  use("wellle/targets.vim")
+  use {
+    "AndrewRadev/switch.vim",
+    "mg979/vim-visual-multi",
+    "tpope/vim-repeat",
+    "tpope/vim-sleuth",
+    "tpope/vim-speeddating",
+    "wellle/targets.vim",
+    { "ggandor/leap.nvim",
+      config = function()
+        require("leap").set_default_keymaps()
+      end
+    },
+    { "phaazon/hop.nvim",
+      config = function()
+        require("hop").setup()
+      end
+    },
+    { "tpope/vim-surround",
+      requires = "vim-repeat",
+      after = "vim-repeat"
+    }
+  }
 
-
-  --
-  -- non-vscode plugins
-  --
 
   -- file explorer
-  use({
+  use {
     "kyazdani42/nvim-tree.lua",
     cond = { not_vscode }
-  })
+  }
 
 
   -- syntax higlighting
-  use({
-    "andrewmustea/black_sun",
-    after = { "bufferline.nvim", "lualine.nvim", "nvim-treesitter" },
-    cond = { not_vscode },
-    config = function()
-      vim.api.nvim_command("colorscheme black_sun")
-    end
-  })
-  use({
-    "lukas-reineke/indent-blankline.nvim",
-    cond = { not_vscode },
-    config = function()
-      require("plugins.indent-blankline")
-    end
-  })
-  use({
-    {
-      "nvim-treesitter/nvim-treesitter",
+  use {
+    { "andrewmustea/black_sun",
+      after = { "bufferline.nvim", "lualine.nvim", "nvim-treesitter" },
+      cond = { not_vscode },
+      config = function()
+        vim.api.nvim_command("colorscheme black_sun")
+      end
+    },
+    { "lukas-reineke/indent-blankline.nvim",
+      cond = { not_vscode },
+      config = function()
+        require("plugins.indent-blankline")
+      end
+    },
+    { "pangloss/vim-javascript",
+      ft = "javascript",
+      cond = { not_vscode }
+    },
+    { "rust-lang/rust.vim",
+      ft = "rust",
+      cond = { not_vscode }
+    },
+    { "kergoth/vim-bitbake",
+      ft = "bitbake",
+      cond = { not_vscode }
+    }
+  }
+
+
+  -- treesitter
+  use {
+    { "nvim-treesitter/nvim-treesitter",
       run = ":TSUpdate",
       cond = { not_vscode },
       config = function()
         require("plugins.nvim-treesitter")
       end
     },
-    { "RRethy/nvim-treesitter-endwise", after = "nvim-treesitter", cond = { not_vscode } },
-    { "nvim-treesitter/playground", after = "nvim-treesitter", cond = { not_vscode } },
-    { "nvim-treesitter/nvim-treesitter-textobjects", after = "nvim-treesitter", cond = { not_vscode } },
-    { "nvim-treesitter/nvim-treesitter-refactor", after = "nvim-treesitter", cond = { not_vscode } }
-  })
-  use({
-    "pangloss/vim-javascript",
-    ft = "javascript",
-    cond = { not_vscode }
-  })
-  use({
-    "rust-lang/rust.vim",
-    ft = "rust",
-    cond = { not_vscode }
-  })
-  use({
-    "kergoth/vim-bitbake",
-    ft = "bitbake",
-    cond = { not_vscode }
-  })
-
-
-  -- vim session info
-  use({
-    "dstein64/vim-startuptime",
-    cmd = "StartupTime",
-    cond = { not_vscode }
-  })
-  use({
-    "rmagatti/auto-session",
-    cond = { not_vscode },
-    config = function()
-      require("plugins.auto-session")
-    end
-  })
-  use({
-    "tversteeg/registers.nvim",
-    cond = { not_vscode }
-  })
+    { "RRethy/nvim-treesitter-endwise",
+      requries = "nvim-treesitter",
+      after = "nvim-treesitter",
+      cond = { not_vscode }
+    },
+    { "nvim-treesitter/playground",
+      requries = "nvim-treesitter",
+      after = "nvim-treesitter",
+      cond = { not_vscode }
+    },
+    { "nvim-treesitter/nvim-treesitter-textobjects",
+      requries = "nvim-treesitter",
+      after = "nvim-treesitter",
+      cond = { not_vscode }
+    },
+    { "nvim-treesitter/nvim-treesitter-refactor",
+      requries = "nvim-treesitter",
+      after = "nvim-treesitter",
+      cond = { not_vscode }
+    }
+  }
 
 
   -- diff
-  use({
-    "AndrewRadev/linediff.vim",
-    event = "DiffUpdated",
-    cond = { not_vscode }
-  })
-  use({
-    "rickhowe/spotdiff.vim",
-    event = "DiffUpdated",
-    cond = { not_vscode }
-  })
+  use {
+    { "AndrewRadev/linediff.vim",
+      event = "DiffUpdated",
+      cond = { not_vscode }
+    },
+    { "rickhowe/spotdiff.vim",
+      event = "DiffUpdated",
+      cond = { not_vscode }
+    }
+  }
 
 
   -- buffer and tab line
-  use({
+  use {
     "akinsho/bufferline.nvim",
     requires = "nvim-web-devicons",
+    after = "nvim-web-devicons",
     cond = { not_vscode },
     config = function()
       require("plugins.bufferline")
     end
-  })
+  }
 
 
   -- lualine
-  use({
-    {
-      "nvim-lualine/lualine.nvim",
+  use {
+    { "nvim-lualine/lualine.nvim",
       requires = { "nvim-web-devicons", "auto-session" },
+      after = { "nvim-web-devicons", "auto-session" },
       cond = { not_vscode },
       config = function()
         require("plugins.lualine")
       end
     },
-    {
-      "j-hui/fidget.nvim",
+    { "j-hui/fidget.nvim",
       requires = "lualine.nvim",
+      after = "lualine.nvim",
       cond = { not_vscode },
       config = function()
         require("fidget").setup()
       end
     }
-  })
+  }
 
 
   -- git
-  use({
-    "lewis6991/gitsigns.nvim",
-    cond = { not_vscode },
-    config = function()
-      require("gitsigns").setup()
-    end
-  })
-  use({
-    "samoshkin/vim-mergetool",
-    cond = { not_vscode }
-  })
-  use({
-    {
-      "tpope/vim-fugitive",
+  use {
+    { "lewis6991/gitsigns.nvim",
+      cond = { not_vscode },
+      config = function()
+        require("gitsigns").setup()
+      end
+    },
+    { "samoshkin/vim-mergetool",
       cond = { not_vscode }
     },
-    {
-      "junegunn/gv.vim",
+    { "tpope/vim-fugitive",
+      cond = { not_vscode }
+    },
+    { "junegunn/gv.vim",
       requires = "vim-fugitive",
+      after = "vim-fugitive",
       cond = { not_vscode }
     }
-  })
+  }
 
 
   -- lsp
-  use({
+  use {
     "neovim/nvim-lspconfig",
     cond = { not_vscode },
     config = function()
       require("plugins.lspconfig")
     end
-  })
+  }
 
 
   -- code completion
-  use({
+  use {
     "neoclide/coc.nvim",
     branch = "release",
     cond = { not_vscode },
     config = function()
       require("plugins.coc")
     end
-  })
+  }
 
 
   -- fuzzy find file history
-  use({
+  use {
     "ibhagwan/fzf-lua",
     branch = "main",
     requires = "nvim-web-devicons",
+    after = "nvim-web-devicons",
     cond = { not_vscode },
     config = function()
       require("plugins.fzf-lua")
     end
-  })
+  }
 
 
   -- linting
-  use({
+  use {
     "dense-analysis/ale",
     cond = { not_vscode },
     config = function()
       require("plugins.ale")
     end
-  })
+  }
 
 
   -- markdown preview
-  use({
+  use {
     "iamcco/markdown-preview.nvim",
     ft = { "markdown", "vimwiki" },
     cond = { not_vscode },
     run = function()
       vim.fn["mkdp#util#install"]()
-    end,
-  })
+    end
+  }
 
 
   -- vimwiki
-  use({
+  use{
     "vimwiki/vimwiki",
     cond = { not_vscode },
     ft = { "markdown", "vimwiki" }
-  })
+  }
 end)
 
