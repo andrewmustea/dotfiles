@@ -1,5 +1,13 @@
 -- bufferline.nvim
 --
+local black      = "#0c0c0c"
+local black_gray = "#151515"
+local dusk       = "#202020"
+local steel_gray = "#606060"
+local white_gray = "#aaaaaa"
+local blue_gray  = "#4f5b66"
+local dark_blue  = "#042a4a"
+local sage       = "#508040"
 
 require("bufferline").setup {
   options = {
@@ -33,6 +41,31 @@ require("bufferline").setup {
     show_close_icon = false,
     separator_style = "slant",
     sort_by = "tabs",
+  },
+  highlights = {
+    fill                  = { fg = white_gray, bg = black },
+    background            = { fg = blue_gray,  bg = black_gray },
+    tab                   = { fg = blue_gray,  bg = black },
+    tab_selected          = { fg = white_gray, bg = dark_blue },
+    tab_close             = { fg = white_gray, bg = black },
+    close_button          = { fg = blue_gray,  bg = black_gray },
+    close_button_visible  = { fg = steel_gray, bg = dusk },
+    close_button_selected = { fg = white_gray, bg = dark_blue },
+    buffer                = { fg = blue_gray,  bg = black_gray },
+    buffer_visible        = { fg = steel_gray, bg = dusk },
+    buffer_selected       = { fg = white_gray, bg = dark_blue },
+    numbers               = { fg = blue_gray,  bg = black_gray },
+    numbers_visible       = { fg = steel_gray, bg = dusk },
+    numbers_selected      = { fg = white_gray, bg = dark_blue },
+    modified              = { fg = sage,       bg = black_gray },
+    modified_visible      = { fg = sage,       bg = dusk },
+    modified_selected     = { fg = sage,       bg = dark_blue },
+    duplicate_selected    = { fg = white_gray, bg = dark_blue },
+    duplicate_visible     = { fg = steel_gray, bg = dusk },
+    duplicate             = { fg = blue_gray,  bg = black_gray },
+    separator_selected    = { fg = black,      bg = dark_blue },
+    separator_visible     = { fg = black,      bg = dusk },
+    separator             = { fg = black,      bg = black_gray },
   }
 }
 
