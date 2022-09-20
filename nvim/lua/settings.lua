@@ -3,6 +3,9 @@
 local g = vim.g
 local o = vim.o
 
+-- mouse support
+o.mouse = "nv"
+
 -- highlighting
 o.syntax = true
 o.termguicolors = true
