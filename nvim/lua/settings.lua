@@ -3,6 +3,9 @@
 local g = vim.g
 local o = vim.o
 
+-- clipboard
+o.clipboard = "unnamedplus"
+
 -- mouse support
 o.mouse = "nv"
 
