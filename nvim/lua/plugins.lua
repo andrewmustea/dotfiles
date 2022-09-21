@@ -40,7 +40,6 @@ require("packer").startup(function(use)
 
   -- vim session info
   use {
-    "editorconfig/editorconfig-vim",
     { "dstein64/vim-startuptime",
       cmd = "StartupTime",
       cond = { not_vscode }
@@ -96,7 +95,8 @@ require("packer").startup(function(use)
     "AndrewRadev/switch.vim",
     "mg979/vim-visual-multi",
     "tpope/vim-repeat",
-    "tpope/vim-sleuth",
+    "editorconfig/editorconfig-vim",
+    { "tpope/vim-sleuth", after = "editorconfig-vim" },
     "tpope/vim-speeddating",
     "wellle/targets.vim",
     { "ggandor/leap.nvim",

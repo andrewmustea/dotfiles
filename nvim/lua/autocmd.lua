@@ -61,3 +61,23 @@ if fn.has("wsl") then
   end
 end
 
+-- set tabstop for linux kernel c
+local function check_expandtab()
+    local c_files = { c = true, cpp = true }
+    if vim.opt_local.expandtab:get() == false and c_files[bo.filetype] ~= nil then
+      vim.opt_local.tabstop = 8
+    end
+end
+
+local kernel_tabstop = api.nvim_create_augroup("kernel_tabstop", { clear = true })
+api.nvim_create_autocmd("VimEnter", {
+  group = kernel_tabstop,
+  pattern = "*",
+  callback = check_expandtab
+})
+api.nvim_create_autocmd("OptionSet", {
+  group = kernel_tabstop,
+  pattern = "expandtab",
+  callback = check_expandtab
+})
+
