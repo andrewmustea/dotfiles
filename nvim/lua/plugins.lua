@@ -231,6 +231,25 @@ require("packer").startup(function(use)
   }
 
 
+  -- scrollbar
+  use {
+    { "petertriho/nvim-scrollbar",
+      after = "coc.nvim",
+      cond = { not_vscode },
+      config = function()
+        require("plugins.nvim-scrollbar")
+      end
+    },
+    { "kevinhwang91/nvim-hlslens",
+      after = "nvim-scrollbar",
+      cond = { not_vscode },
+      config = function()
+        require("plugins.nvim-hlslens")
+      end
+    }
+  }
+
+
   -- git
   use {
     { "lewis6991/gitsigns.nvim",
