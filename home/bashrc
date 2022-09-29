@@ -113,11 +113,6 @@ which nala &>/dev/null && alias apt='nala'
 # --------------------------------------------------
 
 
-# xauth
-#
-export XAUTHORITY="$RUNTIME"/Xauthority
-
-
 # wget
 #
 alias wget="wget --hsts-file=\"$DATA/wget-hsts\""
@@ -174,7 +169,6 @@ export GCC_COLORS
 #
 GPG_TTY=$(tty)
 export GPG_TTY
-export GNUPGHOME="$DATA"/gnupg
 export PASSWORD_STORE_DIR="$DATA"/pass
 
 
@@ -225,8 +219,11 @@ print-path() {
 }
 
 
+# --------------------------------------------------
 # wsl settings
-#
+# --------------------------------------------------
+
+
 # run powershell command
 run-ps() {
     if [[ $# -eq 0 ]]; then
@@ -254,7 +251,7 @@ get-winpath() {
 # windows paths
 win_user="$(get-winpath "$(run-ps "echo \"\${env:USERPROFILE}\"")")"
 export win_user
-export win_doc="$win_user/Documents"
+export win_doc="$win_user/OneDrive - Microsoft/Documents"
 export win_down="$win_user/Downloads"
 
 alias win_user='cd "$win_user"'
@@ -425,6 +422,10 @@ alias git-last-message='git show -s --format=%s'
 alias git-reset-last='git reset HEAD~1'
 alias rebase-origin='rebase-remote origin'
 alias rebase-upstream='rebase-remote upstream'
+alias diff-origin='diff-remote origin'
+alias diff-upstream='diff-remote upstream'
+alias difftool-origin='difftool-remote origin'
+alias difftool-upstream='difftool-remote upstream'
 
 
 # print the branch name of the current directory or a given one
@@ -506,6 +507,33 @@ add-exclude-vscode() {
         repo=$1
     fi
     add-exclude '.vscode/' "$repo"
+}
+
+# diff compare against a remote
+diff-remote() {
+    if [[ -z "$1" ]]; then
+        echo "diff-remote <remote> [diff args]"
+    fi
+    git diff "$1/$(get-branch-name)" "${@:2}"
+}
+
+# difftool compare against a remote
+difftool-remote() {
+    if [[ -z "$1" ]]; then
+        echo "difftool-remote <remote> [difftool args]"
+    fi
+    git difftool "$1/$(get-branch-name)" "${@:2}"
+}
+
+push-from-commit-id() {
+    # get commit id
+    # verify its on the branch
+    # print quick diff/show/log/etc
+    # ask for confirmation
+    # checkout commit id
+    # git push -f origin/whatever HEAD:branch_name
+    # checkout branch_name
+    echo
 }
 
 
