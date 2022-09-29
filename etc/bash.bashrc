@@ -180,11 +180,6 @@ which nala &>/dev/null && alias apt='nala'
 # --------------------------------------------------
 
 
-# xauth
-#
-export XAUTHORITY="$RUNTIME"/Xauthority
-
-
 # wget
 #
 alias wget="wget --hsts-file=\"$DATA/wget-hsts\""
@@ -225,7 +220,6 @@ export GCC_COLORS
 #
 GPG_TTY=$(tty)
 export GPG_TTY
-export GNUPGHOME="$DATA"/gnupg
 export PASSWORD_STORE_DIR="$DATA"/pass
 
 
