@@ -1,13 +1,28 @@
 #!/bin/sh
 
-# Install and setup fzf
+if which fzf >/dev/null 2>&1; then
+    echo "fzf already installed"
+    exit
+fi
 
 [ -z "$XDG_CONFIG_HOME" ] && export XDG_CONFIG_HOME=~/.config
+[ -z "$XDG_DATA_HOME" ] && export XDG_DATA_HOME=~/.local/share
 
 DISTRO="$(grep "^ID=" /etc/os-release | awk -F "=" '{ print $2 }')"
+
 if [ "$DISTRO" = "arch" ]; then
-    echo "Use pacman to install fzf."
+    sudo pacman -S --needed --noconfirm fzf
     exit
+elif [ "$DISTRO" = "debian" ]; then
+    if which nala >/dev/null 2>&1; then
+        sudo nala install -y fzf
+    else
+        sudo apt install -y fzf
+    fi
+    exit
+elif [ "$DISTRO" != "ubuntu" ]; then
+    echo "Distro not supported: $DISTRO"
+    exit 1
 fi
 
 if ! which fzf >/dev/null 2>&1; then
