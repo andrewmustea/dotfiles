@@ -23,7 +23,7 @@ elif [ "$DISTRO" != "debian" ] && [ "$DISTRO" != "ubuntu" ]; then
 fi
 
 pkgmgr='apt'
-! which nala >/dev/null 2>&1 && pkgmgr='nala'
+which nala >/dev/null 2>&1 && pkgmgr='nala'
 
 sudo "$pkgmgr" update
 sudo "$pkgmgr" install -y ca-certificates curl apt-transport-https lsb-release gnupg
