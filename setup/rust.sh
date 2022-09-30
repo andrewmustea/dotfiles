@@ -1,6 +1,23 @@
 #!/bin/sh
 
-# Setup rust and rust binaries
+DISTRO="$(grep "^ID=" /etc/os-release | awk -F "=" '{ print $2 }')"
+
+if [ "$DISTRO" = "arch" ]; then
+    rust_programs="as-tree bat bottom cargo du-dust exa fd-find git-delta \
+        gitui hck hx ripgrep rm-improved rustc sd viu"
+    if which paru >/dev/null 2>&1; then
+        sudo paru -S --needed --noconfirm "$rust_programs"
+    elif which yay >/dev/null 2>&1; then
+        sudo yay -S --needed --noconfirm "$rust_programs"
+    else
+        echo "No AUR helper detected. Can't install rust and rust programs"
+        exit 1
+    fi
+    exit
+elif [ "$DISTRO" = "debian" ] && [ "$DISTRO" != "ubuntu" ]; then
+    echo "Distro not supported: $DISTRO"
+    exit 1
+fi
 
 if ! which cargo >/dev/null 2>&1; then
     printf "Cargo not installed. Proceed to install? [Y/n] "
