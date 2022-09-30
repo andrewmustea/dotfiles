@@ -3,9 +3,10 @@
 # shell script designed to setup a new system as quick as possible
 
 # TODO
-# lua liblua5.3-dev luarocks
+# lua5.3 liblua5.3-dev luarocks
 # ruby-dev gem
-# openssl libssl-dev cmake gcc g++ make autoconf automake gdb build-essential binutils libgmp-dev cmake clang clangd clang-format
+# openssl libssl-dev cmake gcc g++ make autoconf automake gdb build-essential binutils libgmp-dev cmake libtool python3-venv llvm clang clangd clang-format bison pip xdg-utils gpg pass python-is-python3 ninja-build yank cmatrix cmatrix-xfont
+# gawk wget diffstat unzip texinfo chrpath socat cpio python3 xz-utils debianutils iputils-ping python3-git libegl1-mesa libsdl1.2-dev pylint xterm mesa-common-dev zstd liblz4-tool
 
 # setup environment
 
@@ -13,9 +14,15 @@ DISTRO="$(grep "^ID=" /etc/os-release | awk -F "=" '{ print $2 }')"
 
 unset RELEASE
 if [ "$DISTRO" = "arch" ]; then
-    alias dist_install="sudo pacman -S --noconfirm "
-elif [ "$DISTRO" = "ubuntu" ]; then
-    alias dist_install="sudo apt install -y "
+    if which paru >/dev/null 2>&1; then
+        alias dist_install="paru -S --noconfirm "
+    elif which yay >/dev/null 2>&1; then
+        alias dist_install="yay -S --noconfirm "
+    else
+        alias dist_install="sudo pacman -S --noconfirm "
+    fi
+elif [ "$DISTRO" = "debian" ] || [ "$DISTRO" = "ubuntu" ]; then
+    alias dist_install="sudo nala install -y "
     RELEASE=$(lsb_release -r | awk '{ split($2, a, "."); print a[1] }')
 else
     echo "Unknown or unimplemented distro: $DISTRO"
@@ -81,7 +88,7 @@ get_release_url() {
 
 # get latest release from github
 # $1 - repository [github_name/repository]
-# $2 - search pattern for name
+# $2 - release name
 # $3 - local save directory (optional)
 get_github_latest() {
     dir="."
@@ -97,11 +104,10 @@ get_github_latest() {
         dir=$3
     fi
 
-    info="$(get_latest_release_data "$1")"
-    name="$(get_release_name "$info" "$2")"
-    link="$(get_release_url "$info" "$name")"
+    exe="$2"
+    uri="https://github.com/$1/releases/latest/download/$exe"
 
-    wget -cq "$link" -P "$dir"
+    wget -cq "$uri" -P "$dir"
 }
 
 
@@ -116,11 +122,49 @@ get_github_latest() {
 
 
 # --------------------
-# pip
+# Ubuntu only
 # --------------------
 
-dist_install pip
-sudo -H pip install --upgrade pynvim pylint gitlint bashate codespell
+if [ "$DISTRO" = "ubuntu" ]; then
+    # nala
+    ./setup/nala.sh
+
+    # no motd
+    sudo chmod -x /etc/update-motd.d/*
+
+    # eliminate snap (gross) and motd
+    sudo nala purge snapd update-motd show-motd
+    # ppas
+    sudo add-apt-repository -y ppa:neovim-ppa/stable
+    sudo add-apt-repository -y ppa:git-core/ppa
+
+    sudo nala install -y git
+
+    # pacstall
+    sudo bash -c "$(curl -fsSL https://git.io/JsADh || wget -q https://git.io/JsADh -O -)"
+
+    # sudo update
+    sudo_ver="$(sudo --version | awk -F'[ .]' 'NR==1{ print $4 }')"
+    if [ "$sudo_ver" -lt 9 ]; then
+        get_github_latest "sudo-project/sudo" "sudo_.*ubu$RELEASE" "/tmp/sudo"
+        sudo dpkg -i "$(find "/tmp/sudo/" -name "sudo_*")"
+        rm -rf "/tmp/sudo"
+    fi
+
+    # other setup
+    ./setup/fzf.sh
+    ./setup/rust.sh
+    ./setup/haskell.sh
+    ./setup/azure.sh
+    ./setup/go.sh
+    ./setup/node.sh
+    ./setup/lua-lsp.sh
+fi
+
+
+# --------------------
+# TODO: locale
+# --------------------
 
 
 # --------------------
@@ -132,7 +176,7 @@ mkdir --parents ~/.config/git/
 touch ~/.config/git/config
 #cat git/config >> ~/.config/git/config
 
-# if name not set
+# TODO: if name not set
 USERNAME=
 while [ -z "$USERNAME" ]; do
     printf "Enter git username: "
@@ -146,8 +190,6 @@ while [ -z "$USERNAME" ]; do
             ;;
     esac
 done
-
-git config --global user.name "$USERNAME"
 
 # if email not set
 EMAIL=
@@ -165,47 +207,15 @@ while [ -z "$EMAIL" ]; do
     esac
 done
 
+git config --global user.name "$USERNAME"
 git config --global user.email "$EMAIL"
 
 
 # --------------------
-# Ubuntu only
+# pip
 # --------------------
 
-if [ "$DISTRO" = "ubuntu" ]; then
-    # nala
-    ./setup/nala.sh
-
-    # no motd
-    sudo chmod -x /etc/update-motd.d/*
-
-    # eliminate snap (gross) and motd
-    sudo apt purge snapd update-motd show-motd
-    # ppas
-    sudo add-apt-repository -y ppa:neovim-ppa/stable
-    sudo add-apt-repository -y ppa:git-core/ppa
-
-    sudo apt install git
-
-    # node
-    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo bash
-
-    # sudo update
-    sudo_ver="$(sudo --version | awk -F'[ .]' 'NR==1{ print $4 }')"
-    if [ "$sudo_ver" -lt 9 ]; then
-        get_github_latest "sudo-project/sudo" "sudo_.*ubu$RELEASE" "/tmp/sudo"
-        sudo dpkg -i "$(find "/tmp/sudo/" -name "sudo_*")"
-        rm -rf "/tmp/sudo"
-    fi
-fi
-
-
-# --------------------
-# node
-# --------------------
-
-dist_install nodejs
-sudo npm install -g npm@latest neovim commitizen
+pip install --upgrade pynvim pylint gitlint codespell
 
 
 # --------------------
@@ -218,123 +228,35 @@ git clone --depth 1 https://github.com/wbthomason/packer.nvim \
 
 
 # --------------------
-# fzf
-# --------------------
-
-if [ -n "$ARCH" ]; then
-    dist_install fzf
-else
-    ./setup/fzf.sh
-fi
-
-
-# --------------------
-# go
-# --------------------
-
-# if ubuntu/debian, download go from google
-# and if go isnt installed
-if [ "$DISTRO" = "ubuntu" ]; then
-    wget -cq https://go.dev/dl/go1.19.linux-amd64.tar.gz -P /tmp && \
-        sudo rm -rf /usr/local/go && \
-        sudo tar -C /usr/local -xzf /tmp/go1.19.linux-amd64.tar.gz && \
-        rm /tmp/go1.19.linux-amd64.tar.gz
-elif [ "$DISTRO" = "arch" ]; then
-    sudo pacman -S golang
-fi
-
-# TODO add to path
-
-# TODO: move to setup
-if [ "$DISTRO" = "arch" ]; then
-    sudo pacman -S shfmt golines glow lemonade
-else
-    go install mvdan.cc/sh/v3/cmd/shfmt@latest
-    go install github.com/segmentio/golines@latest
-    go install github.com/charmbracelet/glow@latest
-    go install github.com/lemonade-command/lemonade@latest
-fi
-
-
-# --------------------
-# nala
-# --------------------
-
-[ "$DISTRO" = "ubuntu" ] && ./nala/setup-nala.sh
-
-
-# --------------------
-# rust
-# --------------------
-
-if [ "$DISTRO" = "arch" ]; then
-    dist_install rust
-else
-    ./rust/setup-rust.sh
-fi
-
-
-# --------------------
-# haskell
-# --------------------
-
-if [ "$DISTRO" = "arch" ]; then
-    dist_install rust
-else
-    ./haskell/setup-haskell.sh
-fi
-
-
-# --------------------
 # gnupg, pass
 # --------------------
 
 # if ubuntu
 dist_install gpg pass
 
-mkdir --parents "$XDG_DATA_HOME/gnupg"
-chmod 700 "$XDG_DATA_HOME/gnupg"
+# TODO: check for key
 
 #if key not generated
 # TODO: see if you can enter them pre
-if gpg --full-generate-key; then
-    echo "Error generating key."
-    exit
-fi
+# if gpg --full-generate-key; then
+#     echo "Error generating key."
+#     exit
+# fi
 # TODO get pub key
-PUB_KEY=
-pass init "$PUB_KEY"
-
-
-# --------------------
-# azure cli
-# --------------------
-
-# if ubuntu/deb, use deb package
-if [ "$DISTRO" = "ubuntu" ]; then
-    sudo apt update
-    sudo apt install -y ca-certificates curl apt-transport-https lsb-release gnupg
-
-    curl -sL https://packages.microsoft.com/keys/microsoft.asc |
-        gpg --dearmor |
-        sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
-
-    AZ_REPO=$(lsb_release -cs)
-    echo "deb [arch=amd64] \
-        https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" |
-    sudo tee /etc/apt/sources.list.d/azure-cli.list
-
-    sudo apt update
-    sudo apt install -y azure-cli
-# else use generic linux package
-fi
+# PUB_KEY=
+# pass init "$PUB_KEY"
 
 
 # --------------------
 # git-credential-manager
 # --------------------
 
-if [ "$DISTRO" = "ubuntu" ]; then
+if [ "$DISTRO" = "arch" ]; then
+    dist_install git-credential-manager-core-bin
+    git-credential-manager-core configure &&
+    git-credential-manager-core diagnose &&
+    rm gcm-diagnose.log
+elif ! which git-credential-manager-core >/dev/null 2>&1; then
     get_github_latest "GitCredentialManager/git-credential-manager" \
         "amd64.*deb" "/tmp/gcm"
     sudo dpkg -i "$(find "/tmp/sudo/" -name "gcm_*.deb")"
@@ -343,33 +265,6 @@ if [ "$DISTRO" = "ubuntu" ]; then
     git-credential-manager-core configure &&
     git-credential-manager-core diagnose &&
     rm gcm-diagnose.log
-fi
-
-
-# --------------------
-# lua lsp
-# --------------------
-
-if ! which lua-language-server >/dev/null 2>&1; then
-    dist_install ninja-build
-    # check if gcc >= 9?
-    git clone --depth=1 https://github.com/sumneko/lua-language-server \
-        "$XDG_DATA_HOME/lua-language-server"
-    cd "$XDG_DATA_HOME/lua-language-server" || exit 1
-    git submodule update --depth 1 --init --recursive
-
-    cd 3rd/luamake || exit 1
-    ./compile/install.sh
-    cd ../..
-    ./3rd/luamake/luamake rebuild
-
-    case ":$PATH:" in
-        *:"$XDG_DATA_HOME/lua-language-server/bin":*)
-            ;;
-        *)
-            export PATH="$PATH:$XDG_DATA_HOME/lua-language-server/bin"
-            ;;
-    esac
 fi
 
 
