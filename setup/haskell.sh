@@ -1,6 +1,11 @@
 #!/bin/sh
 
-# Setup haskell and haskell binaries
+DISTRO="$(grep "^ID=" /etc/os-release | awk -F "=" '{ print $2 }')"
+
+if [ "$DISTRO" = "arch" ]; then
+    sudo pacman -S --needed --noconfirm ghc shellcheck
+    exit
+fi
 
 # install haskell
 if ! which cabal >/dev/null 2>&1; then
