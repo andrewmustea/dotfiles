@@ -1,14 +1,23 @@
 #!/bin/sh
 
+if which nala >/dev/null 2>&1; then
+    echo "nala already installed"
+    exit
+fi
+
 DISTRO="$(grep "^ID=" /etc/os-release | awk -F "=" '{ print $2 }')"
-if [ "$DISTRO" != "ubuntu" ]; then
-    echo "Nala requires an Ubuntu release"
+
+if [ "$DISTRO" = "debian" ]; then
+    sudo apt install -y nala
+    exit
+elif [ "$DISTRO" != "ubuntu" ]; then
+    echo "nala requires a debian-based distro"
     exit 1
 fi
 
 RELEASE=$(lsb_release -r | awk '{ split($2, a, "."); print a[1] }')
 if [ "$RELEASE" -lt 20 ]; then
-    printf "Nala requires Ubuntu OS release >=20.04 \nExiting"
+    echo "nala requires Ubuntu release >=20.04"
     exit 1
 fi
 
@@ -22,9 +31,9 @@ sudo apt update
 
 if [ "$RELEASE" -lt 22 ]; then
     echo "Installing nala-legacy..."
-    sudo apt install nala-legacy
+    sudo apt install -y nala-legacy
 else
     echo "Installing nala..."
-    sudo apt install nala
+    sudo apt install -y nala
 fi
 
