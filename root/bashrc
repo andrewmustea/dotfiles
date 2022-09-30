@@ -97,7 +97,7 @@ alias pacsearch='$PACKAGE_MANAGER -Ss'
 alias pacquery='$PACKAGE_MANAGER -Q'
 
 
-# Ubuntu settings
+# Debian/Ubuntu settings
 #
 which nala &>/dev/null && alias apt='nala'
 
@@ -105,11 +105,6 @@ which nala &>/dev/null && alias apt='nala'
 # --------------------------------------------------
 # extra XDG settings
 # --------------------------------------------------
-
-
-# xauth
-#
-export XAUTHORITY="$RUNTIME"/Xauthority
 
 
 # wget
@@ -168,7 +163,6 @@ export GCC_COLORS
 #
 GPG_TTY=$(tty)
 export GPG_TTY
-export GNUPGHOME="$DATA"/gnupg
 export PASSWORD_STORE_DIR="$DATA"/pass
 
 
@@ -219,8 +213,11 @@ print-path() {
 }
 
 
+# --------------------------------------------------
 # wsl settings
-#
+# --------------------------------------------------
+
+
 # run powershell command
 run-ps() {
     if [[ $# -eq 0 ]]; then
