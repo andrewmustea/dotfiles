@@ -2,11 +2,6 @@
 
 # shell script designed to setup a new system as quick as possible
 
-# TODO
-# lua5.3 liblua5.3-dev luarocks
-# ruby-dev gem
-# openssl libssl-dev cmake gcc g++ make autoconf automake gdb build-essential binutils libgmp-dev cmake libtool python3-venv llvm clang clangd clang-format bison pip xdg-utils gpg pass python-is-python3 ninja-build yank cmatrix cmatrix-xfont
-# gawk wget diffstat unzip texinfo chrpath socat cpio python3 xz-utils debianutils iputils-ping python3-git libegl1-mesa libsdl1.2-dev pylint xterm mesa-common-dev zstd liblz4-tool
 
 # setup environment
 
@@ -276,4 +271,18 @@ MAXUSERWATCHES="fs.inotify.max_user_watches = 524288"
 if ! grep -q "$MAXUSERWATCHES" /etc/sysctl.conf; then
     echo "$MAXUSERWATCHES" | sudo tee -a /etc/sysctl.conf
 fi
+
+
+# --------------------
+# other
+# --------------------
+
+dist_install \
+    openssl libssl-dev cmake gcc g++ make autoconf automake gdb \
+    build-essential binutils libgmp-dev cmake libtool python3-venv llvm clang \
+    clangd clang-format bison pip xdg-utils gpg pass python-is-python3 \
+    ninja-build yank cmatrix cmatrix-xfont gawk wget diffstat unzip texinfo \
+    chrpath socat cpio python3 xz-utils debianutils iputils-ping python3-git \
+    libegl1-mesa libsdl1.2-dev pylint xterm mesa-common-dev zstd liblz4-tool \
+    lua5.3 liblua5.3-dev luarocks ruby-dev gem wl-clipboard
 
