@@ -14,7 +14,7 @@ if [ "$DISTRO" = "arch" ]; then
         exit 1
     fi
     exit
-elif [ "$DISTRO" = "debian" ] && [ "$DISTRO" != "ubuntu" ]; then
+elif [ "$DISTRO" != "debian" ] && [ "$DISTRO" != "ubuntu" ]; then
     echo "Distro not supported: $DISTRO"
     exit 1
 fi
