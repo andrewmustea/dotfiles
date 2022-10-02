@@ -31,6 +31,7 @@ if ! which fzf >/dev/null 2>&1; then
     "$XDG_DATA_HOME/fzf/install" --xdg --bin
     mkdir --parents "$XDG_CONFIG_HOME/fzf"
     cp -rf "$(cd -- "$(dirname -- "$0")" && pwd -P)/../fzf/" "$XDG_CONFIG_HOME"
+    . "$XDG_CONFIG_HOME/fzf/fzf.bash"
 else
     echo "Updating fzf..."
     git -C "$XDG_DATA_HOME/fzf" pull
