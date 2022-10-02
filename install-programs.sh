@@ -128,7 +128,7 @@ fi
 
 
 # --------------------
-# Ubuntu only
+# Distro specific
 # --------------------
 
 if [ "$DISTRO" = "ubuntu" ]; then
@@ -161,7 +161,10 @@ if [ "$DISTRO" = "ubuntu" ]; then
     fi
 
     sudo cp etc/sudoers.d/disable_sudo_admin_successful /etc/sudoers.d/
+elif [ "$DISTRO" = "debian" ]; then
+    ./setup/nala.sh
 fi
+
 
 
 # --------------------
