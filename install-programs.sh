@@ -19,6 +19,8 @@ if [ "$DISTRO" = "arch" ]; then
 elif [ "$DISTRO" = "ubuntu" ]; then
     alias dist_install="sudo nala install -y "
     RELEASE=$(lsb_release -r | awk '{ split($2, a, "."); print a[1] }')
+elif [ "$DISTRO" = "debian" ]; then
+    alias dist_install="sudo nala install -y "
 else
     echo "Distro is not supported: $DISTRO"
     exit 1
