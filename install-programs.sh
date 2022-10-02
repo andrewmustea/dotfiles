@@ -16,11 +16,11 @@ if [ "$DISTRO" = "arch" ]; then
     else
         alias dist_install="sudo pacman -S --noconfirm "
     fi
-elif [ "$DISTRO" = "debian" ] || [ "$DISTRO" = "ubuntu" ]; then
+elif [ "$DISTRO" = "ubuntu" ]; then
     alias dist_install="sudo nala install -y "
     RELEASE=$(lsb_release -r | awk '{ split($2, a, "."); print a[1] }')
 else
-    echo "Unknown or unimplemented distro: $DISTRO"
+    echo "Distro is not supported: $DISTRO"
     exit 1
 fi
 
@@ -102,7 +102,7 @@ get_github_latest() {
     exe="$2"
     uri="https://github.com/$1/releases/latest/download/$exe"
 
-    wget -cq "$uri" -P "$dir"
+    wget -cq --show-progress "$uri" -P "$dir"
 }
 
 
@@ -117,6 +117,15 @@ get_github_latest() {
 
 
 # --------------------
+# locale
+# --------------------
+if [ "$DISTRO" = "debian" ] || [ "$DISTRO" = "ubuntu" ]; then
+    sudo locale-gen en_US.UTF-8
+    sudo update-locale LANG=en_US.UTF-8
+fi
+
+
+# --------------------
 # Ubuntu only
 # --------------------
 
@@ -127,16 +136,19 @@ if [ "$DISTRO" = "ubuntu" ]; then
     # no motd
     sudo chmod -x /etc/update-motd.d/*
 
-    # eliminate snap (gross) and motd
+    # eliminate snap (eww) and motd
     sudo nala purge snapd update-motd show-motd
     # ppas
     sudo add-apt-repository -y ppa:neovim-ppa/stable
     sudo add-apt-repository -y ppa:git-core/ppa
 
-    sudo nala install -y git
-
     # pacstall
-    sudo bash -c "$(curl -fsSL https://git.io/JsADh || wget -q https://git.io/JsADh -O -)"
+    sudo bash -c "$(curl -fsSL https://git.io/JsADh ||
+        wget -q --show-progress https://git.io/JsADh -O -)"
+
+    # homebrew
+    bash -c "$(curl -fsSL \
+        https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
     # sudo update
     sudo_ver="$(sudo --version | awk -F'[ .]' 'NR==1{ print $4 }')"
@@ -146,34 +158,45 @@ if [ "$DISTRO" = "ubuntu" ]; then
         rm -rf "/tmp/sudo"
     fi
 
-    # other setup
-    ./setup/fzf.sh
-    ./setup/rust.sh
-    ./setup/haskell.sh
-    ./setup/azure.sh
-    ./setup/go.sh
-    ./setup/node.sh
-    ./setup/lua-lsp.sh
+    sudo cp etc/sudoers.d/disable_sudo_admin_successful /etc/sudoers.d/
 fi
 
 
 # --------------------
-# TODO: locale
+# other
 # --------------------
+
+dist_install \
+    openssl libssl-dev cmake gcc g++ make autoconf automake gdb \
+    build-essential binutils libgmp-dev cmake libtool python3-venv llvm clang \
+    clangd clang-format bison pip xdg-utils gpg pass python-is-python3 \
+    ninja-build yank cmatrix cmatrix-xfont gawk wget diffstat unzip texinfo \
+    chrpath socat cpio python3 xz-utils debianutils iputils-ping python3-git \
+    libegl1-mesa libsdl1.2-dev pylint xterm mesa-common-dev zstd liblz4-tool \
+    lua5.3 liblua5.3-dev luarocks ruby-dev gem wl-clipboard neovim git jq \
+    command-not-found bash-completion python-pip
+
+# other setup
+./setup/fzf.sh
+./setup/rust.sh
+./setup/haskell.sh
+./setup/azure.sh
+./setup/go.sh
+./setup/node.sh
+./setup/lua-lsp.sh
 
 
 # --------------------
 # git
 # --------------------
 
-# if ~/.config/git/config not exists
-mkdir --parents ~/.config/git/
+# create git config
+mkdir --parents ~/.config/git
 touch ~/.config/git/config
-#cat git/config >> ~/.config/git/config
 
-# TODO: if name not set
-USERNAME=
-while [ -z "$USERNAME" ]; do
+# set git config user.name
+username="$(git config --global user.name)"
+while [ -z "$username" ]; do
     printf "Enter git username: "
     read -r response
     case "$response" in
@@ -181,14 +204,16 @@ while [ -z "$USERNAME" ]; do
             echo "No input detected."
             ;;
         *)
-            USERNAME="$response"
+            echo "Setting git username to: '$response'"
+            git config --global user.name "$response"
+            break
             ;;
     esac
 done
 
-# if email not set
-EMAIL=
-while [ -z "$EMAIL" ]; do
+# set git config user.email
+email="$(git config --global user.email)"
+while [ -z "$email" ]; do
     printf "Enter git email: "
     read -r response
     case "$response" in
@@ -196,21 +221,22 @@ while [ -z "$EMAIL" ]; do
             echo "No input detected."
             ;;
         *)
-            EMAIL="$response"
-            echo "Setting email to: '$EMAIL'"
+            echo "Setting git email to: '$response'"
+            git config --global user.email "$response"
+            break
             ;;
     esac
 done
 
-git config --global user.name "$USERNAME"
-git config --global user.email "$EMAIL"
+# append git config settings
+cat git/config >> ~/.config/git/config
 
 
 # --------------------
 # pip
 # --------------------
 
-pip install --upgrade pynvim pylint gitlint codespell
+pip install -I --upgrade pynvim pylint gitlint codespell
 
 
 # --------------------
@@ -226,20 +252,22 @@ git clone --depth 1 https://github.com/wbthomason/packer.nvim \
 # gnupg, pass
 # --------------------
 
-# if ubuntu
 dist_install gpg pass
 
-# TODO: check for key
+if ! pass ls; then
+    key="$(gpg --list-secret-keys --keyid-format LONG |
+        awk '/sec/{if (length($2) > 0) print $2}')"
+    key="${key##*/}"
 
-#if key not generated
-# TODO: see if you can enter them pre
-# if gpg --full-generate-key; then
-#     echo "Error generating key."
-#     exit
-# fi
-# TODO get pub key
-# PUB_KEY=
-# pass init "$PUB_KEY"
+    if [ -z "$key" ]; then
+        if gpg --full-gen-key; then
+            echo "Error generating key. Not initializing password store."
+        else
+            export PASSWORD_STORE_DIR="$XDG_DATA_HOME/pass"
+            pass init "$key"
+        fi
+    fi
+fi
 
 
 # --------------------
@@ -271,18 +299,4 @@ MAXUSERWATCHES="fs.inotify.max_user_watches = 524288"
 if ! grep -q "$MAXUSERWATCHES" /etc/sysctl.conf; then
     echo "$MAXUSERWATCHES" | sudo tee -a /etc/sysctl.conf
 fi
-
-
-# --------------------
-# other
-# --------------------
-
-dist_install \
-    openssl libssl-dev cmake gcc g++ make autoconf automake gdb \
-    build-essential binutils libgmp-dev cmake libtool python3-venv llvm clang \
-    clangd clang-format bison pip xdg-utils gpg pass python-is-python3 \
-    ninja-build yank cmatrix cmatrix-xfont gawk wget diffstat unzip texinfo \
-    chrpath socat cpio python3 xz-utils debianutils iputils-ping python3-git \
-    libegl1-mesa libsdl1.2-dev pylint xterm mesa-common-dev zstd liblz4-tool \
-    lua5.3 liblua5.3-dev luarocks ruby-dev gem wl-clipboard
 
