@@ -16,7 +16,7 @@ if [ "$DISTRO" = "debian" ]; then
     fi
 elif [ "$DISTRO" = "ubuntu" ]; then
     if ! [ -d /usr/local/go ]; then
-        wget -cq https://go.dev/dl/go1.19.linux-amd64.tar.gz -P /tmp && \
+        wget -cq --show-progress https://go.dev/dl/go1.19.linux-amd64.tar.gz -P /tmp && \
             sudo rm -rf /usr/local/go && \
             sudo tar -C /usr/local -xzf /tmp/go1.19.linux-amd64.tar.gz && \
             rm /tmp/go1.19.linux-amd64.tar.gz
@@ -33,6 +33,10 @@ else
     echo "Distro not supported: $DISTRO"
     exit 1
 fi
+
+[ -z "$XDG_DATA_HOME" ] && export XDG_DATA_HOME=~/.local/share
+
+export GOPATH="$DATA"/go
 
 go install mvdan.cc/sh/v3/cmd/shfmt@latest
 go install github.com/segmentio/golines@latest
