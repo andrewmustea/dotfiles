@@ -15,68 +15,6 @@ esac
 # --------------------------------------------------
 
 
-# shopt
-#
-shopt -s \
-    autocd cdspell checkhash checkjobs checkwinsize cmdhist dirspell dotglob \
-    expand_aliases extglob extquote globstar histappend interactive_comments \
-    no_empty_cmd_completion progcomp promptvars sourcepath xpg_echo
-if ! shopt -oq posix; then
-    if [ -f /usr/share/bash-completion/bash_completion ]; then
-        source /usr/share/bash-completion/bash_completion
-    elif [ -f /etc/bash_completion ]; then
-        source /etc/bash_completion
-    fi
-fi
-
-
-# sudo
-#
-alias sudo='sudo -v; sudo --preserve-env '
-
-
-# command-not-found
-#
-if [ -x /usr/lib/command-not-found ] \
-    || [ -x /usr/share/command-not-found/command-not-found ]; then
-    command_not_found_handle() {
-        # check because c-n-f could've been removed in the meantime
-        if [ -x /usr/lib/command-not-found ]; then
-            /usr/lib/command-not-found -- "$1"
-            return $?
-        elif [ -x /usr/share/command-not-found/command-not-found ]; then
-            /usr/share/command-not-found/command-not-found -- "$1"
-            return $?
-        else
-            printf "%s: command not found\n" "$1" >&2
-            return 127
-        fi
-    }
-fi
-
-
-# XDG defaults
-#
-[[ -z "$XDG_DATA_HOME" ]] && export XDG_DATA_HOME=~/.local/share
-[[ -z "$XDG_CONFIG_HOME" ]] && export XDG_CONFIG_HOME=~/.config
-[[ -z "$XDG_STATE_HOME" ]] && export XDG_STATE_HOME="$HOME/.local/state"
-[[ -z "$XDG_CACHE_HOME" ]] && export XDG_CACHE_HOME="$HOME/.cache"
-export DATA="$XDG_DATA_HOME"
-export CONFIG="$XDG_CONFIG_HOME"
-export STATE="$XDG_STATE_HOME"
-export CACHE="$XDG_CACHE_HOME"
-
-if [[ -z "$XDG_RUNTIME_DIR" ]]; then
-    if pidof "systemd" &>/dev/null; then
-        RUNTIME="/run/user/$UID"
-    else
-        mkdir --parents /tmp/user/${UID}
-        RUNTIME="/tmp/user/$UID"
-    fi
-    export XDG_RUNTIME_DIR=$RUNTIME
-fi
-
-
 # bash history
 #
 PROMPT_COMMAND='history -a'
@@ -86,6 +24,12 @@ export HISTCONTROL=ignoredups
 export HISTIGNORE='history:pwd:ls:ll:la:l:'
 export HISTTIMEFORMAT='%F %T '
 export HISTFILE="$STATE/bash/history"
+
+
+# gpg tty
+#
+GPG_TTY=$(tty)
+export GPG_TTY
 
 
 # Arch settings
@@ -103,7 +47,7 @@ alias pacsearch='$PACKAGE_MANAGER -Ss'
 alias pacquery='$PACKAGE_MANAGER -Q'
 
 
-# Ubuntu settings
+# Debian/Ubuntu settings
 #
 which nala &>/dev/null && alias apt='nala'
 
@@ -120,168 +64,27 @@ alias wget="wget --hsts-file=\"$DATA/wget-hsts\""
 
 # azure
 #
-export AZURE_CONFIG_DIR="$DATA"/azure
-export AZURE_DEVOPS_CACHE_DIR="$CACHE"/azure-devops
+export AZURE_CONFIG_DIR="$DATA/azure"
+export AZURE_DEVOPS_CACHE_DIR="$CACHE/azure-devops"
 
 
 # npm
 #
-export NPM_CONFIG_USERCONFIG="$CONFIG"/npm/npmrc
+export NPM_CONFIG_USERCONFIG="$CONFIG/npm/npmrc"
 
 
 # gem
 #
-export GEM_SPEC_CACHE="${XDG_CACHE_HOME}"/gem
+export GEM_SPEC_CACHE="$XDG_CACHE_HOME/gem"
+
+
+# pass
+#
+export PASSWORD_STORE_DIR="$DATA/pass"
 
 
 # --------------------------------------------------
-# interactive bash settings
-# --------------------------------------------------
-
-
-# ls
-#
-alias ls='ls -hF --color=auto'
-alias ll='ls -l'
-alias la='ls -Al'
-alias l='ls -C'
-
-
-# mkdir
-#
-alias mkdir='mkdir --parents'
-
-
-# colors
-#
-alias dir='dir --color=auto'
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
-alias dmesg='dmesg --color'
-
-GCC_COLORS="$(printf "error=01;31:warning=01;35:note=01;%s" \
-    "36:caret=01;32:locus=01:quote=01")"
-export GCC_COLORS
-
-
-# gpg and pass
-#
-GPG_TTY=$(tty)
-export GPG_TTY
-export PASSWORD_STORE_DIR="$DATA"/pass
-
-
-# diff
-#
-alias diffdir='diff -qr'
-
-
-# nvim
-#
-export EDITOR='nvim'
-! which vim &>/dev/null && alias vim='nvim'
-alias {vi,nvi}='nvim'
-alias {vd,nvd,nvimdiff}='nvim -d'
-alias nvim-remove-swap='rm -rf "$XDG_DATA_HOME/nvim/swap/"'
-
-
-# less
-#
-LESS_TERMCAP_mb="$(printf '\E[01;31m')"
-LESS_TERMCAP_md="$(printf '\E[01;38;5;74m')"
-LESS_TERMCAP_me="$(printf '\E[0m')"
-LESS_TERMCAP_se="$(printf '\E[0m')"
-LESS_TERMCAP_so="$(printf '\E[38;5;246m')"
-LESS_TERMCAP_ue="$(printf '\E[0m')"
-LESS_TERMCAP_us="$(printf '\E[04;38;5;146m')"
-
-export LESS_TERMCAP_mb
-export LESS_TERMCAP_md
-export LESS_TERMCAP_me
-export LESS_TERMCAP_se
-export LESS_TERMCAP_so
-export LESS_TERMCAP_ue
-export LESS_TERMCAP_us
-
-export LESSHISTFILE="$CACHE"/less/history
-alias less='less -QR'
-alias man='man -P "less -QR"'
-
-# make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
-
-# path
-#
-print-path() {
-    printf "%s\n" "${PATH//:/$'\n'}"
-}
-
-
-# --------------------------------------------------
-# wsl settings
-# --------------------------------------------------
-
-
-# run powershell command
-run-ps() {
-    if [[ $# -eq 0 ]]; then
-        echo "Error: no command provided"
-        echo "Usage: run-ps <command-string>"
-        return 1
-    fi
-
-    pwsh="$(powershell.exe -command "$*" | sed 's/\\/\//g')"
-    echo "${pwsh%$'\r'}"
-}
-
-# get path from windows path
-get-winpath() {
-    if ! [[ $# -eq 1 ]]; then
-        echo "Error: bad arguments: $*"
-        echo "Usage: get-winpath <path>"
-        return 1
-    fi
-
-    winpath="$(wslpath "$1")"
-    echo "${winpath%$'\r'}"
-}
-
-# windows paths
-win_user="$(get-winpath "$(run-ps "echo \"\${env:USERPROFILE}\"")")"
-export win_user
-export win_doc="$win_user/OneDrive - Microsoft/Documents"
-export win_down="$win_user/Downloads"
-
-alias win_user='cd "$win_user"'
-alias win_doc='cd "$win_doc"'
-alias win_down='cd "$win_down"'
-
-# windows 10 x11 forwarding
-winver="$(run-ps "[System.Environment]::OSVersion.Version.Major")"
-if [[ "${winver}" == 10 ]]; then
-    winpath="$(run-ps "echo \"\${env:USERPROFILE}\"")"
-    xauthfile="$win_user/.Xauthority"
-    if [[ -f "$xauthfile" ]]; then
-        touch "$XAUTHORITY"
-        xauth -q merge "$xauthfile"
-        DISPLAY="$(ip route show default | cut -d ' ' -f 3):0"
-        LIBGL_ALWAYS_INDIRECT=0
-        GALLIUM_DRIVER=llvmpipe
-        export DISPLAY
-        export LIBGL_ALWAYS_INDIRECT
-        export GALLIUM_DRIVER
-    fi
-fi
-
-print-path() {
-    printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/'
-}
-
-
-# --------------------------------------------------
-# binaries
+# path additions
 # --------------------------------------------------
 
 
@@ -298,8 +101,8 @@ fi
 alias {pip,pip3}='python3 -m pip'
 
 pip-update-all() {
-    sudo -H pip list --outdated --format=freeze | grep -v '^\-e' | \
-        cut -d = -f 1 | xargs -n1 sudo -H pip install -U -I
+    pip list --outdated --format=freeze | grep -v '^\-e' | \
+        cut -d = -f 1 | xargs -n1 pip install -U -I
 }
 
 
@@ -523,68 +326,5 @@ difftool-remote() {
         echo "difftool-remote <remote> [difftool args]"
     fi
     git difftool "$1/$(get-branch-name)" "${@:2}"
-}
-
-push-from-commit-id() {
-    # get commit id
-    # verify its on the branch
-    # print quick diff/show/log/etc
-    # ask for confirmation
-    # checkout commit id
-    # git push -f origin/whatever HEAD:branch_name
-    # checkout branch_name
-    echo
-}
-
-
-# --------------------------------------------------
-# other
-# --------------------------------------------------
-
-
-# ips and ssh targets
-#
-alias pingpath='mtr'
-alias myip='curl -s checkip.amazonaws.com'
-
-
-# permissions
-#
-alias mx='chmod a+x'
-
-
-# other functions
-#
-psgrep() {
-    pgrep "$@" | xargs --no-run-if-empty ps -fp
-}
-
-pskill() {
-    local pid
-    pid=$(pgrep "$@" | xargs -r ps --no-headers -fp | awk '{ print $2 }')
-    echo "killing $1 (process $pid)..."
-    kill -9 "$pid"
-}
-
-extract() {
-    if [ -f "$1" ]; then
-        case $1 in
-            *.tar.bz2) tar xvjf "$1" ;;
-            *.tar.gz) tar xvzf "$1" ;;
-            *.tar.xz) tar xvf "$1" ;;
-            *.bz2) bunzip2 "$1" ;;
-            *.rar) unrar x "$1" ;;
-            *.gz) gunzip "$1" ;;
-            *.tar) tar xvf "$1" ;;
-            *.tbz2) tar xvjf "$1" ;;
-            *.tgz) tar xvzf "$1" ;;
-            *.zip) unzip "$1" ;;
-            *.Z) uncompress "$1" ;;
-            *.7z) 7z x "$1" ;;
-            *) echo "don't know how to extract '$1'..." ;;
-        esac
-    else
-        echo "'$1' is not a valid file!"
-    fi
 }
 
