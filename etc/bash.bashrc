@@ -11,11 +11,10 @@ esac
 
 
 # --------------------------------------------------
-# shell options
+# terminal prompt
 # --------------------------------------------------
 
-# terminal prompt
-#
+
 # bash colors
 export GREEN="\[\033[0;32m\]"
 export CYAN="\[\033[0;36m\]"
@@ -124,65 +123,23 @@ fi
 
 # XDG defaults
 #
-[[ -z "$XDG_DATA_HOME" ]] && export XDG_DATA_HOME=~/.local/share
-[[ -z "$XDG_CONFIG_HOME" ]] && export XDG_CONFIG_HOME=~/.config
-[[ -z "$XDG_STATE_HOME" ]] && export XDG_STATE_HOME="$HOME/.local/state"
-[[ -z "$XDG_CACHE_HOME" ]] && export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_DATA_HOME=~/.local/share
+export XDG_CONFIG_HOME=~/.config
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_CACHE_HOME="$HOME/.cache"
+
 export DATA="$XDG_DATA_HOME"
 export CONFIG="$XDG_CONFIG_HOME"
 export STATE="$XDG_STATE_HOME"
 export CACHE="$XDG_CACHE_HOME"
 
-if [[ -z "$XDG_RUNTIME_DIR" ]]; then
-    if pidof "systemd" &>/dev/null; then
-        RUNTIME="/run/user/$UID"
-    else
-        mkdir --parents /tmp/user/${UID}
-        RUNTIME="/tmp/user/$UID"
-    fi
-    export XDG_RUNTIME_DIR=$RUNTIME
-fi
-
-
-# bash history
-#
-PROMPT_COMMAND='history -a'
-HISTSIZE=10000
-HISTFILESIZE=100000
-export HISTCONTROL=ignoredups
-export HISTIGNORE='history:pwd:ls:ll:la:l:'
-export HISTTIMEFORMAT='%F %T '
-export HISTFILE="$STATE/bash/history"
-
-
-# Arch settings
-PACKAGE_MANAGER=pacman
-if which paru &>/dev/null; then
-    export PACKAGE_MANAGER=paru
-elif which yay &>/dev/null; then
-    export PACKAGE_MANAGER=yay
+if pidof "systemd" &>/dev/null; then
+    export XDG_RUNTIME_DIR="/run/user/$UID"
 else
-    echo "No AUR helper detected. Using pacman as the package manager."
+    mkdir --parents "/tmp/user/$UID"
+    export XDG_RUNTIME_DIR="/tmp/user/$UID"
 fi
-
-alias pac='"$PACKAGE_MANAGER"'
-alias pacsearch='$PACKAGE_MANAGER -Ss'
-alias pacquery='$PACKAGE_MANAGER -Q'
-
-
-# Ubuntu settings
-#
-which nala &>/dev/null && alias apt='nala'
-
-
-# --------------------------------------------------
-# extra XDG settings
-# --------------------------------------------------
-
-
-# wget
-#
-alias wget="wget --hsts-file=\"$DATA/wget-hsts\""
+export RUNTIME=$XDG_RUNTIME_DIR
 
 
 # --------------------------------------------------
@@ -216,13 +173,6 @@ GCC_COLORS="$(printf "error=01;31:warning=01;35:note=01;%s" \
 export GCC_COLORS
 
 
-# gpg and pass
-#
-GPG_TTY=$(tty)
-export GPG_TTY
-export PASSWORD_STORE_DIR="$DATA"/pass
-
-
 # diff
 #
 alias diffdir='diff -qr'
@@ -234,6 +184,7 @@ export EDITOR='nvim'
 ! which vim &>/dev/null && alias vim='nvim'
 alias {vi,nvi}='nvim'
 alias {vd,nvd,nvimdiff}='nvim -d'
+alias nvim-remove-swap='rm -rf "$XDG_DATA_HOME/nvim/swap/"'
 
 
 # less
@@ -254,18 +205,58 @@ export LESS_TERMCAP_so
 export LESS_TERMCAP_ue
 export LESS_TERMCAP_us
 
-export LESSHISTFILE="$CACHE"/less/history
+export LESSHISTFILE="$CACHE/less/history"
 alias less='less -QR'
 alias man='man -P "less -QR"'
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-
-# path
-#
 print-path() {
     printf "%s\n" "${PATH//:/$'\n'}"
+}
+
+# --------------------------------------------------
+# wsl settings
+# --------------------------------------------------
+
+
+# run powershell command
+run-ps() {
+    if [[ $# -eq 0 ]]; then
+        echo "Error: no command provided"
+        echo "Usage: run-ps <command-string>"
+        return 1
+    fi
+
+    pwsh="$(powershell.exe -command "$*" | sed 's/\\/\//g')"
+    echo "${pwsh%$'\r'}"
+}
+
+# get path from windows path
+get-winpath() {
+    if ! [[ $# -eq 1 ]]; then
+        echo "Error: bad arguments: $*"
+        echo "Usage: get-winpath <path>"
+        return 1
+    fi
+
+    winpath="$(wslpath "$1")"
+    echo "${winpath%$'\r'}"
+}
+
+# windows paths
+win_user="$(get-winpath "$(run-ps "echo \"\${env:USERPROFILE}\"")")"
+export win_user
+export win_doc="$win_user/OneDrive - Microsoft/Documents"
+export win_down="$win_user/Downloads"
+
+alias win_user='cd "$win_user"'
+alias win_doc='cd "$win_doc"'
+alias win_down='cd "$win_down"'
+
+print-path() {
+    printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/'
 }
 
 
