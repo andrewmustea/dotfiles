@@ -14,12 +14,13 @@ vim.g.coc_global_extensions = {
   "coc-clangd", "coc-clang-format-style-options", "coc-cmake", "coc-css",
   "coc-cssmodules", "coc-deno", "coc-diagnostic", "coc-docker", "coc-eslint",
   "coc-explorer", "coc-fzf-preview", "coc-git", "coc-go", "coc-golines",
-  "coc-highlight", "coc-html", "coc-htmlhint", "coc-html-css-support",
-  "coc-java", "coc-jedi", "coc-json", "coc-lists", "coc-markdownlint",
-  "coc-markdown-preview-enhanced", "coc-markmap", "coc-perl", "coc-prettier",
-  "coc-pydocstring", "coc-pyright", "coc-rome", "coc-rust-analyzer", "coc-sh",
-  "coc-stylelintplus", "coc-stylelint", "coc-snippets", "coc-sql", "coc-toml",
-  "coc-tsserver", "coc-vimlsp", "coc-xml", "coc-yaml", "coc-yank"
+  "coc-highlight", "coc-html", "coc-htmlhint", "coc-sumneko-lua",
+  "coc-html-css-support", "coc-java", "coc-jedi", "coc-json", "coc-lists",
+  "coc-markdownlint", "coc-markdown-preview-enhanced", "coc-markmap",
+  "coc-perl", "coc-prettier", "coc-pydocstring", "coc-pyright", "coc-rome",
+  "coc-rust-analyzer","coc-sh", "coc-stylelintplus", "coc-stylelint",
+  "coc-snippets", "coc-sql", "coc-toml", "coc-tsserver", "coc-vimlsp",
+  "coc-xml", "coc-yaml", "coc-yank"
 }
 
 -- Use coc#pum#info() if you need to confirm completion, only when there's selected complete item:
