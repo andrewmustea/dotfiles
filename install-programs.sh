@@ -139,7 +139,7 @@ if [ "$DISTRO" = "ubuntu" ]; then
     sudo chmod -x /etc/update-motd.d/*
 
     # eliminate snap (eww) and motd
-    sudo nala purge snapd update-motd show-motd
+    sudo nala purge snapd update-motd show-motd motd-news-config
     # ppas
     sudo add-apt-repository -y ppa:neovim-ppa/stable
     sudo add-apt-repository -y ppa:git-core/ppa
@@ -171,15 +171,17 @@ fi
 # other
 # --------------------
 
+sudo chown "$USER:$USER" ~ -R
+
 dist_install \
     openssl libssl-dev cmake gcc g++ make autoconf automake gdb \
     build-essential binutils libgmp-dev cmake libtool python3-venv llvm clang \
-    clangd clang-format bison pip xdg-utils gpg pass python-is-python3 \
+    clangd clang-format bison python3-pip xdg-utils gpg pass python-is-python3 \
     ninja-build yank cmatrix cmatrix-xfont gawk wget diffstat unzip texinfo \
     chrpath socat cpio python3 xz-utils debianutils iputils-ping python3-git \
     libegl1-mesa libsdl1.2-dev pylint xterm mesa-common-dev zstd liblz4-tool \
     lua5.3 liblua5.3-dev luarocks ruby-dev gem wl-clipboard neovim git jq \
-    command-not-found bash-completion python-pip
+    command-not-found bash-completion man-db curl luajit flex pandoc
 
 # other setup
 ./setup/fzf.sh
