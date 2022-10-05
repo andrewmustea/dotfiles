@@ -17,7 +17,6 @@ local function not_vscode()
   return vim.g.vscode == nil
 end
 
-
 -- packer
 --
 require("packer").startup(function(use)
@@ -96,9 +95,11 @@ require("packer").startup(function(use)
     "mg979/vim-visual-multi",
     "tpope/vim-repeat",
     "editorconfig/editorconfig-vim",
-    { "tpope/vim-sleuth", after = "editorconfig-vim" },
     "tpope/vim-speeddating",
     "wellle/targets.vim",
+    { "tpope/vim-sleuth",
+      after = "editorconfig-vim"
+    },
     { "ggandor/leap.nvim",
       config = function()
         require("leap").set_default_keymaps()
@@ -112,6 +113,12 @@ require("packer").startup(function(use)
     { "tpope/vim-surround",
       requires = "vim-repeat",
       after = "vim-repeat"
+    },
+    { "rmagatti/goto-preview",
+      cond = { not_vscode },
+      config = function()
+        require("goto-preview").setup()
+      end
     }
   }
 
@@ -163,24 +170,32 @@ require("packer").startup(function(use)
       end
     },
     { "RRethy/nvim-treesitter-endwise",
-      requries = "nvim-treesitter",
+      requires = "nvim-treesitter",
       after = "nvim-treesitter",
       cond = { not_vscode }
     },
     { "nvim-treesitter/playground",
-      requries = "nvim-treesitter",
+      requires = "nvim-treesitter",
       after = "nvim-treesitter",
       cond = { not_vscode }
     },
     { "nvim-treesitter/nvim-treesitter-textobjects",
-      requries = "nvim-treesitter",
+      requires = "nvim-treesitter",
       after = "nvim-treesitter",
       cond = { not_vscode }
     },
     { "nvim-treesitter/nvim-treesitter-refactor",
-      requries = "nvim-treesitter",
+      requires = "nvim-treesitter",
       after = "nvim-treesitter",
       cond = { not_vscode }
+    },
+    { "m-demare/hlargs.nvim",
+      requires = "nvim-treesitter",
+      after = "nvim-treesitter",
+      cond = { not_vscode },
+      config = function()
+        require("hlargs").setup()
+      end
     }
   }
 
@@ -274,11 +289,19 @@ require("packer").startup(function(use)
 
   -- lsp
   use {
-    "neovim/nvim-lspconfig",
-    cond = { not_vscode },
-    config = function()
-      require("plugins.lspconfig")
-    end
+    { "neovim/nvim-lspconfig",
+      cond = { not_vscode },
+      config = function()
+        require("plugins.lspconfig")
+      end
+    },
+    {
+      "stevearc/aerial.nvim",
+      cond = { not_vscode },
+      config = function()
+        require("aerial").setup()
+      end
+    }
   }
 
 
@@ -316,22 +339,26 @@ require("packer").startup(function(use)
   }
 
 
-  -- markdown preview
+  -- markdown
   use {
-    "iamcco/markdown-preview.nvim",
-    ft = { "markdown", "vimwiki" },
-    cond = { not_vscode },
-    run = function()
-      vim.fn["mkdp#util#install"]()
-    end
+    { "iamcco/markdown-preview.nvim",
+      ft = { "markdown", "vimwiki" },
+      cond = { not_vscode },
+      run = function()
+        vim.fn["mkdp#util#install"]()
+      end
+    },
+    { "ellisonleao/glow.nvim",
+      ft = { "markdown", "vimwiki" },
+      cond = { not_vscode }
+    }
   }
 
 
   -- vimwiki
-  use{
+  use {
     "vimwiki/vimwiki",
-    cond = { not_vscode },
-    ft = { "markdown", "vimwiki" }
+    ft = { "markdown", "vimwiki" },
+    cond = { not_vscode }
   }
 end)
-

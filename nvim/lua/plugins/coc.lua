@@ -4,6 +4,8 @@
 local api = vim.api
 local fn  = vim.fn
 
+require("plugins.aerial")
+
 local function map(mode, keys, exec, opts)
   vim.keymap.set(mode, keys, exec, opts or { silent = true, noremap = true })
 end
