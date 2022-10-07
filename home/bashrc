@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 # ~/.bashrc
 #
@@ -30,26 +32,6 @@ export HISTFILE="$STATE/bash/history"
 #
 GPG_TTY=$(tty)
 export GPG_TTY
-
-
-# Arch settings
-PACKAGE_MANAGER=pacman
-if which paru &>/dev/null; then
-    export PACKAGE_MANAGER=paru
-elif which yay &>/dev/null; then
-    export PACKAGE_MANAGER=yay
-else
-    echo "No AUR helper detected. Using pacman as the package manager."
-fi
-
-alias pac='"$PACKAGE_MANAGER"'
-alias pacsearch='$PACKAGE_MANAGER -Ss'
-alias pacquery='$PACKAGE_MANAGER -Q'
-
-
-# Debian/Ubuntu settings
-#
-which nala &>/dev/null && alias apt='nala'
 
 
 # --------------------------------------------------
