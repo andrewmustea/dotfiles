@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 # /etc/bash.bashrc
 #
@@ -74,7 +76,8 @@ case ${TERM} in
         PS1="\[\e]0;${PROMPT_COMMAND:+($PROMPT_COMMAND)}\u@\h:\w\a\]$PS1"
         ;;
   screen*)
-    PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033_%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
+    PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf \
+        "\033_%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
     ;;
     *)
         ;;
@@ -215,50 +218,6 @@ alias man='man -P "less -QR"'
 print-path() {
     printf "%s\n" "${PATH//:/$'\n'}"
 }
-
-# --------------------------------------------------
-# wsl settings
-# --------------------------------------------------
-
-
-# run powershell command
-run-ps() {
-    if [[ $# -eq 0 ]]; then
-        echo "Error: no command provided"
-        echo "Usage: run-ps <command-string>"
-        return 1
-    fi
-
-    pwsh="$(powershell.exe -command "$*" | sed 's/\\/\//g')"
-    echo "${pwsh%$'\r'}"
-}
-
-# get path from windows path
-get-winpath() {
-    if ! [[ $# -eq 1 ]]; then
-        echo "Error: bad arguments: $*"
-        echo "Usage: get-winpath <path>"
-        return 1
-    fi
-
-    winpath="$(wslpath "$1")"
-    echo "${winpath%$'\r'}"
-}
-
-# windows paths
-win_user="$(get-winpath "$(run-ps "echo \"\${env:USERPROFILE}\"")")"
-export win_user
-export win_doc="$win_user/OneDrive - Microsoft/Documents"
-export win_down="$win_user/Downloads"
-
-alias win_user='cd "$win_user"'
-alias win_doc='cd "$win_doc"'
-alias win_down='cd "$win_down"'
-
-print-path() {
-    printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/'
-}
-
 
 # --------------------------------------------------
 # other
