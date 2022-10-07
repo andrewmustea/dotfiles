@@ -7,6 +7,10 @@
     ; helper = /usr/share/git-credential-manager-core/git-credential-manager-core
     credentialStore = gpg
     guiPrompt = false
+[interactive]
+    diffFilter = delta --color-only
+[add.interactive]
+    useBuiltin = false
 [url "https://"]
     insteadOf = git://
 [credential "https://dev.azure.com"]
