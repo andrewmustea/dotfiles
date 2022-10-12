@@ -3,7 +3,9 @@
 # shell script designed to setup a new system as quick as possible
 
 
-# setup environment
+# --------------------
+# environment
+# --------------------
 
 DISTRO="$(grep "^ID=" /etc/os-release | awk -F "=" '{ print $2 }')"
 
@@ -109,7 +111,7 @@ get_github_latest() {
 
 
 # --------------------
-# check XDG
+# XDG directories
 # --------------------
 
 [ -z "$XDG_DATA_HOME" ] && export XDG_DATA_HOME=~/.local/share
@@ -128,7 +130,7 @@ fi
 
 
 # --------------------
-# Distro specific
+# distro specific
 # --------------------
 
 if [ "$DISTRO" = "ubuntu" ]; then
@@ -140,9 +142,12 @@ if [ "$DISTRO" = "ubuntu" ]; then
 
     # eliminate snap (eww) and motd
     sudo nala purge snapd update-motd show-motd motd-news-config
+
     # ppas
     sudo add-apt-repository -y ppa:neovim-ppa/stable
     sudo add-apt-repository -y ppa:git-core/ppa
+    sudo add-apt-repository -y ppa:flatpak/stable
+    sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
 
     # pacstall
     sudo bash -c "$(curl -fsSL https://git.io/JsADh ||
@@ -174,14 +179,16 @@ fi
 sudo chown "$USER:$USER" ~ -R
 
 dist_install \
-    openssl libssl-dev cmake gcc g++ make autoconf automake gdb \
-    build-essential binutils libgmp-dev cmake libtool python3-venv llvm clang \
-    clangd clang-format bison python3-pip xdg-utils gpg pass python-is-python3 \
-    ninja-build yank cmatrix cmatrix-xfont gawk wget diffstat unzip texinfo \
-    chrpath socat cpio python3 xz-utils debianutils iputils-ping python3-git \
-    libegl1-mesa libsdl1.2-dev pylint xterm mesa-common-dev zstd liblz4-tool \
-    lua5.3 liblua5.3-dev luarocks ruby-dev gem wl-clipboard neovim git jq \
-    command-not-found bash-completion man-db curl luajit flex pandoc
+    autoconf automake bash-completion binutils bison build-essential chrpath \
+    clang clang-format clang-tools clangd cmake cmatrix cmatrix-xfont \
+    command-not-found cpio curl debianutils diffstat doxygen flex g++ gawk \
+    gcc gdb gem gettext git gpg iputils-ping jq libegl1-mesa libgee-0.8-dev \
+    libgmp-dev libjsonrpc-glib-1.0-dev liblua5.3-dev liblz4-tool \
+    libsdl1.2-dev libssl-dev libtool libtool-bin libvala-dev lldb llvm lua5.3 \
+    luajit luarocks make man-db mesa-common-dev meson neovim ninja-build \
+    openssl pandoc pass pkg-config pylint python-is-python3 python3 \
+    python3-git python3-pip python3-venv ruby-dev scdoc socat texinfo unzip \
+    valac wget wl-clipboard xdg-utils xterm xz-utils yank zstd
 
 # other setup
 ./setup/fzf.sh
@@ -289,8 +296,8 @@ if [ "$DISTRO" = "arch" ]; then
 elif ! which git-credential-manager-core >/dev/null 2>&1; then
     get_github_latest "GitCredentialManager/git-credential-manager" \
         "amd64.*deb" "/tmp/gcm"
-    sudo dpkg -i "$(find "/tmp/sudo/" -name "gcm_*.deb")"
-    rm -rf "/tmp/sudo"
+    sudo dpkg -i "$(find "/tmp/gcm/" -name "gcm_*.deb")"
+    rm -rf "/tmp/gcm"
 
     git-credential-manager-core configure &&
     git-credential-manager-core diagnose &&
