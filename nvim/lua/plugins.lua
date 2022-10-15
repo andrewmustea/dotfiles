@@ -3,12 +3,17 @@
 
 
 -- automatically run :PackerCompile whenever plugins.lua is updated
---
-vim.api.nvim_create_autocmd('BufWritePost', {
-  group = vim.api.nvim_create_augroup('PACKER', { clear = true }),
-  pattern = 'plugins.lua',
-  command = 'source <afile> | PackerCompile',
+vim.api.nvim_create_autocmd("BufWritePost", {
+  group = vim.api.nvim_create_augroup("PACKER", { clear = true }),
+  pattern = "plugins.lua",
+  command = "source <afile> | PackerCompile",
 })
+
+
+-- returns a config file as a function from the config/ directory using a given name
+local function get_config(name)
+  return string.format("require(\"config/%s\")", name)
+end
 
 
 -- vscode conditional disable
@@ -16,6 +21,7 @@ vim.api.nvim_create_autocmd('BufWritePost', {
 local function not_vscode()
   return vim.g.vscode == nil
 end
+
 
 -- packer
 --
@@ -29,7 +35,7 @@ require("packer").startup(function(use)
     "glts/vim-magnum",
     "glts/vim-radical",
     { "kyazdani42/nvim-web-devicons",
-      cond = { not_vscode },
+      cond = not_vscode,
       config = function()
         require("nvim-web-devicons").get_icons()
       end
@@ -37,25 +43,48 @@ require("packer").startup(function(use)
   }
 
 
-  -- vim session info
+  -- neovim session
   use {
+    { "nathom/filetype.nvim",
+      config = get_config("filetype")
+    },
+    { "Pocco81/AbbrevMan.nvim",
+      config = function()
+        require("abbrev-man").setup()
+      end
+    },
     { "dstein64/vim-startuptime",
       cmd = "StartupTime",
-      cond = { not_vscode }
-    },
-    { "nathom/filetype.nvim",
-      config = function()
-        require("plugins.filetype")
-      end
+      cond = not_vscode
     },
     { "rmagatti/auto-session",
-      cond = { not_vscode },
-      config = function()
-        require("plugins.auto-session")
-      end
+      cond = not_vscode,
+      config = get_config("auto-session")
     },
     { "tversteeg/registers.nvim",
-      cond = { not_vscode }
+      cond = not_vscode,
+      config = function()
+        require("registers").setup()
+      end
+    },
+    { "mrjones2014/legendary.nvim",
+      cond = not_vscode,
+      config = get_config("legendary")
+    }
+  }
+
+  -- windows and buffers
+  use {
+    { "famiu/bufdelete.nvim",
+      cond = not_vscode
+    },
+    { "matbme/JABS.nvim",
+      cmd = "JABSOpen",
+      requires = "kyazdani42/nvim-web-devicons",
+      cond = not_vscode,
+      config = function()
+        require("jabs").setup()
+      end
     }
   }
 
@@ -63,18 +92,11 @@ require("packer").startup(function(use)
   -- text manipulation
   use {
     "matze/vim-move",
-    "rstacruz/vim-closer",
-    "svermeulen/vim-subversive",
-    "tpope/vim-unimpaired",
     { "gbprod/cutlass.nvim",
-      config = function()
-        require("plugins.cutlass")
-      end
+      config = get_config("cutlass")
     },
     { "junegunn/vim-easy-align",
-      config = function()
-        require("plugins.vim-easy-align")
-      end
+      config = get_config("vim-easy-align")
     },
     { "numToStr/Comment.nvim",
       config = function()
@@ -82,21 +104,16 @@ require("packer").startup(function(use)
       end
     },
     { "svermeulen/vim-yoink",
-      config = function()
-        require("plugins.vim-yoink")
-      end
+      config = get_config("vim-yoink")
     }
   }
 
 
   -- movement and targets
   use {
-    "AndrewRadev/switch.vim",
-    "mg979/vim-visual-multi",
     "tpope/vim-repeat",
-    "editorconfig/editorconfig-vim",
-    "tpope/vim-speeddating",
     "wellle/targets.vim",
+    "editorconfig/editorconfig-vim",
     { "tpope/vim-sleuth",
       after = "editorconfig-vim"
     },
@@ -110,52 +127,70 @@ require("packer").startup(function(use)
         require("hop").setup()
       end
     },
-    { "tpope/vim-surround",
-      requires = "vim-repeat",
-      after = "vim-repeat"
+    { "kylechui/nvim-surround",
+      config = function()
+        require("nvim-surround").setup()
+      end
+    },
+    { "mg979/vim-visual-multi",
+      cond = not_vscode
     },
     { "rmagatti/goto-preview",
-      cond = { not_vscode },
+      cond = not_vscode,
       config = function()
         require("goto-preview").setup()
       end
-    }
+    },
+    { "chentoast/marks.nvim",
+      cond = not_vscode,
+      config = function()
+        require("marks").setup()
+      end
+    },
   }
 
 
   -- file explorer
   use {
     "kyazdani42/nvim-tree.lua",
-    cond = { not_vscode }
+    cmd = "NvimTreeToggle",
+    cond = not_vscode,
+    config = function()
+      require("nvim-tree").setup()
+    end
   }
 
 
   -- syntax higlighting
   use {
     { "andrewmustea/black_sun",
-      after = { "bufferline.nvim", "lualine.nvim", "nvim-treesitter" },
-      cond = { not_vscode },
+      after = { "lualine.nvim", "nvim-treesitter" },
+      cond = not_vscode,
       config = function()
         vim.api.nvim_command("colorscheme black_sun")
       end
     },
     { "lukas-reineke/indent-blankline.nvim",
-      cond = { not_vscode },
-      config = function()
-        require("plugins.indent-blankline")
-      end
+      requires = "nvim-treesitter/nvim-treesitter",
+      cond = not_vscode,
+      config = get_config("indent-blankline")
     },
     { "pangloss/vim-javascript",
       ft = "javascript",
-      cond = { not_vscode }
+      cond = not_vscode
     },
     { "rust-lang/rust.vim",
       ft = "rust",
-      cond = { not_vscode }
+      cond = not_vscode
     },
-    { "kergoth/vim-bitbake",
+    { "andrewmustea/vim-bitbake",
       ft = "bitbake",
-      cond = { not_vscode }
+      cond = not_vscode,
+      branch = "remove_newbb_newbbappend_from_BufReadPost"
+    },
+    { "arrufat/vala.vim",
+      ft = "vala",
+      cond = not_vscode
     }
   }
 
@@ -164,35 +199,33 @@ require("packer").startup(function(use)
   use {
     { "nvim-treesitter/nvim-treesitter",
       run = ":TSUpdate",
-      cond = { not_vscode },
-      config = function()
-        require("plugins.nvim-treesitter")
-      end
+      cond = not_vscode,
+      config = get_config("nvim-treesitter")
     },
     { "RRethy/nvim-treesitter-endwise",
-      requires = "nvim-treesitter",
+      requires = "nvim-treesitter/nvim-treesitter",
       after = "nvim-treesitter",
-      cond = { not_vscode }
+      cond = not_vscode
     },
     { "nvim-treesitter/playground",
-      requires = "nvim-treesitter",
+      requires = "nvim-treesitter/nvim-treesitter",
       after = "nvim-treesitter",
-      cond = { not_vscode }
+      cond = not_vscode
     },
     { "nvim-treesitter/nvim-treesitter-textobjects",
-      requires = "nvim-treesitter",
+      requires = "nvim-treesitter/nvim-treesitter",
       after = "nvim-treesitter",
-      cond = { not_vscode }
+      cond = not_vscode
     },
     { "nvim-treesitter/nvim-treesitter-refactor",
-      requires = "nvim-treesitter",
+      requires = "nvim-treesitter/nvim-treesitter",
       after = "nvim-treesitter",
-      cond = { not_vscode }
+      cond = not_vscode
     },
     { "m-demare/hlargs.nvim",
-      requires = "nvim-treesitter",
+      requires = "nvim-treesitter/nvim-treesitter",
       after = "nvim-treesitter",
-      cond = { not_vscode },
+      cond = not_vscode,
       config = function()
         require("hlargs").setup()
       end
@@ -204,11 +237,11 @@ require("packer").startup(function(use)
   use {
     { "AndrewRadev/linediff.vim",
       event = "DiffUpdated",
-      cond = { not_vscode }
+      cond = not_vscode
     },
     { "rickhowe/spotdiff.vim",
       event = "DiffUpdated",
-      cond = { not_vscode }
+      cond = not_vscode
     }
   }
 
@@ -216,29 +249,26 @@ require("packer").startup(function(use)
   -- buffer and tab line
   use {
     "akinsho/bufferline.nvim",
-    requires = "nvim-web-devicons",
+    requires = "kyazdani42/nvim-web-devicons",
     after = "nvim-web-devicons",
-    cond = { not_vscode },
-    config = function()
-      require("plugins.bufferline")
-    end
+    cond = not_vscode,
+    config = get_config("bufferline")
   }
 
 
   -- lualine
   use {
     { "nvim-lualine/lualine.nvim",
-      requires = { "nvim-web-devicons", "auto-session" },
-      after = { "nvim-web-devicons", "auto-session" },
-      cond = { not_vscode },
-      config = function()
-        require("plugins.lualine")
-      end
+      requires = {
+        "kyazdani42/nvim-web-devicons",
+        "rmagatti/auto-session"
+      },
+      cond = not_vscode,
+      config = get_config("lualine")
     },
     { "j-hui/fidget.nvim",
-      requires = "lualine.nvim",
-      after = "lualine.nvim",
-      cond = { not_vscode },
+      requires = "nvim-lualine/lualine.nvim",
+      cond = not_vscode,
       config = function()
         require("fidget").setup()
       end
@@ -250,17 +280,13 @@ require("packer").startup(function(use)
   use {
     { "petertriho/nvim-scrollbar",
       after = "coc.nvim",
-      cond = { not_vscode },
-      config = function()
-        require("plugins.nvim-scrollbar")
-      end
+      cond = not_vscode,
+      config = get_config("nvim-scrollbar")
     },
     { "kevinhwang91/nvim-hlslens",
       after = "nvim-scrollbar",
-      cond = { not_vscode },
-      config = function()
-        require("plugins.nvim-hlslens")
-      end
+      cond = not_vscode,
+      config = get_config("nvim-hlslens")
     }
   }
 
@@ -268,74 +294,68 @@ require("packer").startup(function(use)
   -- git
   use {
     { "lewis6991/gitsigns.nvim",
-      cond = { not_vscode },
+      cond = not_vscode,
       config = function()
         require("gitsigns").setup()
       end
     },
     { "samoshkin/vim-mergetool",
-      cond = { not_vscode }
+      cond = not_vscode
     },
     { "tpope/vim-fugitive",
-      cond = { not_vscode }
+      cond = not_vscode
     },
     { "junegunn/gv.vim",
-      requires = "vim-fugitive",
-      after = "vim-fugitive",
-      cond = { not_vscode }
+      requires = "tpope/vim-fugitive",
+      cond = not_vscode
     }
   }
 
 
   -- lsp
-  use {
-    { "neovim/nvim-lspconfig",
-      cond = { not_vscode },
-      config = function()
-        require("plugins.lspconfig")
-      end
-    },
-    {
-      "stevearc/aerial.nvim",
-      cond = { not_vscode },
-      config = function()
-        require("aerial").setup()
-      end
-    }
-  }
-
-
-  -- code completion
+  -- use {
+  --   "neovim/nvim-lspconfig",
+  --   cond = not_vscode,
+  --   config = get_config("nvim-lspconfig")
+  -- }
   use {
     "neoclide/coc.nvim",
     branch = "release",
-    cond = { not_vscode },
-    config = function()
-      require("plugins.coc")
-    end
+    cond = not_vscode,
+    config = get_config("coc")
   }
 
 
-  -- fuzzy find file history
+  -- fuzzy find
   use {
-    "ibhagwan/fzf-lua",
-    branch = "main",
-    requires = "nvim-web-devicons",
-    after = "nvim-web-devicons",
-    cond = { not_vscode },
-    config = function()
-      require("plugins.fzf-lua")
-    end
+    { "ibhagwan/fzf-lua",
+      branch = "main",
+      requires = "kyazdani42/nvim-web-devicons",
+      cond = not_vscode,
+      config = get_config("fzf-lua")
+    },
+    { "nvim-telescope/telescope.nvim",
+      -- branch = "0.1.x"
+      tag = "0.1.0",
+      requires = {
+        "nvim-lua/plenary.nvim",
+        "nvim-treesitter/nvim-treesitter"
+      },
+      cond = not_vscode,
+      config = get_config("telescope")
+    },
+    { "nvim-telescope/telescope-fzf-native.nvim",
+      run = "make",
+      cond = not_vscode
+    }
   }
 
 
   -- linting
   use {
     "dense-analysis/ale",
-    cond = { not_vscode },
-    config = function()
-      require("plugins.ale")
-    end
+    cond = not_vscode,
+    config = get_config("ale")
   }
 
 
@@ -343,14 +363,21 @@ require("packer").startup(function(use)
   use {
     { "iamcco/markdown-preview.nvim",
       ft = { "markdown", "vimwiki" },
-      cond = { not_vscode },
+      cond = not_vscode,
       run = function()
         vim.fn["mkdp#util#install"]()
       end
     },
     { "ellisonleao/glow.nvim",
       ft = { "markdown", "vimwiki" },
-      cond = { not_vscode }
+      cond = not_vscode
+    },
+    { "jghauser/follow-md-links.nvim",
+      ft = { "markdown", "vimwiki" },
+      cond = not_vscode,
+      config = function()
+        vim.keymap.set("n", "<bs>", ":edit #<cr>", { silent = true })
+      end
     }
   }
 
@@ -359,6 +386,19 @@ require("packer").startup(function(use)
   use {
     "vimwiki/vimwiki",
     ft = { "markdown", "vimwiki" },
-    cond = { not_vscode }
+    cond = not_vscode
+  }
+
+
+  -- help
+  use {
+    "sudormrfbin/cheatsheet.nvim",
+    requires = {
+      "nvim-telescope/telescope.nvim",
+      "nvim-lua/popup.nvim",
+      "nvim-lua/plenary.nvim",
+    },
+    cond = not_vscode
   }
 end)
+

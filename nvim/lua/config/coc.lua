@@ -4,8 +4,6 @@
 local api = vim.api
 local fn  = vim.fn
 
-require("plugins.aerial")
-
 local function map(mode, keys, exec, opts)
   vim.keymap.set(mode, keys, exec, opts or { silent = true, noremap = true })
 end
@@ -19,8 +17,8 @@ vim.g.coc_global_extensions = {
   "coc-markdownlint", "coc-markdown-preview-enhanced", "coc-markmap",
   "coc-perl", "coc-prettier", "coc-pydocstring", "coc-pyright", "coc-rome",
   "coc-rust-analyzer","coc-sh", "coc-stylelintplus", "coc-stylelint",
-  "coc-snippets", "coc-sql", "coc-toml", "coc-tsserver", "coc-vimlsp",
-  "coc-xml", "coc-yaml", "coc-yank"
+  "coc-snippets", "coc-sql", "coc-toml", "coc-tag", "coc-tsserver",
+  "coc-vimlsp", "coc-xml", "coc-yaml", "coc-yank"
 }
 
 -- Use coc#pum#info() if you need to confirm completion, only when there's selected complete item:

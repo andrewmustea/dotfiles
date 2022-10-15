@@ -42,7 +42,6 @@ require("nvim-treesitter.configs").setup {
       show_help = "?",
     },
   },
-  -- nvim-treesitter/nvim-treesitter-textobjects
   textobjects = {
     select = {
       enable = true,
