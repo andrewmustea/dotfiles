@@ -45,39 +45,13 @@ api.nvim_create_autocmd("BufWritePre", {
     end
 })
 
--- windows wsl clipboard
-if fn.has("wsl") then
-  local clip = "/mnt/c/Windows/System32/clip.exe"
-  if fn.executable(clip) then
-    api.nvim_create_autocmd("TextYankPost", {
-      group = api.nvim_create_augroup("wsl_yank", { clear = true }),
-      callback =
-        function()
-          if vim.v.event.operator == "y" then
-            api.nvim_call_function("system", { clip, fn.getreg("0") })
-          end
-        end
-    })
-  end
-end
-
--- set tabstop for linux kernel c
-local function check_expandtab()
-    local c_files = { c = true, cpp = true }
-    if vim.opt_local.expandtab:get() == false and c_files[bo.filetype] ~= nil then
-      vim.opt_local.tabstop = 8
+-- set lua to shiftwidth 2 by default
+api.nvim_create_autocmd({ "BufRead", "BufNewFile" }, {
+  group = api.nvim_create_augroup("lua_shiftwidth", { clear = true }),
+  pattern = "*.lua",
+  callback =
+    function()
+      vim.opt_local.shiftwidth = 2
     end
-end
-
-local kernel_tabstop = api.nvim_create_augroup("kernel_tabstop", { clear = true })
-api.nvim_create_autocmd("VimEnter", {
-  group = kernel_tabstop,
-  pattern = "*",
-  callback = check_expandtab
-})
-api.nvim_create_autocmd("OptionSet", {
-  group = kernel_tabstop,
-  pattern = "expandtab",
-  callback = check_expandtab
 })
 
