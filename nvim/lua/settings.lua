@@ -13,6 +13,12 @@ o.mouse = "nv"
 o.syntax = true
 o.termguicolors = true
 
+-- signcolumn
+vim.wo.signcolumn = "yes"
+
+-- timing
+o.updatetime = 300
+
 -- turn off all sounds
 o.belloff = true
 
@@ -39,7 +45,6 @@ o.incsearch = true
 
 -- split buffers better
 o.splitright = true
-o.splitbelow = true
 
 -- show matching bracket
 o.showmatch = true
@@ -48,11 +53,11 @@ o.showmatch = true
 o.autoindent = true
 o.cindent = true
 o.expandtab = true
-o.shiftwidth = 0
+o.shiftwidth = 4
 o.smartindent = true
 o.smarttab = true
 o.softtabstop = -1
-o.tabstop = 4
+o.tabstop = 8
 
 -- case insensitive search unless /C or capital in search
 o.ignorecase = true
@@ -67,7 +72,6 @@ o.diffopt = "internal,filler,closeoff,vertical,hiddenoff"
 -- number of lines to keep above and below cursor
 o.scrolloff = 8
 
-
 -- do not save when switching buffers
 o.hidden = true
 
@@ -75,7 +79,7 @@ o.hidden = true
 g.python3_host_prog = "/usr/bin/python3"
 
 -- non-vscode options
-if g.vscode ~= nil then
+if g.vscode == nil then
   -- save undo history in separate file
   o.undofile = true
 end
