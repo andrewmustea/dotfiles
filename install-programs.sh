@@ -196,7 +196,7 @@ dist_install \
 ./setup/haskell.sh
 ./setup/azure.sh
 ./setup/go.sh
-./setup/node.sh
+./setup/nvm.sh
 ./setup/lua-lsp.sh
 
 
