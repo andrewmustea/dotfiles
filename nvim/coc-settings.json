@@ -1,4 +1,12 @@
 {
     "suggest.noselect": true,
-    "session.directory": "~/.local/share/nvim/sessions"
+    "session.directory": "~/.local/share/nvim/sessions",
+    "Lua.telemetry.enable": true,
+    "languageserver": {
+        "vala": {
+            "command": "vala-language-server",
+            "filetypes": ["vala", "genie"]
+        }
+    }
 }
+
