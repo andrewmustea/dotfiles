@@ -1,5 +1,6 @@
--- nvim settings
+-- settings.lua
 --
+
 local g = vim.g
 local o = vim.o
 
