@@ -45,9 +45,6 @@ require("packer").startup(function(use)
 
   -- neovim session
   use {
-    { "nathom/filetype.nvim",
-      config = get_config("filetype")
-    },
     { "Pocco81/AbbrevMan.nvim",
       config = function()
         require("abbrev-man").setup()
