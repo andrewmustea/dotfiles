@@ -26,20 +26,19 @@ end
 -- packer
 --
 require("packer").startup(function(use)
+
+
   -- packer can manage itself
   use "wbthomason/packer.nvim"
 
 
   -- libraries
   use {
-    "glts/vim-magnum",
-    "glts/vim-radical",
-    { "kyazdani42/nvim-web-devicons",
+    "kyazdani42/nvim-web-devicons",
       cond = not_vscode,
       config = function()
         require("nvim-web-devicons").get_icons()
       end
-    }
   }
 
 
@@ -77,7 +76,7 @@ require("packer").startup(function(use)
     },
     { "matbme/JABS.nvim",
       cmd = "JABSOpen",
-      requires = "nvim-web-devicons",
+      requires = "kyazdani42/nvim-web-devicons",
       cond = not_vscode,
       config = function()
         require("jabs").setup()
@@ -130,6 +129,7 @@ require("packer").startup(function(use)
       end
     },
     { "mg979/vim-visual-multi",
+      branch = "master",
       cond = not_vscode
     },
     { "rmagatti/goto-preview",
@@ -167,7 +167,7 @@ require("packer").startup(function(use)
       end
     },
     { "lukas-reineke/indent-blankline.nvim",
-      requires = "nvim-treesitter",
+      requires = "nvim-treesitter/nvim-treesitter",
       after = "nvim-treesitter",
       cond = not_vscode,
       config = get_config("indent-blankline")
@@ -200,28 +200,43 @@ require("packer").startup(function(use)
       config = get_config("nvim-treesitter")
     },
     { "RRethy/nvim-treesitter-endwise",
-      requires = "nvim-treesitter",
-      after = { "nvim-treesitter", "telescope.nvim" },
+      requires = "nvim-treesitter/nvim-treesitter",
+      after = {
+        "nvim-treesitter",
+        "telescope.nvim"
+      },
       cond = not_vscode
     },
     { "nvim-treesitter/playground",
-      requires = "nvim-treesitter",
-      after = { "nvim-treesitter", "telescope.nvim" },
+      requires = "nvim-treesitter/nvim-treesitter",
+      after = {
+        "nvim-treesitter",
+        "telescope.nvim"
+      },
       cond = not_vscode
     },
     { "nvim-treesitter/nvim-treesitter-textobjects",
-      requires = "nvim-treesitter",
-      after = { "nvim-treesitter", "telescope.nvim" },
+      requires = "nvim-treesitter/nvim-treesitter",
+      after = {
+        "nvim-treesitter",
+        "telescope.nvim"
+      },
       cond = not_vscode
     },
     { "nvim-treesitter/nvim-treesitter-refactor",
-      requires = "nvim-treesitter",
-      after = { "nvim-treesitter", "telescope.nvim" },
+      requires = "nvim-treesitter/nvim-treesitter",
+      after = {
+        "nvim-treesitter",
+        "telescope.nvim"
+      },
       cond = not_vscode
     },
     { "m-demare/hlargs.nvim",
-      requires = "nvim-treesitter",
-      after = { "nvim-treesitter", "telescope.nvim" },
+      requires = "nvim-treesitter/nvim-treesitter",
+      after = {
+        "nvim-treesitter",
+        "telescope.nvim"
+      },
       cond = not_vscode,
       config = get_config("hlargs")
     }
@@ -244,7 +259,7 @@ require("packer").startup(function(use)
   -- buffer and tab line
   use {
     "akinsho/bufferline.nvim",
-    requires = "nvim-web-devicons",
+    requires = "kyazdani42/nvim-web-devicons",
     after = "nvim-web-devicons",
     cond = not_vscode,
     config = get_config("bufferline")
@@ -255,14 +270,14 @@ require("packer").startup(function(use)
   use {
     { "nvim-lualine/lualine.nvim",
       requires = {
-        "nvim-web-devicons",
-        "auto-session"
+        "kyazdani42/nvim-web-devicons",
+        "rmagatti/auto-session"
       },
       cond = not_vscode,
       config = get_config("lualine")
     },
     { "j-hui/fidget.nvim",
-      requires = "lualine.nvim",
+      requires = "nvim-lualine/lualine.nvim",
       cond = not_vscode,
       config = function()
         require("fidget").setup()
@@ -301,7 +316,7 @@ require("packer").startup(function(use)
       cond = not_vscode
     },
     { "junegunn/gv.vim",
-      requires = "vim-fugitive",
+      requires = "tpope/vim-fugitive",
       cond = not_vscode
     }
   }
@@ -325,7 +340,7 @@ require("packer").startup(function(use)
   use {
     "ibhagwan/fzf-lua",
     branch = "main",
-    requires = "nvim-web-devicons",
+    requires = "kyazdani42/nvim-web-devicons",
     cond = not_vscode,
     config = get_config("fzf-lua")
   }
@@ -337,22 +352,19 @@ require("packer").startup(function(use)
       branch = "0.1.x",
       requires = {
         "nvim-lua/plenary.nvim",
+        "nvim-telescope/telescope-fzf-native.nvim",
         "LinArcX/telescope-command-palette.nvim",
         "LinArcX/telescope-scriptnames.nvim",
         "LinArcX/telescope-changes.nvim",
         "smartpde/telescope-recent-files"
       },
+      after = "telescope-fzf-native.nvim",
       cond = not_vscode,
       config = get_config("telescope")
     },
     { "nvim-telescope/telescope-fzf-native.nvim",
       run = "make",
-      requires = "telescope.nvim",
-      after = "telescope.nvim",
       cond = not_vscode,
-      config = function()
-        require("telescope").load_extension("fzf")
-      end
     },
   }
 
@@ -401,8 +413,8 @@ require("packer").startup(function(use)
     "cuducos/yaml.nvim",
     ft = { "yaml" },
     requires = {
-      "nvim-treesitter",
-      "telescope.nvim"
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-telescope/telescope.nvim"
     },
   }
 
@@ -411,7 +423,7 @@ require("packer").startup(function(use)
   use {
     "sudormrfbin/cheatsheet.nvim",
     requires = {
-      "telescope.nvim",
+      "nvim-telescope/telescope.nvim",
       "nvim-lua/popup.nvim",
       "nvim-lua/plenary.nvim",
     },

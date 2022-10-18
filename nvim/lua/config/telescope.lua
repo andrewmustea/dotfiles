@@ -75,6 +75,7 @@ vim.keymap.set("n", "fg", builtin.live_grep, { })
 vim.keymap.set("n", "fb", builtin.buffers, { })
 vim.keymap.set("n", "fh", builtin.help_tags, { })
 
+require("telescope").load_extension("fzf")
 require("telescope").load_extension("command_palette")
 require("telescope").load_extension("scriptnames")
 require("telescope").load_extension("changes")
