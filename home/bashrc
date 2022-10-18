@@ -80,6 +80,8 @@ fi
 
 # python
 #
+export PYLINTHOME="${XDG_CACHE_HOME}"/pylint
+
 alias {pip,pip3}='python3 -m pip'
 
 pip-update-all() {
@@ -90,6 +92,8 @@ pip-update-all() {
 
 # rust
 #
+alias cargo-update='cargo install-update --all'
+
 export CARGO_HOME="$DATA"/cargo
 export RUSTUP_HOME="$DATA"/rustup
 if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *$CARGO_HOME/bin* ]]; then
