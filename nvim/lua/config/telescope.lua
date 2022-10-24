@@ -1,7 +1,10 @@
 -- telescope.nvim
 --
 
-require("telescope").setup({
+local map = vim.keymap.set
+local telescope = require("telescope")
+
+telescope.setup({
   extensions = {
     fzf = {
       fuzzy = true,                    -- false will only do exact matching
@@ -69,16 +72,16 @@ require("telescope").setup({
   }
 })
 
-local builtin = require("telescope.builtin")
-vim.keymap.set("n", "ff", builtin.find_files, { })
-vim.keymap.set("n", "fg", builtin.live_grep, { })
-vim.keymap.set("n", "fb", builtin.buffers, { })
-vim.keymap.set("n", "fh", builtin.help_tags, { })
+telescope.load_extension("command_palette")
+telescope.load_extension("scriptnames")
+telescope.load_extension("changes")
+telescope.load_extension("yank_history")
+telescope.load_extension("recent_files")
+telescope.load_extension("file_browser")
 
-require("telescope").load_extension("fzf")
-require("telescope").load_extension("command_palette")
-require("telescope").load_extension("scriptnames")
-require("telescope").load_extension("changes")
-require("telescope").load_extension("yank_history")
-require("telescope").load_extension("recent_files")
+map("n", "ff", "<cmd>lua require('telescope.builtin').find_files()<CR>", { })
+map("n", "fg", "<cmd>lua require('telescope.builtin').live_grep()<CR>", { })
+map("n", "fb", "<cmd>lua require('telescope.builtin').buffers()<CR>", { })
+map("n", "fh", "<cmd>lua require('telescope.builtin').help_tags()<CR>", { })
+map("n", "fb", "<cmd>lua require('telescope').extensions.file_browser.file_browser()<CR>", { noremap = true })
 
