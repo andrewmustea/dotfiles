@@ -21,14 +21,6 @@ map("i", "<C-u>", "<ESC>ui", { noremap = true })
 -- paste from + register while in insert mode
 map("v", "<C-p>", "\"+p")
 
--- dont yank on paste
-map("x", "p",
-  function()
-    return 'pgv"' .. vim.v.register .. "y"
-  end,
-  { noremap = true, expr = true }
-)
-
 -- vscode keybinds
 if vim.g.vscode ~= nil then
   local function workbench_action(action)
