@@ -1,23 +1,19 @@
 -- lualine.nvim
 --
 
+local red = "#b02828"
+local blue = "#0040bb"
 local bo = vim.bo
-local status_color = nil
 
-local function file_status()
-  if bo.modifiable == false or bo.readonly == true then
-    status_color = { fg = "#b02828" }
-    return "[-]"
-  elseif bo.modified then
-    status_color = { fg = "#0040bb" }
+local function modified()
+  if bo.modified then
     return "[+]"
   end
-  status_color = nil
   return ""
 end
 
-local function get_color()
-  return status_color
+local function read_only()
+  return "[-]"
 end
 
 require("lualine").setup {
@@ -26,7 +22,7 @@ require("lualine").setup {
     theme = "black_sun",
     component_separators = { left = "|", right = "|" },
     section_separators = "",
-    disabled_filetypes = {},
+    disabled_filetypes = { },
     always_divide_middle = true,
     globalstatus = false,
   },
@@ -40,11 +36,22 @@ require("lualine").setup {
         path = 1,
         separator = ""
       },
-      { file_status,
-        color = get_color,
+      { modified,
+        color = { fg = blue },
         separator = { left = "", right = "|" },
-        padding = { left = 0, right = 1 }
+        padding = { left = 0, right = 1 },
+        cond = function()
+          return bo.modifiable
+        end
       },
+      { read_only,
+        color = { fg = red },
+        separator = { left = "", right = "|" },
+        padding = { left = 0, right = 1 },
+        cond = function()
+          return bo.buftype == "help" or not bo.modifiable or bo.readonly
+        end
+      }
     },
     lualine_x = { "filetype" },
     lualine_y = { "progress" },
@@ -60,11 +67,22 @@ require("lualine").setup {
         path = 1,
         separator = ""
       },
-      { file_status,
-        color = get_color,
+      { modified,
+        color = { fg = blue },
         separator = { left = "", right = "|" },
-        padding = { left = 0, right = 1 }
+        padding = { left = 0, right = 1 },
+        cond = function()
+          return bo.modifiable
+        end
       },
+      { read_only,
+        color = { fg = red },
+        separator = { left = "", right = "|" },
+        padding = { left = 0, right = 1 },
+        cond = function()
+          return bo.buftype == "help" or not bo.modifiable or bo.readonly
+        end
+      }
     },
     lualine_x = { "location" },
     lualine_y = { },
