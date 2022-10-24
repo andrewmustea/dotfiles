@@ -5,15 +5,18 @@ local bo  = vim.bo
 local fn  = vim.fn
 local api = vim.api
 
+-- abbreviation to split buffers vertically
+api.nvim_command("cabbrev vsb vert sb")
+
 -- map accidental shift when quitting
-api.nvim_create_user_command("Q", "q", {})
-api.nvim_create_user_command("WQ", "wq", {})
-api.nvim_create_user_command("Wq", "wq", {})
-api.nvim_create_user_command("QA", "qa", {})
-api.nvim_create_user_command("Qa", "qa", {})
-api.nvim_create_user_command("Wqa", "wqa", {})
-api.nvim_create_user_command("WQa", "wqa", {})
-api.nvim_create_user_command("WQA", "wqa", {})
+api.nvim_create_user_command("Q", "q", { })
+api.nvim_create_user_command("WQ", "wq", { })
+api.nvim_create_user_command("Wq", "wq", { })
+api.nvim_create_user_command("QA", "qa", { })
+api.nvim_create_user_command("Qa", "qa", { })
+api.nvim_create_user_command("Wqa", "wqa", { })
+api.nvim_create_user_command("WQa", "wqa", { })
+api.nvim_create_user_command("WQA", "wqa", { })
 
 -- show highlights and under cursor highlight group
 api.nvim_create_user_command("ShowHighlights", "silent runtime syntax/hitest.vim", { bang = true })
