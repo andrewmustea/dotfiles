@@ -35,8 +35,9 @@ get-winpath() {
 
 # windows paths
 winuser="$(get-winpath "$(run-ps "echo \"\${env:USERPROFILE}\"")")"
+windoc="$(get-winpath "$(run-ps "[Environment]::GetFolderPath(\"MyDocuments\")")")"
 export winuser
-export windoc="$winuser/OneDrive - Microsoft/Documents"
+export windoc
 export windown="$winuser/Downloads"
 
 alias winuser='cd "$winuser"'
