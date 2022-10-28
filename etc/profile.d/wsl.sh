@@ -34,14 +34,14 @@ get-winpath() {
 }
 
 # windows paths
-win_user="$(get-winpath "$(run-ps "echo \"\${env:USERPROFILE}\"")")"
-export win_user
-export win_doc="$win_user/OneDrive - Microsoft/Documents"
-export win_down="$win_user/Downloads"
+winuser="$(get-winpath "$(run-ps "echo \"\${env:USERPROFILE}\"")")"
+export winuser
+export windoc="$winuser/OneDrive - Microsoft/Documents"
+export windown="$winuser/Downloads"
 
-alias win_user='cd "$win_user"'
-alias win_doc='cd "$win_doc"'
-alias win_down='cd "$win_down"'
+alias winuser='cd "$winuser"'
+alias windoc='cd "$windoc"'
+alias windown='cd "$windown"'
 
 print-path() {
     printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/'
