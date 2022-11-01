@@ -323,7 +323,6 @@ require("packer").startup(function(use)
 
     -- vimwiki
     use { "vimwiki/vimwiki",
-      ft = { "markdown", "vimwiki" },
       cond = not_vscode
     }
 
