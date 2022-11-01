@@ -65,7 +65,6 @@ require("packer").startup(function(use)
     }
     use { "akinsho/bufferline.nvim",
       requires = "kyazdani42/nvim-web-devicons",
-      after = "nvim-web-devicons",
       cond = not_vscode,
       config = get_config("bufferline")
     }
