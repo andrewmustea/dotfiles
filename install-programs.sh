@@ -186,9 +186,9 @@ dist_install \
     libgmp-dev libjsonrpc-glib-1.0-dev liblua5.3-dev liblz4-tool \
     libsdl1.2-dev libssl-dev libtool libtool-bin libvala-dev lldb llvm lua5.3 \
     luajit luarocks make man-db mesa-common-dev meson neovim ninja-build \
-    openssl pandoc pass pkg-config pylint python-is-python3 python3 \
-    python3-git python3-pip python3-venv ruby-dev scdoc socat texinfo unzip \
-    valac wget wl-clipboard xdg-utils xterm xz-utils yank zstd
+    openssl pandoc pass pkg-config python-is-python3 python3 python3-pip \
+    python3-venv ruby-dev scdoc socat texinfo unzip valac wget wl-clipboard \
+    xdg-utils xterm xz-utils yank zstd
 
 # other setup
 ./setup/fzf.sh
@@ -250,8 +250,9 @@ cat git/config >> ~/.config/git/config
 # pip
 # --------------------
 
-pip install -I --upgrade pynvim pylint gitlint codespell
-
+pip install --user --ignore-installed --upgrade \
+    codespell esbonio gitlint oelint-adv pylint pynvim sphinx \
+    sphinx-rtd-dark-mode sphinx-rtd-theme
 
 # --------------------
 # nvim
