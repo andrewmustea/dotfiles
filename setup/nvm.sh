@@ -22,7 +22,7 @@ else
     [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
 fi
 
-nvm install node --lts=fermium --default
+nvm install node --default --latest-npm
 
-npm install -g npm@latest neovim
+npm install -g npm@latest neovim commitizen
 
