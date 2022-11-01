@@ -245,9 +245,14 @@ require("packer").startup(function(use)
     }
 
     -- telescope
+    use { "nvim-telescope/telescope-fzf-native.nvim",
+      run = "make",
+      cond = not_vscode,
+    }
     use { "nvim-telescope/telescope.nvim",
       branch = "0.1.x",
       requires = {
+        "nvim-telescope/telescope-fzf-native.nvim",
         "nvim-lua/plenary.nvim",
         "LinArcX/telescope-command-palette.nvim",
         "LinArcX/telescope-scriptnames.nvim",
@@ -257,14 +262,6 @@ require("packer").startup(function(use)
       },
       cond = not_vscode,
       config = get_config("telescope")
-    }
-    use { "nvim-telescope/telescope-fzf-native.nvim",
-      run = "make",
-      requires = "nvim-telescope/telescope.nvim",
-      cond = not_vscode,
-      config = function()
-        require("telescope").load_extension("fzf")
-      end
     }
 
     -- syntax
