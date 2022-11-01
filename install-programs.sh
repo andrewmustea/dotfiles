@@ -137,6 +137,9 @@ if [ "$DISTRO" = "ubuntu" ]; then
     # nala
     ./setup/nala.sh
 
+    # gpg terminal pin-entry
+    sudo update-alternatives --install /usr/bin/pinentry pinentry /usr/bin/pinentry-curses 100
+
     # no motd
     sudo chmod -x /etc/update-motd.d/*
 
