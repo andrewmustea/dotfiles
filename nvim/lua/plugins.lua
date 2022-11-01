@@ -53,6 +53,11 @@ require("packer").startup(function(use)
       cond = not_vscode,
       config = get_config("nvim-hlslens")
     }
+    use { "rcarriga/nvim-notify",
+      branch = "master",
+      cond = not_vscode,
+      config = get_config("nvim-notify")
+    }
 
     -- buffers/windows
     use { "matbme/JABS.nvim",
