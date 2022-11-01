@@ -44,7 +44,8 @@ alias winuser='cd "$winuser"'
 alias windoc='cd "$windoc"'
 alias windown='cd "$windown"'
 
-print-path() {
+# print path
+print-path-wsl() {
     printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/'
 }
 
