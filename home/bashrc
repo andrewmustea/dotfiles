@@ -270,7 +270,7 @@ rebase-remote() {
     fi
 }
 
-# add a line to a repositories .git/info/exclude
+# add a pattern to .git/info/exclude
 add-exclude() {
     local repo_config="$PWD"
     if [[ $# -eq 2 ]]; then
@@ -287,7 +287,7 @@ add-exclude() {
         return 1
     fi
 
-    if ! grep -q "^${1}\$" "$repo_config"; then
+    if ! grep -q "$(printf '^%q$' "$1")" "$repo_config"; then
         echo "adding '$1' to '$repo_config'"
         echo "$1" >> "$repo_config"
     else
@@ -295,13 +295,13 @@ add-exclude() {
     fi
 }
 
-# add the hidden .vscode directory to .git/info/exclude
+# add '.vscode*' to .git/info/exclude
 add-exclude-vscode() {
     local repo=$PWD
     if [[ -n "$1" ]]; then
         repo=$1
     fi
-    add-exclude '.vscode/' "$repo"
+    add-exclude ".vscode*" "$repo"
 }
 
 # diff compare against a remote
