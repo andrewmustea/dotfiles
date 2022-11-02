@@ -1,3 +1,5 @@
+#!/bin/bash
+
 #
 # /root/.bashrc
 #
@@ -13,28 +15,6 @@ esac
 # --------------------------------------------------
 # shell options
 # --------------------------------------------------
-
-
-# XDG defaults
-#
-[[ -z "$XDG_DATA_HOME" ]] && export XDG_DATA_HOME=~/.local/share
-[[ -z "$XDG_CONFIG_HOME" ]] && export XDG_CONFIG_HOME=~/.config
-[[ -z "$XDG_STATE_HOME" ]] && export XDG_STATE_HOME="$HOME/.local/state"
-[[ -z "$XDG_CACHE_HOME" ]] && export XDG_CACHE_HOME="$HOME/.cache"
-export DATA="$XDG_DATA_HOME"
-export CONFIG="$XDG_CONFIG_HOME"
-export STATE="$XDG_STATE_HOME"
-export CACHE="$XDG_CACHE_HOME"
-
-if [[ -z "$XDG_RUNTIME_DIR" ]]; then
-    if pidof "systemd" &>/dev/null; then
-        export RUNTIME="/run/user/$UID"
-    else
-        mkdir --parents "/tmp/user/$UID"
-        export RUNTIME="/tmp/user/$UID"
-    fi
-    export XDG_RUNTIME_DIR=$RUNTIME
-fi
 
 
 # bash history
@@ -100,7 +80,10 @@ fi
 
 # python
 #
+export PYLINTHOME="${XDG_CACHE_HOME}"/pylint
+
 alias {pip,pip3}='python3 -m pip'
+alias venv='python3 -m venv'
 
 pip-update-all() {
     pip list --outdated --format=freeze | grep -v '^\-e' | \
@@ -110,6 +93,8 @@ pip-update-all() {
 
 # rust
 #
+alias cargo-update='cargo install-update --all'
+
 export CARGO_HOME="$DATA"/cargo
 export RUSTUP_HOME="$DATA"/rustup
 if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *$CARGO_HOME/bin* ]]; then
@@ -223,10 +208,15 @@ alias gdt='git difftool'
 alias gdth='git difftool HEAD'
 alias gdts='git difftool --staged'
 alias gmt='git mergetool'
-alias git-last-message='git show -s --format=%s'
+alias gr='git remote'
+alias grv='git remote -v'
+
+alias git-show-message='git show -s --format=%s'
 alias git-reset-last='git reset HEAD~1'
+
 alias rebase-origin='rebase-remote origin'
 alias rebase-upstream='rebase-remote upstream'
+
 alias diff-origin='diff-remote origin'
 alias diff-upstream='diff-remote upstream'
 alias difftool-origin='difftool-remote origin'
@@ -243,11 +233,11 @@ get-branch-name() {
     git -C "$dir" rev-parse --abbrev-ref HEAD
 }
 
-# run an interactive rebase starting at a given commit
-rebase-commit() {
+# run an interactive rebase starting at a given commit inclusively
+rebase-at-commit() {
     if [[ -z "$1" ]]; then
         echo "error: missing commit-id"
-        echo "usage: update-past-commit <commit-id>"
+        echo "usage: rebase-at-commit <commit-id>"
         return 1
     fi
 
@@ -280,7 +270,7 @@ rebase-remote() {
     fi
 }
 
-# add a line to a repositories .git/info/exclude
+# add a pattern to .git/info/exclude
 add-exclude() {
     local repo_config="$PWD"
     if [[ $# -eq 2 ]]; then
@@ -297,7 +287,7 @@ add-exclude() {
         return 1
     fi
 
-    if ! grep -q "^${1}\$" "$repo_config"; then
+    if ! grep -q "$(printf '^%q$' "$1")" "$repo_config"; then
         echo "adding '$1' to '$repo_config'"
         echo "$1" >> "$repo_config"
     else
@@ -305,27 +295,29 @@ add-exclude() {
     fi
 }
 
-# add the hidden .vscode directory to .git/info/exclude
+# add '.vscode*' to .git/info/exclude
 add-exclude-vscode() {
     local repo=$PWD
     if [[ -n "$1" ]]; then
         repo=$1
     fi
-    add-exclude '.vscode/' "$repo"
+    add-exclude ".vscode*" "$repo"
 }
 
-# diff compare against a remote
+# diff compare against the same branch on a remote
 diff-remote() {
     if [[ -z "$1" ]]; then
-        echo "diff-remote <remote> [diff args]"
+        echo "error: missing remote name"
+        echo "usage: diff-remote <remote> [diff args]"
     fi
     git diff "$1/$(get-branch-name)" "${@:2}"
 }
 
-# difftool compare against a remote
+# run difftool against the same branch on a remote
 difftool-remote() {
     if [[ -z "$1" ]]; then
-        echo "difftool-remote <remote> [difftool args]"
+        echo "error: missing remote name"
+        echo "usage: difftool-remote <remote> [difftool args]"
     fi
     git difftool "$1/$(get-branch-name)" "${@:2}"
 }
