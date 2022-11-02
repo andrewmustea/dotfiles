@@ -83,6 +83,7 @@ fi
 export PYLINTHOME="${XDG_CACHE_HOME}"/pylint
 
 alias {pip,pip3}='python3 -m pip'
+alias venv='python3 -m venv'
 
 pip-update-all() {
     pip list --outdated --format=freeze | grep -v '^\-e' | \
