@@ -304,18 +304,20 @@ add-exclude-vscode() {
     add-exclude ".vscode*" "$repo"
 }
 
-# diff compare against a remote
+# diff compare against the same branch on a remote
 diff-remote() {
     if [[ -z "$1" ]]; then
-        echo "diff-remote <remote> [diff args]"
+        echo "error: missing remote name"
+        echo "usage: diff-remote <remote> [diff args]"
     fi
     git diff "$1/$(get-branch-name)" "${@:2}"
 }
 
-# difftool compare against a remote
+# run difftool against the same branch on a remote
 difftool-remote() {
     if [[ -z "$1" ]]; then
-        echo "difftool-remote <remote> [difftool args]"
+        echo "error: missing remote name"
+        echo "usage: difftool-remote <remote> [difftool args]"
     fi
     git difftool "$1/$(get-branch-name)" "${@:2}"
 }
