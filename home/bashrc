@@ -208,10 +208,15 @@ alias gdt='git difftool'
 alias gdth='git difftool HEAD'
 alias gdts='git difftool --staged'
 alias gmt='git mergetool'
-alias git-last-message='git show -s --format=%s'
+alias gr='git remote'
+alias grv='git remote -v'
+
+alias git-show-message='git show -s --format=%s'
 alias git-reset-last='git reset HEAD~1'
+
 alias rebase-origin='rebase-remote origin'
 alias rebase-upstream='rebase-remote upstream'
+
 alias diff-origin='diff-remote origin'
 alias diff-upstream='diff-remote upstream'
 alias difftool-origin='difftool-remote origin'
