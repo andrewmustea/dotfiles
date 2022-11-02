@@ -233,11 +233,11 @@ get-branch-name() {
     git -C "$dir" rev-parse --abbrev-ref HEAD
 }
 
-# run an interactive rebase starting at a given commit
-rebase-commit() {
+# run an interactive rebase starting at a given commit inclusively
+rebase-at-commit() {
     if [[ -z "$1" ]]; then
         echo "error: missing commit-id"
-        echo "usage: update-past-commit <commit-id>"
+        echo "usage: rebase-at-commit <commit-id>"
         return 1
     fi
 
