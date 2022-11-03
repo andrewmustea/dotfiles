@@ -188,13 +188,16 @@ alias man='man -P "less -QR"'
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-print-path() {
-    printf "%s\n" "${PATH//:/$'\n'}"
-}
-
 # --------------------------------------------------
 # other
 # --------------------------------------------------
+
+
+# print path
+#
+print-path() {
+    printf "%s\n" "${PATH//:/$'\n'}"
+}
 
 
 # ips and ssh targets
