@@ -81,11 +81,17 @@ shopt -s \
     autocd cdspell checkhash checkjobs checkwinsize cmdhist dirspell dotglob \
     expand_aliases extglob extquote globstar histappend interactive_comments \
     no_empty_cmd_completion progcomp promptvars sourcepath xpg_echo
+
+
+# bash_completion
+#
 if ! shopt -oq posix; then
-    if [ -f /usr/share/bash-completion/bash_completion ]; then
+    if [[ -f /usr/share/bash-completion/bash_completion ]]; then
         source /usr/share/bash-completion/bash_completion
-    elif [ -f /etc/bash_completion ]; then
+    elif [[ -f /etc/bash_completion ]]; then
         source /etc/bash_completion
+    else
+        echo "bash_completion not found"
     fi
 fi
 
