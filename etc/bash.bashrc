@@ -124,27 +124,6 @@ if [ -x /usr/lib/command-not-found ] \
 fi
 
 
-# XDG defaults
-#
-export XDG_DATA_HOME=~/.local/share
-export XDG_CONFIG_HOME=~/.config
-export XDG_STATE_HOME="$HOME/.local/state"
-export XDG_CACHE_HOME="$HOME/.cache"
-
-export DATA="$XDG_DATA_HOME"
-export CONFIG="$XDG_CONFIG_HOME"
-export STATE="$XDG_STATE_HOME"
-export CACHE="$XDG_CACHE_HOME"
-
-if pidof "systemd" &>/dev/null; then
-    export XDG_RUNTIME_DIR="/run/user/$UID"
-else
-    mkdir --parents "/tmp/user/$UID"
-    export XDG_RUNTIME_DIR="/tmp/user/$UID"
-fi
-export RUNTIME=$XDG_RUNTIME_DIR
-
-
 # --------------------------------------------------
 # interactive bash settings
 # --------------------------------------------------

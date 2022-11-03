@@ -26,6 +26,31 @@ append_path '/usr/bin'
 # Force PATH to be environment
 export PATH
 
+# Unload our profile API functions
+unset -f append_path
+
+# XDG defaults
+#
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_STATE_HOME="$HOME/.local/state"
+export XDG_CACHE_HOME="$HOME/.cache"
+
+uid="$(id -u)"
+if pidof "systemd" &>/dev/null; then
+    export XDG_RUNTIME_DIR="/run/user/$uid"
+else
+    mkdir --parents "/tmp/user/$uid"
+    export XDG_RUNTIME_DIR="/tmp/user/$uid"
+fi
+unset uid
+
+export DATA="$XDG_DATA_HOME"
+export CONFIG="$XDG_CONFIG_HOME"
+export STATE="$XDG_STATE_HOME"
+export CACHE="$XDG_CACHE_HOME"
+export RUNTIME="$XDG_RUNTIME_DIR"
+
 # Load profiles from /etc/profile.d
 if test -d /etc/profile.d/; then
     for profile in /etc/profile.d/*.sh; do
@@ -34,14 +59,11 @@ if test -d /etc/profile.d/; then
     unset profile
 fi
 
-# Unload our profile API functions
-unset -f append_path
-
 # Source global bash config, when interactive but not posix or sh mode
-if test "$BASH" &&\
-   test "$PS1" &&\
-   test -z "$POSIXLY_CORRECT" &&\
-   test "${0#-}" != sh &&\
+if test "$BASH" && \
+   test "$PS1" && \
+   test -z "$POSIXLY_CORRECT" && \
+   test "${0#-}" != sh && \
    test -r /etc/bash.bashrc
 then
     . /etc/bash.bashrc
