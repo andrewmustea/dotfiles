@@ -200,7 +200,7 @@ print-path() {
 }
 
 
-# ips and ssh targets
+# ip aliases
 #
 alias pingpath='mtr'
 alias myip='curl -s checkip.amazonaws.com'
@@ -211,7 +211,7 @@ alias myip='curl -s checkip.amazonaws.com'
 alias mx='chmod a+x'
 
 
-# other functions
+# process functions
 #
 psgrep() {
     pgrep "$@" | xargs --no-run-if-empty ps -fp
@@ -219,7 +219,7 @@ psgrep() {
 
 pskill() {
     local pid
-    pid=$(pgrep "$@" | xargs -r ps --no-headers -fp | awk '{ print $2 }')
+    pid="$(pgrep "$@" | xargs -r ps --no-headers -fp | awk '{ print $2 }')"
     echo "killing $1 (process $pid)..."
     kill -9 "$pid"
 }
