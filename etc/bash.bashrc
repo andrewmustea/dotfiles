@@ -224,9 +224,12 @@ pskill() {
     kill -9 "$pid"
 }
 
+
+# compressed file extraction
+#
 extract() {
     if [ -f "$1" ]; then
-        case $1 in
+        case "$1" in
             *.tar.bz2) tar xvjf "$1" ;;
             *.tar.gz) tar xvzf "$1" ;;
             *.tar.xz) tar xvf "$1" ;;
@@ -239,10 +242,10 @@ extract() {
             *.zip) unzip "$1" ;;
             *.Z) uncompress "$1" ;;
             *.7z) 7z x "$1" ;;
-            *) echo "don't know how to extract '$1'..." ;;
+            *) echo "unknown compressed file type '.${1#*.}'" ;;
         esac
     else
-        echo "'$1' is not a valid file!"
+        echo "not a valid file: '$1'"
     fi
 }
 
