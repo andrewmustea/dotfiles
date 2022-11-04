@@ -13,60 +13,7 @@ esac
 
 
 # --------------------------------------------------
-# shell options
-# --------------------------------------------------
-
-
-# bash history
-#
-PROMPT_COMMAND='history -a'
-HISTSIZE=10000
-HISTFILESIZE=100000
-export HISTCONTROL=ignoredups
-export HISTIGNORE='history:pwd:ls:ll:la:l:'
-export HISTTIMEFORMAT='%F %T '
-export HISTFILE="$STATE/bash/history"
-
-
-# gpg tty
-#
-GPG_TTY=$(tty)
-export GPG_TTY
-
-
-# --------------------------------------------------
-# extra XDG settings
-# --------------------------------------------------
-
-
-# wget
-#
-alias wget="wget --hsts-file=\"$DATA/wget-hsts\""
-
-
-# azure
-#
-export AZURE_CONFIG_DIR="$DATA/azure"
-export AZURE_DEVOPS_CACHE_DIR="$CACHE/azure-devops"
-
-
-# npm
-#
-export NPM_CONFIG_USERCONFIG="$CONFIG/npm/npmrc"
-
-
-# gem
-#
-export GEM_SPEC_CACHE="$XDG_CACHE_HOME/gem"
-
-
-# pass
-#
-export PASSWORD_STORE_DIR="$DATA/pass"
-
-
-# --------------------------------------------------
-# path additions
+# user paths
 # --------------------------------------------------
 
 
@@ -78,47 +25,11 @@ if [[ "$PATH" != *$HOME_BIN* ]]; then
 fi
 
 
-# python
-#
-export PYLINTHOME="${XDG_CACHE_HOME}"/pylint
-
-alias {pip,pip3}='python3 -m pip'
-alias venv='python3 -m venv'
-
-pip-update-all() {
-    pip list --outdated --format=freeze | grep -v '^\-e' | \
-        cut -d = -f 1 | xargs -n1 pip install -U -I
-}
-
-
-# rust
-#
-alias cargo-update='cargo install-update --all'
-
-export CARGO_HOME="$DATA"/cargo
-export RUSTUP_HOME="$DATA"/rustup
-if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *$CARGO_HOME/bin* ]]; then
-    export PATH="$CARGO_HOME/bin:$PATH"
-
-    # bat cache
-    if ! [[ -d "$CACHE/bat" ]]; then
-        echo "Rebuilding bat cache..."
-        bat cache --build
-    fi
-fi
-
-
 # go
 #
-GO_BIN=/usr/local/go/bin
-if [[ -d "$GO_BIN" ]]; then
-    if [[ "$PATH" != *$GO_BIN* ]]; then
-        export PATH="${PATH:+${PATH}:}$GO_BIN"
-    fi
-    export GOPATH="$DATA"/go
-    if [[ -d "$GOPATH"/bin ]] && [[ "$PATH" != *$GOPATH/bin* ]]; then
-        export PATH="${PATH:+${PATH}:}$GOPATH/bin"
-    fi
+export GOPATH="$DATA"/go
+if [[ -d "$GOPATH"/bin ]] && [[ "$PATH" != *$GOPATH/bin* ]]; then
+    export PATH="${PATH:+${PATH}:}$GOPATH/bin"
 fi
 
 
@@ -131,42 +42,20 @@ if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *$CABAL_DIR/bin* ]]; then
 fi
 
 
-# fzf
+# rust
 #
-FZF_DIR="$DATA/fzf"
-FZF_ENV="$CONFIG/fzf/fzf.bash"
-[[ -f "$FZF_ENV" ]] && [[ -x "$FZF_DIR/bin/fzf" ]] && source "$FZF_ENV"
+alias cargo-update='cargo install-update --all'
 
-update-fzf() {
-    if ! [[ -d $FZF_DIR ]]; then
-        echo "Couldn't find fzf direcotry in '$FZF_DIR'"
-        return 1
-    fi
-    git -C "$FZF_DIR" pull
-    "$FZF_DIR/install --xdg --bin"
-}
+export CARGO_HOME="$DATA"/cargo
+export RUSTUP_HOME="$DATA"/rustup
+if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *$CARGO_HOME/bin* ]]; then
+    export PATH="$CARGO_HOME/bin:$PATH"
+fi
 
-# fzf can use fd-find
+# fzf can use fd
 if which fd &>/dev/null; then
-    export FZF_DEFAULT_COMMAND='command fd -HI --type file'
+    export FZF_DEFAULT_COMMAND='command fd -HIi --type file'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-fi
-
-
-# lua lsp
-#
-LUA_LSP="$DATA/lua-language-server/bin"
-if [[ -d "$LUA_LSP" ]] && [[ "$PATH" != *$LUA_LSP* ]]; then
-    export PATH="${PATH:+${PATH}:}$LUA_LSP"
-fi
-
-
-# nvm
-#
-export NVM_DIR="$XDG_CONFIG_HOME/nvm"
-if [[ -d "$NVM_DIR" ]]; then
-    source "$NVM_DIR/nvm.sh"
-    source "$NVM_DIR/bash_completion"
 fi
 
 
@@ -309,7 +198,19 @@ diff-remote() {
     if [[ -z "$1" ]]; then
         echo "error: missing remote name"
         echo "usage: diff-remote <remote> [diff args]"
+        return 1
     fi
+
+    if [[ ! -d .git/ ]]; then
+        echo "error: not a git directory"
+        return 1
+    fi
+
+    if ! git remote | grep -q "$1"; then
+        echo "error: unknown remote '$1'"
+        return 1
+    fi
+
     git diff "$1/$(get-branch-name)" "${@:2}"
 }
 
@@ -318,7 +219,19 @@ difftool-remote() {
     if [[ -z "$1" ]]; then
         echo "error: missing remote name"
         echo "usage: difftool-remote <remote> [difftool args]"
+        return 1
     fi
+
+    if [[ ! -d .git/ ]]; then
+        echo "error: not a git directory"
+        return 1
+    fi
+
+    if ! git remote | grep -q "$1"; then
+        echo "error: unknown remote '$1'"
+        return 1
+    fi
+
     git difftool "$1/$(get-branch-name)" "${@:2}"
 }
 
