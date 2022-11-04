@@ -137,14 +137,6 @@ if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *$CABAL_DIR/bin* ]]; then
 fi
 
 
-# lua lsp
-#
-LUA_LSP="$DATA/lua-language-server/bin"
-if [[ -d "$LUA_LSP" ]] && [[ "$PATH" != *$LUA_LSP* ]]; then
-    export PATH="${PATH:+${PATH}:}$LUA_LSP"
-fi
-
-
 # --------------------------------------------------
 # projects
 # --------------------------------------------------
