@@ -2,6 +2,10 @@
 
 DISTRO="$(grep "^ID=" /etc/os-release | awk -F "=" '{ print $2 }')"
 
+[ -z "$XDG_CONFIG_HOME" ] && export XDG_CONFIG_HOME=~/.config
+
+export NVM_DIR="$XDG_CONFIG_HOME/nvm"
+
 if which nvm >/dev/null 2>&1; then
     echo "nvm already installed"
     if which node >/dev/null 2>&1; then
@@ -10,12 +14,9 @@ if which nvm >/dev/null 2>&1; then
     fi
 elif [ "$DISTRO" = "arch" ]; then
     sudo pacman -S --needed --noconfirm nvm
+    mkdir --parents "$XDG_CONFIG_HOME/nvm"
     . /usr/share/nvm/init-nvm.sh
 else
-    [ -z "$XDG_CONFIG_HOME" ] && export XDG_CONFIG_HOME=~/.config
-
-    export NVM_DIR="$XDG_CONFIG_HOME/nvm"
-
     git clone https://github.com/nvm-sh/nvm.git "$NVM_DIR"
 
     [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
