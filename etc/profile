@@ -26,9 +26,6 @@ append_path '/usr/bin'
 # Force PATH to be environment
 export PATH
 
-# Unload our profile API functions
-unset -f append_path
-
 # XDG defaults
 #
 export XDG_DATA_HOME="$HOME/.local/share"
@@ -58,6 +55,9 @@ if test -d /etc/profile.d/; then
     done
     unset profile
 fi
+
+# Unload our profile API functions
+unset -f append_path
 
 # Source global bash config, when interactive but not posix or sh mode
 if test "$BASH" && \
