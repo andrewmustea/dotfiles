@@ -99,12 +99,6 @@ export CARGO_HOME="$DATA"/cargo
 export RUSTUP_HOME="$DATA"/rustup
 if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *$CARGO_HOME/bin* ]]; then
     export PATH="$CARGO_HOME/bin:$PATH"
-
-    # bat cache
-    if ! [[ -d "$CACHE/bat" ]]; then
-        echo "Rebuilding bat cache..."
-        bat cache --build
-    fi
 fi
 
 # fzf can use fd
