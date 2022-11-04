@@ -198,7 +198,19 @@ diff-remote() {
     if [[ -z "$1" ]]; then
         echo "error: missing remote name"
         echo "usage: diff-remote <remote> [diff args]"
+        return 1
     fi
+
+    if [[ ! -d .git/ ]]; then
+        echo "error: not a git directory"
+        return 1
+    fi
+
+    if ! git remote | grep -q "$1"; then
+        echo "error: unknown remote '$1'"
+        return 1
+    fi
+
     git diff "$1/$(get-branch-name)" "${@:2}"
 }
 
@@ -207,7 +219,19 @@ difftool-remote() {
     if [[ -z "$1" ]]; then
         echo "error: missing remote name"
         echo "usage: difftool-remote <remote> [difftool args]"
+        return 1
     fi
+
+    if [[ ! -d .git/ ]]; then
+        echo "error: not a git directory"
+        return 1
+    fi
+
+    if ! git remote | grep -q "$1"; then
+        echo "error: unknown remote '$1'"
+        return 1
+    fi
+
     git difftool "$1/$(get-branch-name)" "${@:2}"
 }
 
