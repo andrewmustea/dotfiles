@@ -133,7 +133,18 @@ fi
 # distro specific
 # --------------------
 
-if [ "$DISTRO" = "ubuntu" ]; then
+if ["$DISTRO" = "arch" ]; then
+    # programs
+    sudo dist_install -S \
+        autoconf automake bash-completion binutils bison chrpath clang \
+        clang-format clang-tools clangd cmake cmatrix cmatrix-xfont \
+        command-not-found cpio curl diffstat doxygen flex g++ gawk gcc gdb \
+        gem gettext git gpg iputils-ping jq lldb llvm lua5.3 luajit luarocks \
+        make man-db meson neovim ninja-build openssl pandoc pass pkg-config \
+        python-is-python3 python3 python3-pip python3-venv ruby scdoc socat \
+        texinfo unzip valac wget wl-clipboard xclip xdg-utils xterm xz-utils \
+        yank zstd
+elif [ "$DISTRO" = "ubuntu" ]; then
     # nala
     ./setup/nala.sh
 
@@ -147,10 +158,24 @@ if [ "$DISTRO" = "ubuntu" ]; then
     sudo nala purge snapd update-motd show-motd motd-news-config
 
     # ppas
-    sudo add-apt-repository -y ppa:neovim-ppa/stable
+    sudo add-apt-repository -y ppa:neovim-ppa/unstable
     sudo add-apt-repository -y ppa:git-core/ppa
     sudo add-apt-repository -y ppa:flatpak/stable
     sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+
+    # programs
+    sudo nala install \
+        aptitude autoconf automake bash-completion binutils bison \
+        build-essential chrpath clang clang-format clang-tools clangd cmake \
+        cmatrix cmatrix-xfont command-not-found cpio curl debianutils \
+        diffstat doxygen flex g++ gawk gcc gdb gem gettext git gpg \
+        iputils-ping jq libegl1-mesa libgee-0.8-dev libgmp-dev \
+        libjsonrpc-glib-1.0-dev liblua5.3-dev liblz4-tool libsdl1.2-dev \
+        libssl-dev libtool libtool-bin libvala-dev lldb llvm lua5.3 luajit \
+        luarocks make man-db mesa-common-dev meson neovim ninja-build openssl \
+        pandoc pass pkg-config python-is-python3 python3 python3-pip \
+        python3-venv ruby-dev scdoc socat texinfo unzip valac wget \
+        wl-clipboard xclip xdg-utils xterm xz-utils yank zstd
 
     # pacstall
     sudo bash -c "$(curl -fsSL https://git.io/JsADh ||
@@ -168,6 +193,7 @@ if [ "$DISTRO" = "ubuntu" ]; then
         rm -rf "/tmp/sudo"
     fi
 
+    # disable sudo as admin flag
     sudo cp etc/sudoers.d/disable_sudo_admin_successful /etc/sudoers.d/
 elif [ "$DISTRO" = "debian" ]; then
     ./setup/nala.sh
@@ -181,17 +207,6 @@ fi
 
 sudo chown "$USER:$USER" ~ -R
 
-dist_install \
-    autoconf automake bash-completion binutils bison build-essential chrpath \
-    clang clang-format clang-tools clangd cmake cmatrix cmatrix-xfont \
-    command-not-found cpio curl debianutils diffstat doxygen flex g++ gawk \
-    gcc gdb gem gettext git gpg iputils-ping jq libegl1-mesa libgee-0.8-dev \
-    libgmp-dev libjsonrpc-glib-1.0-dev liblua5.3-dev liblz4-tool \
-    libsdl1.2-dev libssl-dev libtool libtool-bin libvala-dev lldb llvm lua5.3 \
-    luajit luarocks make man-db mesa-common-dev meson neovim ninja-build \
-    openssl pandoc pass pkg-config python-is-python3 python3 python3-pip \
-    python3-venv ruby-dev scdoc socat texinfo unzip valac wget wl-clipboard \
-    xdg-utils xterm xz-utils yank zstd
 
 # other setup
 ./setup/fzf.sh
