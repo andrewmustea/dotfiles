@@ -13,60 +13,7 @@ esac
 
 
 # --------------------------------------------------
-# shell options
-# --------------------------------------------------
-
-
-# bash history
-#
-PROMPT_COMMAND='history -a'
-HISTSIZE=10000
-HISTFILESIZE=100000
-export HISTCONTROL=ignoredups
-export HISTIGNORE='history:pwd:ls:ll:la:l:'
-export HISTTIMEFORMAT='%F %T '
-export HISTFILE="$STATE/bash/history"
-
-
-# gpg tty
-#
-GPG_TTY=$(tty)
-export GPG_TTY
-
-
-# --------------------------------------------------
-# extra XDG settings
-# --------------------------------------------------
-
-
-# wget
-#
-alias wget="wget --hsts-file=\"$DATA/wget-hsts\""
-
-
-# azure
-#
-export AZURE_CONFIG_DIR="$DATA/azure"
-export AZURE_DEVOPS_CACHE_DIR="$CACHE/azure-devops"
-
-
-# npm
-#
-export NPM_CONFIG_USERCONFIG="$CONFIG/npm/npmrc"
-
-
-# gem
-#
-export GEM_SPEC_CACHE="$XDG_CACHE_HOME/gem"
-
-
-# pass
-#
-export PASSWORD_STORE_DIR="$DATA/pass"
-
-
-# --------------------------------------------------
-# path additions
+# user paths
 # --------------------------------------------------
 
 
@@ -78,17 +25,21 @@ if [[ "$PATH" != *$HOME_BIN* ]]; then
 fi
 
 
-# python
+# go
 #
-export PYLINTHOME="${XDG_CACHE_HOME}"/pylint
+export GOPATH="$DATA"/go
+if [[ -d "$GOPATH"/bin ]] && [[ "$PATH" != *$GOPATH/bin* ]]; then
+    export PATH="${PATH:+${PATH}:}$GOPATH/bin"
+fi
 
-alias {pip,pip3}='python3 -m pip'
-alias venv='python3 -m venv'
 
-pip-update-all() {
-    pip list --outdated --format=freeze | grep -v '^\-e' | \
-        cut -d = -f 1 | xargs -n1 pip install -U -I
-}
+# haskell
+#
+export STACK_ROOT="$XDG_DATA_HOME"/stack
+export CABAL_DIR="$DATA"/cabal
+if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *$CABAL_DIR/bin* ]]; then
+    export PATH="$CABAL_DIR/bin:$PATH"
+fi
 
 
 # rust
@@ -105,29 +56,6 @@ fi
 if which fd &>/dev/null; then
     export FZF_DEFAULT_COMMAND='command fd -HIi --type file'
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-fi
-
-
-# go
-#
-GO_BIN=/usr/local/go/bin
-if [[ -d "$GO_BIN" ]]; then
-    if [[ "$PATH" != *$GO_BIN* ]]; then
-        export PATH="${PATH:+${PATH}:}$GO_BIN"
-    fi
-    export GOPATH="$DATA"/go
-    if [[ -d "$GOPATH"/bin ]] && [[ "$PATH" != *$GOPATH/bin* ]]; then
-        export PATH="${PATH:+${PATH}:}$GOPATH/bin"
-    fi
-fi
-
-
-# haskell
-#
-export STACK_ROOT="$XDG_DATA_HOME"/stack
-export CABAL_DIR="$DATA"/cabal
-if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *$CABAL_DIR/bin* ]]; then
-    export PATH="$CABAL_DIR/bin:$PATH"
 fi
 
 

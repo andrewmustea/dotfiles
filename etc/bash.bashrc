@@ -118,9 +118,15 @@ command_not_found_handle() {
 alias sudo='sudo -v; sudo --preserve-env '
 
 
-# --------------------------------------------------
-# interactive bash settings
-# --------------------------------------------------
+# bash history
+#
+PROMPT_COMMAND='history -a'
+HISTSIZE=10000
+HISTFILESIZE=100000
+export HISTCONTROL=ignoredups
+export HISTIGNORE='history:pwd:ls:ll:la:l:'
+export HISTTIMEFORMAT='%F %T '
+export HISTFILE="$STATE/bash/history"
 
 
 # ls
@@ -147,6 +153,12 @@ alias dmesg='dmesg --color'
 GCC_COLORS="$(printf "error=01;31:warning=01;35:note=01;%s" \
     "36:caret=01;32:locus=01:quote=01")"
 export GCC_COLORS
+
+
+# gpg tty
+#
+GPG_TTY=$(tty)
+export GPG_TTY
 
 
 # diff
@@ -187,6 +199,49 @@ alias man='man -P "less -QR"'
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+
+# python
+#
+alias {pip,pip3}='python3 -m pip'
+alias venv='python3 -m venv'
+
+
+# --------------------------------------------------
+# extra XDG settings
+# --------------------------------------------------
+
+
+# azure
+#
+export AZURE_CONFIG_DIR="$DATA/azure"
+export AZURE_DEVOPS_CACHE_DIR="$CACHE/azure-devops"
+
+
+# gem
+#
+export GEM_SPEC_CACHE="$CACHE/gem"
+
+
+# npm
+#
+export NPM_CONFIG_USERCONFIG="$CONFIG/npm/npmrc"
+
+
+# pass
+#
+export PASSWORD_STORE_DIR="$DATA/pass"
+
+
+# pylint
+#
+export PYLINTHOME="$CACHE/pylint"
+
+
+# wget
+#
+alias wget="wget --hsts-file=\"$DATA/wget-hsts\""
+
 
 # --------------------------------------------------
 # other
