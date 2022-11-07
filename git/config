@@ -1,72 +1,72 @@
 [core]
-    editor = nvim
-    pager = delta
+	editor = nvim
+	pager = delta
 [credential]
-    helper =
-    helper = /usr/local/share/gcm-core/git-credential-manager-core
-    ; helper = /usr/share/git-credential-manager-core/git-credential-manager-core
-    credentialStore = gpg
-    guiPrompt = false
+	helper =
+	helper = /usr/local/share/gcm-core/git-credential-manager-core
+	; helper = /usr/share/git-credential-manager-core/git-credential-manager-core
+	credentialStore = gpg
+	guiPrompt = false
 [interactive]
-    diffFilter = delta --color-only
+	diffFilter = delta --color-only
 [add.interactive]
-    useBuiltin = false
+	useBuiltin = false
 [url "https://"]
-    insteadOf = git://
+	insteadOf = git://
 [credential "https://dev.azure.com"]
-    useHttpPath = true
+	useHttpPath = true
 [push]
-    autoSetupRemote = true
+	autoSetupRemote = true
 [diff]
-    tool = nvimdiff
-    colorMoved = default
+	tool = nvimdiff
+	colorMoved = default
 [difftool]
-    prompt = false
+	prompt = false
 [difftool "nvimdiff"]
-    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
+	cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 [merge]
-    tool = nvim_mergetool
-    conflictstyle = diff3
-    prompt = false
+	tool = nvim_mergetool
+	conflictstyle = diff3
+	prompt = false
 [mergetool]
-    prompt = false
-    keepBackup = false
+	prompt = false
+	keepBackup = false
 [mergetool "nvim_mergetool"]
-    cmd = nvim -f -c "MergetoolStart" "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
+	cmd = nvim -f -c "MergetoolStart" "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
 [delta]
-    navigate = true  # use n and N to move between diff sections
-    light = false
-    features = pompous-panther
+	navigate = true  # use n and N to move between diff sections
+	light = false
+	features = pompous-panther
 [delta "pompous-panther"]
-    #author: https://github.com/andrewmustea
-    blame-code-style = syntax
-    blame-format = "{author:<18} ({commit:>7}) {timestamp:^16} "
-    blame-palette = "#404040" "#151a1e" "#202020" "#022021"
-    commit-decoration-style = "#888888" box ul
-    dark = true
-    file-added-label = [+]
-    file-copied-label = [==]
-    file-decoration-style = "#404040" ul
-    file-modified-label = [*]
-    file-removed-label = [-]
-    file-renamed-label = [->]
-    file-style = "#0078c8"
-    hunk-header-style = omit
-    keep-plus-minus-markers = true
-    side-by-side = true
-    syntax-theme = black_sun
-    true-color = always
-    zero-style = syntax
-    line-numbers = true
-    line-numbers-zero-style = "#404040"
-    line-numbers-left-format = " {nm:>1} │"
-    line-numbers-left-style = red
-    line-numbers-minus-style = red
-    minus-emph-style = "#bbbbbb" "#601010"
-    minus-style = "#bbbbbb" "#300000"
-    line-numbers-right-format = " {np:>1} │"
-    line-numbers-right-style = green
-    line-numbers-plus-style = green
-    plus-emph-style = "#bbbbbb" "#105010"
-    plus-style = "#bbbbbb" "#003000"
+	#author: https://github.com/andrewmustea
+	blame-code-style = syntax
+	blame-format = "{author:<18} ({commit:>7}) {timestamp:^16} "
+	blame-palette = "#404040" "#151a1e" "#202020" "#022021"
+	commit-decoration-style = "#888888" box ul
+	dark = true
+	file-added-label = [+]
+	file-copied-label = [==]
+	file-decoration-style = "#404040" ul
+	file-modified-label = [*]
+	file-removed-label = [-]
+	file-renamed-label = [->]
+	file-style = "#0078c8"
+	hunk-header-style = omit
+	keep-plus-minus-markers = true
+	side-by-side = true
+	syntax-theme = black_sun
+	true-color = always
+	zero-style = syntax
+	line-numbers = true
+	line-numbers-zero-style = "#404040"
+	line-numbers-left-format = " {nm:>1} │"
+	line-numbers-left-style = red
+	line-numbers-minus-style = red
+	minus-emph-style = "#bbbbbb" "#601010"
+	minus-style = "#bbbbbb" "#300000"
+	line-numbers-right-format = " {np:>1} │"
+	line-numbers-right-style = green
+	line-numbers-plus-style = green
+	plus-emph-style = "#bbbbbb" "#105010"
+	plus-style = "#bbbbbb" "#003000"
 
