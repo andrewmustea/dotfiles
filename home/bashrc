@@ -4,18 +4,15 @@
 # ~/.bashrc
 #
 
-
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
     *) return ;;
 esac
 
-
 # --------------------------------------------------
 # user paths
 # --------------------------------------------------
-
 
 # local home bin
 #
@@ -24,14 +21,12 @@ if [[ "$PATH" != *$HOME_BIN* ]]; then
     export PATH="${PATH:+${PATH}:}$HOME_BIN"
 fi
 
-
 # go
 #
 export GOPATH="$DATA"/go
 if [[ -d "$GOPATH"/bin ]] && [[ "$PATH" != *$GOPATH/bin* ]]; then
     export PATH="${PATH:+${PATH}:}$GOPATH/bin"
 fi
-
 
 # haskell
 #
@@ -40,7 +35,6 @@ export CABAL_DIR="$DATA"/cabal
 if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *$CABAL_DIR/bin* ]]; then
     export PATH="$CABAL_DIR/bin:$PATH"
 fi
-
 
 # rust
 #
@@ -58,11 +52,9 @@ if which fd &>/dev/null; then
     export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 fi
 
-
 # --------------------------------------------------
 # projects
 # --------------------------------------------------
-
 
 # local projects
 #
@@ -72,11 +64,9 @@ export PROJECTS_DIR
 ASCII_ART="$PROJECTS_DIR/ascii_art"
 [[ -d "$ASCII_ART" ]] && source "$ASCII_ART/ascii.bash"
 
-
 # --------------------------------------------------
 # git settings
 # --------------------------------------------------
-
 
 # git aliases
 #
@@ -110,7 +100,6 @@ alias diff-origin='diff-remote origin'
 alias diff-upstream='diff-remote upstream'
 alias difftool-origin='difftool-remote origin'
 alias difftool-upstream='difftool-remote upstream'
-
 
 # print the branch name of the current directory or a given one
 get-branch-name() {

@@ -4,18 +4,15 @@
 # /etc/bash.bashrc
 #
 
-
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
     *) return ;;
 esac
 
-
 # --------------------------------------------------
 # terminal prompt settings
 # --------------------------------------------------
-
 
 # bash colors
 export GREEN="\[\033[0;32m\]"
@@ -61,14 +58,12 @@ case "$TERM" in
         ;;
 esac
 
-
 # shopt
 #
 shopt -s \
     autocd cdspell checkhash checkjobs checkwinsize cmdhist dirspell dotglob \
     expand_aliases extglob extquote globstar histappend interactive_comments \
     no_empty_cmd_completion progcomp promptvars sourcepath xpg_echo
-
 
 # bash_completion
 #
@@ -81,7 +76,6 @@ if ! shopt -oq posix; then
         echo "bash_completion not found"
     fi
 fi
-
 
 # command-not-found
 #
@@ -99,11 +93,9 @@ command_not_found_handle() {
     fi
 }
 
-
 # sudo
 #
 alias sudo='sudo -v; sudo --preserve-env '
-
 
 # bash history
 #
@@ -115,7 +107,6 @@ export HISTIGNORE='history:pwd:ls:ll:la:l:'
 export HISTTIMEFORMAT='%F %T '
 export HISTFILE="$STATE/bash/history"
 
-
 # ls
 #
 alias ls='ls -hF --color=auto'
@@ -123,11 +114,9 @@ alias ll='ls -l'
 alias la='ls -Al'
 alias l='ls -C'
 
-
 # mkdir
 #
 alias mkdir='mkdir --parents'
-
 
 # colors
 #
@@ -141,17 +130,14 @@ GCC_COLORS="$(printf "error=01;31:warning=01;35:note=01;%s" \
     "36:caret=01;32:locus=01:quote=01")"
 export GCC_COLORS
 
-
 # gpg tty
 #
 GPG_TTY=$(tty)
 export GPG_TTY
 
-
 # diff
 #
 alias diffdir='diff -qr'
-
 
 # nvim
 #
@@ -160,7 +146,6 @@ export EDITOR='nvim'
 alias {vi,nvi}='nvim'
 alias {vd,nvd,nvimdiff}='nvim -d'
 alias nvim-remove-swap='rm -rf "$XDG_DATA_HOME/nvim/swap/"'
-
 
 # less
 #
@@ -187,53 +172,43 @@ alias man='man -P "less -QR"'
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-
 # python
 #
 alias {pip,pip3}='python3 -m pip'
 alias venv='python3 -m venv'
 
-
 # --------------------------------------------------
 # extra XDG settings
 # --------------------------------------------------
-
 
 # azure
 #
 export AZURE_CONFIG_DIR="$DATA/azure"
 export AZURE_DEVOPS_CACHE_DIR="$CACHE/azure-devops"
 
-
 # gem
 #
 export GEM_SPEC_CACHE="$CACHE/gem"
-
 
 # npm
 #
 export NPM_CONFIG_USERCONFIG="$CONFIG/npm/npmrc"
 
-
 # pass
 #
 export PASSWORD_STORE_DIR="$DATA/pass"
-
 
 # pylint
 #
 export PYLINTHOME="$CACHE/pylint"
 
-
 # wget
 #
 alias wget="wget --hsts-file=\"$DATA/wget-hsts\""
 
-
 # --------------------------------------------------
 # other
 # --------------------------------------------------
-
 
 # print path
 #
@@ -241,17 +216,14 @@ print-path() {
     printf "%s\n" "${PATH//:/$'\n'}"
 }
 
-
 # ip aliases
 #
 alias pingpath='mtr'
 alias myip='curl -s checkip.amazonaws.com'
 
-
 # permissions
 #
 alias mx='chmod a+x'
-
 
 # process functions
 #
@@ -265,7 +237,6 @@ pskill() {
     echo "killing $1 (process $pid)..."
     kill -9 "$pid"
 }
-
 
 # compressed file extraction
 #
