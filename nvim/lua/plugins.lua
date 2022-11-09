@@ -93,8 +93,9 @@ require("packer").startup(function(use)
     use "tpope/vim-repeat"
     use "wellle/targets.vim"
     use "editorconfig/editorconfig-vim"
-    use { "tpope/vim-sleuth",
-      after = "editorconfig-vim"
+    use { "Darazaki/indent-o-matic",
+      requires = "editorconfig/editorconfig-vim",
+      config = get_config("indent-o-matic")
     }
     use { "phaazon/hop.nvim",
       config = function()
