@@ -33,21 +33,9 @@ export YELLOW="\[\033[1;33m\]"
 export WHITE="\[\033[1;37m\]"
 export RESTORE="\[\033[0m\]" #0m restores to the terminal's default color
 
-# use a colors file if it exists,
-# otherwise use the dircolors default database
-if [[ -f "$HOME/.dir_colors" ]]; then
-    color_data="$(cat "$HOME/.dir_colors")"
-    eval "$(dircolors -b "/etc/DIR_COLORS")"
-elif [[ -f /etc/DIR_COLORS ]]; then
-    color_data="$(cat "/etc/DIR_COLORS")"
-    eval "$(dircolors -b "/etc/DIR_COLORS")"
-else
-    color_data="$(dircolors --print-database)"
-fi
-
 # apply bash prompt colors if available
 if [[ "$TERM" == +(xterm-color|*-256color) ]] ||
-    grep -q "^$TERM$" <<< "$color_data"; then
+    grep -q "^$TERM$" <<< "$(dircolors -p)"; then
     if [[ "$(id -u)" -eq 0 ]]; then
         PS1="$LIGHT_RED\u@\h$LIGHT_GRAY:$LIGHT_BLUE\w$LIGHT_GRAY# "
     else
@@ -56,7 +44,6 @@ if [[ "$TERM" == +(xterm-color|*-256color) ]] ||
 else
     PS1='\u@\h:\w\$ '
 fi
-unset color_data
 
 PS2="> "
 PS3="> "
