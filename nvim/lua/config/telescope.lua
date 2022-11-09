@@ -72,6 +72,8 @@ telescope.setup({
   }
 })
 
+vim.api.nvim_command("packadd telescope-fzf-native.nvim")
+
 telescope.load_extension("fzf")
 telescope.load_extension("command_palette")
 telescope.load_extension("scriptnames")
