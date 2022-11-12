@@ -3,8 +3,8 @@
 DISTRO="$(grep "^ID=" /etc/os-release | awk -F "=" '{ print $2 }')"
 
 if [ "$DISTRO" = "arch" ]; then
-    rust_programs="as-tree bat bottom cargo du-dust exa fd-find git-delta \
-        gitui hck hx ripgrep rm-improved rustc sd viu"
+    rust_programs="as-tree bat bottom cargo dust exa fd git-delta \
+        gitui hck hex ripgrep rm-improved rust sd viu"
     if which paru >/dev/null 2>&1; then
         sudo paru -S --needed --noconfirm "$rust_programs"
     elif which yay >/dev/null 2>&1; then
@@ -20,7 +20,7 @@ elif [ "$DISTRO" != "debian" ] && [ "$DISTRO" != "ubuntu" ]; then
 fi
 
 if ! which cargo >/dev/null 2>&1; then
-    printf "Cargo not installed. Proceed to install? [Y/n] "
+    printf "Cargo not found. Proceed to install rustup and cargo? [Y/n] "
     read -r response
     case "$response" in
         [yY] | [yY][eE][sS] | "")
@@ -42,9 +42,8 @@ if ! which cargo >/dev/null 2>&1; then
     [ -z "$XDG_STATE_HOME" ] && export XDG_STATE_HOME="$HOME/.local/state"
     [ -z "$XDG_CACHE_HOME" ] && export XDG_CACHE_HOME="$HOME/.cache"
 
-
-    export CARGO_HOME="$XDG_DATA_HOME"/cargo
-    export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
+    export CARGO_HOME="$XDG_DATA_HOME/cargo"
+    export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | \
         sh -s -- --no-modify-path -y
