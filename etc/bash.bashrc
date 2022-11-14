@@ -147,7 +147,7 @@ export EDITOR='nvim'
 ! which vim &>/dev/null && alias vim='nvim'
 alias {vi,nvi}='nvim'
 alias {vd,nvd,nvimdiff}='nvim -d'
-alias nvim-remove-swap='rm -rf "$XDG_DATA_HOME/nvim/swap/"'
+alias nvim-remove-swap='rm -rf "$XDG_STATE_HOME/nvim/swap/"'
 
 # less
 #
