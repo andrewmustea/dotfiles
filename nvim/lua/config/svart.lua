@@ -26,7 +26,7 @@ require("svart").configure {
 }
 
 map({ "n", "x", "o" }, "s", "<Cmd>Svart<CR>")        -- begin exact search
-map({ "n", "x", "o" }, "S", "<Cmd>SvartRegex<CR>")   -- begin regex search
+-- map({ "n", "x", "o" }, "S", "<Cmd>SvartRegex<CR>")   -- begin regex search
 map({ "n", "x", "o" }, "gs", "<Cmd>SvartRepeat<CR>") -- repeat with last searched query
 
 -- SvartDimmedContent = { default = true, link = "Comment" }
