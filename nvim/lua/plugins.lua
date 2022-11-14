@@ -304,10 +304,11 @@ require("packer").startup(function(use)
 
     -- markdown
     use { "iamcco/markdown-preview.nvim",
+      run = "cd app && npm install",
       ft = { "markdown", "vimwiki" },
       cond = not_vscode,
-      run = function()
-        vim.fn["mkdp#util#install"]()
+      setup = function()
+        vim.g.mkdp_filetypes = { "markdown", "vimwiki" }
       end
     }
     use { "ellisonleao/glow.nvim",
