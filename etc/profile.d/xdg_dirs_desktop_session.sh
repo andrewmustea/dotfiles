@@ -4,7 +4,7 @@ DEFAULT_XDG_CONFIG_DIRS='/etc/xdg'
 DEFAULT_XDG_DATA_DIRS='/usr/local/share/:/usr/share/'
 
 if [ -n "$DESKTOP_SESSION" ]; then
-  # readd default if was empty
+  # re-add default if was empty
   if [ -z "$XDG_CONFIG_DIRS" ]; then
     XDG_CONFIG_DIRS="$DEFAULT_XDG_CONFIG_DIRS"
   fi

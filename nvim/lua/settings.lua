@@ -67,7 +67,7 @@ o.smartcase = true
 -- wrap search at end or beginning of file
 o.wrapscan = true
 
--- diff optins
+-- diff options
 o.diffopt = "internal,filler,closeoff,vertical,hiddenoff"
 
 -- number of lines to keep above and below cursor

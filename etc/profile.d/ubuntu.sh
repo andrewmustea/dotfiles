@@ -22,7 +22,7 @@ export FZF_ENV="$CONFIG/fzf/fzf.bash"
 
 update-fzf() {
     if ! [[ -d $FZF_DIR ]]; then
-        echo "Couldn't find fzf direcotry in '$FZF_DIR'"
+        echo "Couldn't find fzf directory in '$FZF_DIR'"
         return 1
     fi
     git -C "$FZF_DIR" pull

@@ -76,7 +76,7 @@ get_release_url() {
         echo "Usage: get_release_url <github_json> <release_name>"
         exit 1
     elif [ -n "$3" ]; then
-        echo "Too many arugments: $*"
+        echo "Too many arguments: $*"
         echo "Usage: get_release_url <github_json> <release_name>"
         exit 1
     fi
