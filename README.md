@@ -212,10 +212,6 @@ Script that installs [`rust`](https://www.rust-lang.org/) and several other rust
 
 > Requires `root` permissions if installing on Arch Linux.
 
-## [`vim/`](vim/)
-
-> No longer maintained.
-
 ## [`check-configs.sh`](check-configs.sh)
 
 Script that compares the currently installed user configs against this repository.
