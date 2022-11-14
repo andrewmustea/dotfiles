@@ -58,6 +58,10 @@ require("packer").startup(function(use)
       cond = not_vscode,
       config = get_config("nvim-notify")
     }
+    use { "stevearc/dressing.nvim",
+      cond = not_vscode,
+      config = get_config("dressing")
+    }
 
     -- buffers/windows
     use { "matbme/JABS.nvim",
@@ -156,6 +160,10 @@ require("packer").startup(function(use)
       end
     }
     use { "mrjones2014/legendary.nvim",
+      requires = {
+        "nvim-telescope/telescope.nvim",
+        "stevearc/dressing.nvim"
+      },
       cond = not_vscode,
       config = get_config("legendary")
     }
