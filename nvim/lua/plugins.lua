@@ -101,6 +101,13 @@ require("packer").startup(function(use)
       requires = "editorconfig/editorconfig-vim",
       config = get_config("indent-o-matic")
     }
+    use { "https://gitlab.com/madyanov/svart.nvim",
+      config = get_config("svart")
+    }
+    use { "mg979/vim-visual-multi",
+      branch = "master",
+      cond = not_vscode
+    }
     use { "phaazon/hop.nvim",
       config = function()
         require("hop").setup()
@@ -110,10 +117,6 @@ require("packer").startup(function(use)
       config = function()
         require("nvim-surround").setup()
       end
-    }
-    use { "mg979/vim-visual-multi",
-      branch = "master",
-      cond = not_vscode
     }
     use { "rmagatti/goto-preview",
       cond = not_vscode,
