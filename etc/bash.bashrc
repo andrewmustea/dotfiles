@@ -165,7 +165,7 @@ export LESS_TERMCAP_so
 export LESS_TERMCAP_ue
 export LESS_TERMCAP_us
 
-export LESSHISTFILE="$CACHE/less/history"
+export LESSHISTFILE="$STATE/less/history"
 alias less='less -QR'
 alias man='man -P "less -QR"'
 
