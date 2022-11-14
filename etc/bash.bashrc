@@ -4,7 +4,8 @@
 # /etc/bash.bashrc
 #
 
-# If not running interactively, don't do anything
+# return if not running interactively
+#
 case $- in
     *i*) ;;
     *) return ;;
@@ -15,6 +16,7 @@ esac
 # --------------------------------------------------
 
 # bash colors
+#
 export GREEN="\[\033[0;32m\]"
 export CYAN="\[\033[0;36m\]"
 export RED="\[\033[0;31m\]"
