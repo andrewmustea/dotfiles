@@ -25,5 +25,5 @@ fi
 
 nvm install node --default --latest-npm
 
-npm install -g npm@latest neovim commitizen
+npm install -g npm@latest neovim commitizen markdownlint
 
