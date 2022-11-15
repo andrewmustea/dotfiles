@@ -196,6 +196,10 @@ export GEM_SPEC_CACHE="$CACHE/gem"
 #
 export NPM_CONFIG_USERCONFIG="$CONFIG/npm/npmrc"
 
+# nuget
+#
+export NUGET_PACKAGES="$CACHE/nuget_packages"
+
 # pass
 #
 export PASSWORD_STORE_DIR="$DATA/pass"
