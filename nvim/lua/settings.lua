@@ -24,7 +24,7 @@ o.updatetime = 300
 o.belloff = true
 
 -- command line history size
-o.history = 1000
+o.history = 10000
 
 -- set line and column numbers
 o.number = true
@@ -44,7 +44,7 @@ o.wrap = true
 o.hlsearch = true
 o.incsearch = true
 
--- split buffers better
+-- split buffers to the right
 o.splitright = true
 
 -- show matching bracket
