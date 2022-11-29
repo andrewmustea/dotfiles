@@ -21,106 +21,35 @@ vim.g.coc_global_extensions = {
   "coc-vimlsp", "coc-xml", "coc-yaml", "coc-yank"
 }
 
--- Use coc#pum#info() if you need to confirm completion, only when there's selected complete item:
--- inoremap <silent><expr> <cr> coc#pum#visible() && coc#pum#info()['index'] != -1 ? coc#pum#confirm() : "\<C-g>u\<CR>"
+local opts = {silent = true, noremap = true, expr = true, replace_keycodes = false}
+vim.keymap.set("i", "<TAB>", 'coc#pum#visible() ? coc#pum#next(1) : "<TAB>" ', opts)
+vim.keymap.set("i", "<S-TAB>", [[coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"]], opts)
 
--- Make <CR> to accept selected completion item or notify coc.nvim to format
--- <C-g>u breaks current undo, please make your own choice.
--- inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
---                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+-- <C-l> will trigger a snippet expansion.
+map("i", "<C-l>", "<Plug>(coc-snippets-expand)", { })
 
--- Use tab for trigger completion with characters ahead and navigate.
--- NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
--- other plugin before putting this into your config.
--- inoremap <silent><expr> <TAB>
---       \ coc#pum#visible() ? coc#pum#next(1):
---       \ CheckBackspace() ? "\<Tab>" :
---       \ coc#refresh()
--- inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+-- <C-j> will place a visual placeholder of the snippet.
+map("v", "<C-j>", "<Plug>(coc-snippets-select)", { })
 
--- map("i", "<TAB>",
---   "coc#pum#visible() ? coc#pum#next(1): CheckBackspace() ? \"\\<Tab>\" :coc#refresh()",
---   { silent = true, noremap = true, expr = true }
--- )
-
-map("i", "<TAB>",
-  function()
-    local function check_backspace()
-      local row, col = unpack(api.nvim_win_get_cursor(0))
-      local linetext = api.nvim_get_current_line()
-      return col == 0 or string.match(linetext:sub(col, col), '%s') ~= nil
-    end
-    if fn["coc#pum#visible"]() == 1 then
-      fn["coc#pum#next"](1)
-    elseif check_backspace() then
-      return "<Tab>"
-    else
-      fn["coc#refresh"]()
-    end
-  end,
-  { silent = true, noremap = true, expr = true }
-)
-
-map("i", "<S-TAB>",
-  function()
-    if fn["coc#pum#visible"]() == 1 then
-      fn["coc#pum#prev"](1)
-    else
-      return "<C-h>"
-    end
-  end,
-  { noremap = true, expr = true }
-)
-
--- Use coc#pum#info() if you need to confirm completion, only when there's selected complete item:
--- inoremap <silent><expr> <cr> coc#pum#visible() && coc#pum#info()['index'] != -1 ? coc#pum#confirm() : "\<C-g>u\<CR>"
--- map("i", "<CR>",
---   function()
---     if fn["coc#pum#visible"]() == 1 and fn["coc#pum#info"]()["index"] ~= -1 then
---       fn["coc#pum#confirm"]()
---     else
---       return "<CR>"
---     end
---   end,
---   { silent = true, noremap = true, expr = true }
--- )
-
--- Use <C-l> for trigger snippet expand.
--- imap <C-l> <Plug>(coc-snippets-expand)
-map("i", "<C-l>", "<Plug>(coc-snippets-expand)", {})
-
--- Use <C-j> for select text for visual placeholder of snippet.
--- vmap <C-j> <Plug>(coc-snippets-select)
-map("v", "<C-j>", "<Plug>(coc-snippets-select)", {})
-
--- <c-space> triggers completion
--- inoremap <silent><expr> <c-space> coc#refresh()
+-- <C-space> triggers completion
 map("i", "<C-space>", "coc#refresh()", { silent = true, noremap = true, expr = true })
 
 -- Use `[g` and `]g` to navigate diagnostics
 -- Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
--- nmap <silent> [g <Plug>(coc-diagnostic-prev)
--- nmap <silent> ]g <Plug>(coc-diagnostic-next)
 map("n", "[g", "<Plug>(coc-diagnostic-prev)", { silent = true })
 map("n", "]g", "<Plug>(coc-diagnostic-next)", { silent = true })
 
 -- Use K to show documentation in preview window.
--- nnoremap <silent> K :call ShowDocumentation()<CR>
-map("n", "K", ":lua ShowDocumentation()<CR>")
-
--- function! ShowDocumentation()
---   if CocAction('hasProvider', 'hover')
---     call CocActionAsync('doHover')
---   else
---     call feedkeys('K', 'in')
---   endif
--- endfunction
-
-function ShowDocumentation()
-  if fn.CocAction("hasProvider", "hover") then
+function _G.show_docs()
+  local cw = fn.expand("<cword>")
+  if fn.index({"vim", "help"}, vim.bo.filetype) >= 0 then
+    api.nvim_command("h " .. cw)
+  elseif api.nvim_eval("coc#rpc#ready()") then
     fn.CocActionAsync("doHover")
   else
-    fn.feedkeys("K", "in")
+    api.nvim_command("!" .. vim.o.keywordprg .. " " .. cw)
   end
 end
+
+map("n", "K", "<CMD>lua _G.show_docs()<CR>", {silent = true})
 

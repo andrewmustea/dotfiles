@@ -153,7 +153,9 @@ require("packer").startup(function(use)
     }
     use { "windwp/nvim-autopairs",
       cond = not_vscode,
-      config = get_config("nvim-autopairs")
+      config = function()
+        require("nvim-autopairs").setup()
+      end
     }
 
     -- keybinds
