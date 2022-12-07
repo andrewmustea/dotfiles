@@ -23,12 +23,8 @@ require("svart").configure {
   search_multi_window = true,    -- search in multiple windows
 
   ui_dim_content = true, -- dim buffer content during search
-}
 
-map({ "n", "x", "o" }, "s", "<Cmd>Svart<CR>")        -- begin exact search
--- map({ "n", "x", "o" }, "S", "<Cmd>SvartRegex<CR>")   -- begin regex search
-map({ "n", "x", "o" }, "gs", "<Cmd>SvartRepeat<CR>") -- repeat with last searched query
-
+-- colors
 -- SvartDimmedContent = { default = true, link = "Comment" }
 -- SvartMatch = { default = true, link = "Search" }
 -- SvartMatchCursor = { default = true, link = "Cursor" }
@@ -36,4 +32,9 @@ map({ "n", "x", "o" }, "gs", "<Cmd>SvartRepeat<CR>") -- repeat with last searche
 -- SvartLabel = { default = true, link = "IncSearch" }
 -- SvartPrompt = { default = true, link = "MoreMsg" }
 -- SvartErrorPrompt = { default = true, link = "ErrorMsg" }
+}
+
+map({ "n", "x", "o" }, "s", "<Cmd>Svart<CR>")        -- begin exact search
+-- map({ "n", "x", "o" }, "S", "<Cmd>SvartRegex<CR>")   -- begin regex search
+map({ "n", "x", "o" }, "gs", "<Cmd>SvartRepeat<CR>") -- repeat with last searched query
 
