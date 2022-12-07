@@ -3,8 +3,8 @@
 DISTRO="$(grep "^ID=" /etc/os-release | awk -F "=" '{ print $2 }')"
 
 if [ "$DISTRO" = "arch" ]; then
-    rust_programs="as-tree bat bottom cargo dust exa fd git-delta \
-        gitui hck hex ripgrep rm-improved rust sd viu"
+    rust_programs="as-tree bat bottom cargo dust exa fd git-delta gitui hck \
+                   hex ripgrep rm-improved rust sd tree-sitter-cli viu"
     if which paru >/dev/null 2>&1; then
         sudo paru -S --needed --noconfirm "$rust_programs"
     elif which yay >/dev/null 2>&1; then
@@ -57,8 +57,8 @@ if ! which cargo >/dev/null 2>&1; then
 fi
 
 cargo install \
-    bat bottom cargo-fix cargo-update du-dust exa fd-find git-delta gitui \
-    hck hx ripgrep rm-improved sd viu
+    bat bottom cargo-fix cargo-update du-dust exa fd-find git-delta gitui hck \
+    hx ripgrep rm-improved sd tree-sitter-cli viu
 cargo install -f --git https://github.com/jez/as-tree
 
 cargo install-update --all
