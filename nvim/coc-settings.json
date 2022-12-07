@@ -2,6 +2,7 @@
     "suggest.noselect": true,
     "session.directory": "~/.local/share/nvim/sessions",
     "Lua.telemetry.enable": true,
+    "jedi.markupKindPreferred": "markdown",
     "languageserver": {
         "vala": {
             "command": "vala-language-server",
