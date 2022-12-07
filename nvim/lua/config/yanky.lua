@@ -31,8 +31,8 @@ require("yanky").setup {
   }
 }
 
-map("x", "p", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
-map("x", "P", "<cmd>lua require('substitute').visual()<cr>", { noremap = true })
+map("x", "p", function() require('substitute').visual() end, { noremap = true })
+map("x", "P", function() require('substitute').visual() end, { noremap = true })
 
 map({ "n", "x" }, "gp", "<Plug>(YankyGPutAfter)")
 map({ "n", "x" }, "gP", "<Plug>(YankyGPutBefore)")
