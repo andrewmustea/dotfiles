@@ -3,12 +3,20 @@
 
 require("nvim-treesitter.configs").setup {
   -- A list of parser names, or "all"
-  ensure_installed = { "bash", "c", "cpp", "cuda", "dot", "go", "haskell",
-    "html", "java", "json", "lua", "make", "markdown", "python", "regex",
-    "rust", "todotxt", "vim" },
+  ensure_installed = {
+    "bash", "c", "c_sharp", "cpp", "comment", "diff", "dot", "git_rebase",
+    "gitattributes", "go", "haskell", "help", "html", "http", "java", "json",
+    "latex", "llvm", "lua", "make", "markdown", "markdown_inline", "meson",
+    "ninja", "python", "regex", "rust", "todotxt", "toml", "typescript",
+    "vala", "vim", "yaml"
+  },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = true,
+
+  -- Automatically install missing parsers when entering buffer
+  -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+  auto_install = true,
 
   endwise = {
     enable = true,
