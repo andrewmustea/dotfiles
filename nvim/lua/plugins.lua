@@ -13,12 +13,57 @@ local function get_config(name)
   return string.format("require(\"config/%s\")", name)
 end
 
+local function string_product(keys)
+    if #keys == 1 then
+        return keys[1]
+    end
+    local keys_copy = {}
+    for _, key in ipairs(keys) do
+        table.insert(keys_copy, key)
+    end
+    local product = {}
+    local first = table.remove(keys_copy, 1)
+    for _, a in ipairs(first) do
+        if type(a) ~= 'string' then
+            vim.cmd('echoerr "Not a valid keys table"')
+        end
+        for _, b in ipairs(string_product(keys_copy)) do
+            table.insert(product, a .. b)
+        end
+    end
+    return product
+end
+
+local function expand_keys(keys)
+    if type(keys) == 'string' then
+        return {keys}
+    elseif type(keys[1]) == 'string' then
+        return keys
+    else
+        return string_product(keys)
+    end
+end
+
+local function get_keys(modes, keys)
+    if type(modes) == 'string' then
+        modes = {modes}
+    end
+    local combinations = {}
+    for _, mode in ipairs(modes) do
+        for _, v in ipairs(expand_keys(keys)) do
+            table.insert(combinations, {mode, v})
+        end
+    end
+    return combinations
+end
+
 -- vscode conditional disable
 local function not_vscode()
   return vim.g.vscode == nil
 end
 
-require("packer").startup(function(use)
+require("packer").startup {
+  function(use)
     -- packer
     use "wbthomason/packer.nvim"
 
@@ -32,6 +77,8 @@ require("packer").startup(function(use)
       config = get_config("auto-session")
     }
     use { "tversteeg/registers.nvim",
+      cmd = "Registers",
+      keys = { { "n", "\"" }, { "v", "\"" }, { "i", "<C-r>" } },
       cond = not_vscode,
       config = function()
         require("registers").setup()
@@ -45,15 +92,25 @@ require("packer").startup(function(use)
         require("nvim-web-devicons").get_icons()
       end
     }
+    use { "norcalli/nvim-colorizer.lua",
+      cmd = "ColorizerToggle",
+      cond = not_vscode,
+      config = function()
+        require("colorizer").setup()
+      end
+    }
     use { "petertriho/nvim-scrollbar",
       cond = not_vscode,
       config = get_config("nvim-scrollbar")
     }
     use { "kevinhwang91/nvim-hlslens",
+      event = "CmdlineEnter",
+      keys = { "n", "N" },
       cond = not_vscode,
       config = get_config("nvim-hlslens")
     }
     use { "rcarriga/nvim-notify",
+      cmd = "Notifications",
       branch = "master",
       cond = not_vscode,
       config = get_config("nvim-notify")
@@ -78,19 +135,9 @@ require("packer").startup(function(use)
       config = get_config("bufferline")
     }
     use { "nvim-lualine/lualine.nvim",
-      requires = {
-        "kyazdani42/nvim-web-devicons",
-        "rmagatti/auto-session"
-      },
+      requires = "kyazdani42/nvim-web-devicons",
       cond = not_vscode,
       config = get_config("lualine")
-    }
-    use { "j-hui/fidget.nvim",
-      requires = "nvim-lualine/lualine.nvim",
-      cond = not_vscode,
-      config = function()
-        require("fidget").setup()
-      end
     }
 
     -- movement and targets
@@ -102,11 +149,8 @@ require("packer").startup(function(use)
       config = get_config("indent-o-matic")
     }
     use { "https://gitlab.com/madyanov/svart.nvim",
+      keys = get_keys({"n", "x", "o" }, { "s", "gs" }),
       config = get_config("svart")
-    }
-    use { "mg979/vim-visual-multi",
-      branch = "master",
-      cond = not_vscode
     }
     use { "phaazon/hop.nvim",
       config = function()
@@ -114,21 +158,15 @@ require("packer").startup(function(use)
       end
     }
     use { "kylechui/nvim-surround",
+      event = "CursorMoved",
       config = function()
         require("nvim-surround").setup()
       end
     }
-    use { "rmagatti/goto-preview",
-      cond = not_vscode,
-      config = function()
-        require("goto-preview").setup()
-      end
-    }
     use { "chentoast/marks.nvim",
+      keys = { "m" },
       cond = not_vscode,
-      config = function()
-        require("marks").setup()
-      end
+      config = get_config("marks")
     }
 
     -- text manipulation
@@ -136,10 +174,8 @@ require("packer").startup(function(use)
     use { "gbprod/cutlass.nvim",
       config = get_config("cutlass")
     }
-    use { "junegunn/vim-easy-align",
-      config = get_config("vim-easy-align")
-    }
     use { "numToStr/Comment.nvim",
+      event = "CursorMoved",
       config = function()
         require("Comment").setup()
       end
@@ -152,6 +188,7 @@ require("packer").startup(function(use)
       config = get_config("yanky")
     }
     use { "windwp/nvim-autopairs",
+      event = "InsertEnter",
       cond = not_vscode,
       config = function()
         require("nvim-autopairs").setup()
@@ -160,25 +197,33 @@ require("packer").startup(function(use)
 
     -- keybinds
     use { "Pocco81/AbbrevMan.nvim",
+      event = "InsertEnter",
       config = function()
         require("abbrev-man").setup()
       end
     }
     use { "mrjones2014/legendary.nvim",
+      cmd = "Legendary",
       requires = {
-        "nvim-telescope/telescope.nvim",
+        { "nvim-telescope/telescope.nvim", opt = true },
         "stevearc/dressing.nvim"
       },
+      wants = "telescope.nvim",
       cond = not_vscode,
       config = get_config("legendary")
     }
     use { "sudormrfbin/cheatsheet.nvim",
-      requires = {
-        "nvim-telescope/telescope.nvim",
-        "nvim-lua/popup.nvim",
-        "nvim-lua/plenary.nvim",
-      },
       cmd = { "Cheatsheet", "CheatsheetEdit" },
+      requires = {
+        { "nvim-telescope/telescope.nvim", opt = true },
+        { "nvim-lua/plenary.nvim", opt = true },
+        { "nvim-lua/popup.nvim", opt = true }
+      },
+      wants = {
+        "telescope.nvim",
+        "plenary.nvim",
+        "popup.nvim"
+      },
       cond = not_vscode
     }
 
@@ -193,6 +238,7 @@ require("packer").startup(function(use)
       cond = not_vscode
     }
     use { "nvim-treesitter/playground",
+      cmd = "TSPlaygroundToggle",
       requires = "nvim-treesitter/nvim-treesitter",
       cond = not_vscode
     }
@@ -217,14 +263,19 @@ require("packer").startup(function(use)
         require("gitsigns").setup()
       end
     }
+    use { "tanvirtin/vgit.nvim",
+      cmd = "VGit",
+      cond = not_vscode,
+      requires = { "nvim-lua/plenary.nvim", opt = true },
+      wants = "plenary.nvim",
+      config = get_config("vgit")
+    }
     use { "samoshkin/vim-mergetool",
+      cmd = "MergetoolStart",
       cond = not_vscode
     }
     use { "tpope/vim-fugitive",
-      cond = not_vscode
-    }
-    use { "junegunn/gv.vim",
-      requires = "tpope/vim-fugitive",
+      event = "CmdlineEnter",
       cond = not_vscode
     }
 
@@ -244,6 +295,7 @@ require("packer").startup(function(use)
     --   config = get_config("nvim-lspconfig")
     -- },
     use { "neoclide/coc.nvim",
+      event = { "CursorHold", "CursorMoved" },
       branch = "release",
       cond = not_vscode,
       config = get_config("coc")
@@ -259,20 +311,32 @@ require("packer").startup(function(use)
     }
 
     -- telescope
-    use { "nvim-telescope/telescope-fzf-native.nvim",
-      run = "make",
-      cond = not_vscode,
-    }
     use { "nvim-telescope/telescope.nvim",
+      cmd = "Telescope",
+      keys = get_keys({ "n" }, { { "f" }, { "b", "c", "f", "g", "h", "n", "p", "r", "y" } }),
       branch = "0.1.x",
       requires = {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        "nvim-lua/plenary.nvim",
-        "LinArcX/telescope-command-palette.nvim",
-        "LinArcX/telescope-scriptnames.nvim",
-        "LinArcX/telescope-changes.nvim",
-        "smartpde/telescope-recent-files",
-        "nvim-telescope/telescope-file-browser.nvim"
+        { "nvim-lua/plenary.nvim", opt = true },
+        { "nvim-telescope/telescope-fzf-native.nvim", run = "make", opt = true },
+        { "LinArcX/telescope-command-palette.nvim", opt = true },
+        { "LinArcX/telescope-scriptnames.nvim", opt = true },
+        { "LinArcX/telescope-changes.nvim", opt = true },
+        { "smartpde/telescope-recent-files", opt = true },
+        { "nvim-telescope/telescope-file-browser.nvim", opt = true },
+        { "nvim-telescope/telescope-packer.nvim", opt = true },
+        { "fannheyward/telescope-coc.nvim", opt = true }
+      },
+      wants = {
+        "plenary.nvim",
+        "nvim-notify",
+        "telescope-fzf-native.nvim",
+        "telescope-command-palette.nvim",
+        "telescope-scriptnames.nvim",
+        "telescope-changes.nvim",
+        "telescope-recent-files",
+        "telescope-file-browser.nvim",
+        "telescope-packer.nvim",
+        "telescope-coc.nvim"
       },
       cond = not_vscode,
       config = get_config("telescope")
@@ -287,6 +351,7 @@ require("packer").startup(function(use)
     }
     use { "lukas-reineke/indent-blankline.nvim",
       requires = "nvim-treesitter/nvim-treesitter",
+      cond = not_vscode,
       config = get_config("indent-blankline")
     }
     use { "pangloss/vim-javascript",
@@ -307,11 +372,12 @@ require("packer").startup(function(use)
       cond = not_vscode
     }
     use { "cuducos/yaml.nvim",
-      ft = { "yaml" },
+      ft = "yaml",
       requires = {
         "nvim-treesitter/nvim-treesitter",
-        "nvim-telescope/telescope.nvim"
+        { "nvim-telescope/telescope.nvim", opt = true }
       },
+      wants = "telescope.nvim",
       cond = not_vscode
     }
 
@@ -338,6 +404,8 @@ require("packer").startup(function(use)
 
     -- vimwiki
     use { "vimwiki/vimwiki",
+      cmd = "Vimwiki",
+      ft = "vimwiki",
       cond = not_vscode
     }
 
@@ -346,5 +414,6 @@ require("packer").startup(function(use)
       cond = not_vscode,
       config = get_config("ale")
     }
-end)
+  end
+}
 
