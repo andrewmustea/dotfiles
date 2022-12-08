@@ -164,9 +164,10 @@ require("packer").startup {
       end
     }
     use { "chentoast/marks.nvim",
-      keys = { "m" },
       cond = not_vscode,
-      config = get_config("marks")
+      config = function()
+        require("marks").setup()
+      end
     }
 
     -- text manipulation
