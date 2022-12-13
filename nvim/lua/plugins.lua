@@ -347,6 +347,13 @@ require("packer").startup({
       },
       cond = util.not_vscode
     }
+    use { "stsewd/sphinx.nvim",
+      run = ":UpdateRemotePlugins",
+      ft = "rst",
+      requires = { "nvim-treesitter/nvim-treesitter", opt = true },
+      wants = "nvim-treesitter",
+      cond = util.not_vscode
+    }
 
     -- markdown
     use { "iamcco/markdown-preview.nvim",
