@@ -121,14 +121,6 @@ require("packer").startup {
     }
 
     -- buffers/windows
-    use { "matbme/JABS.nvim",
-      cmd = "JABSOpen",
-      requires = "kyazdani42/nvim-web-devicons",
-      cond = not_vscode,
-      config = function()
-        require("jabs").setup()
-      end
-    }
     use { "akinsho/bufferline.nvim",
       requires = "kyazdani42/nvim-web-devicons",
       cond = not_vscode,
