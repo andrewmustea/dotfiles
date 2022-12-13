@@ -1,10 +1,13 @@
--- hlargs.nvim
+-- m-demare/hlargs.nvim
 --
+-- nvim-treesitter argument highlighter
 
-require("hlargs").setup {
-  color = "#0078c8",
-  highlight = {},
-  excluded_filetypes = {},
+local blue = "#0078c8"
+
+require("hlargs").setup({
+  color = blue,
+  highlight = { },
+  excluded_filetypes = { },
   -- disable = function(lang, bufnr) -- If changed, `excluded_filetypes` will be ignored
   --   return vim.tbl_contains(vim.opts.excluded_filetypes, lang)
   -- end,
@@ -19,7 +22,7 @@ require("hlargs").setup {
   },
   hl_priority = 10000,
   excluded_argnames = {
-    declarations = {},
+    declarations = { },
     usages = {
       python = { "self", "cls" },
       lua = { "self" }
@@ -37,5 +40,5 @@ require("hlargs").setup {
       slow_parse = 5000
     }
   }
-}
+})
 
