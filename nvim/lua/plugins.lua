@@ -232,6 +232,15 @@ require("packer").startup({
       event = "CmdlineEnter",
       cond = util.not_vscode
     }
+    use { "TimUntersberger/neogit",
+      event = "CmdlineEnter",
+      requires = { "nvim-lua/plenary.nvim", opt = true },
+      wants = "plenary.nvim",
+      cond = util.not_vscode,
+      config = function()
+        require("neogit").setup()
+      end
+    }
 
     -- diff
     use { "AndrewRadev/linediff.vim",
