@@ -195,16 +195,6 @@ require("packer").startup {
         require("abbrev-man").setup()
       end
     }
-    use { "mrjones2014/legendary.nvim",
-      cmd = "Legendary",
-      requires = {
-        { "nvim-telescope/telescope.nvim", opt = true },
-        "stevearc/dressing.nvim"
-      },
-      wants = "telescope.nvim",
-      cond = not_vscode,
-      config = get_config("legendary")
-    }
     use { "sudormrfbin/cheatsheet.nvim",
       cmd = { "Cheatsheet", "CheatsheetEdit" },
       requires = {
