@@ -79,6 +79,13 @@ require("packer").startup({
       cond = util.not_vscode,
       config = util.get_config("lualine")
     }
+    use { "akinsho/toggleterm.nvim",
+      event = "CmdlineEnter",
+      tag = "*",
+      config = function()
+        require("toggleterm").setup()
+      end
+    }
 
     -- movement and targets
     use "tpope/vim-repeat"
