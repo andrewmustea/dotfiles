@@ -1,14 +1,16 @@
 -- nvim-treesitter
 --
+-- syntax tree parser and highlighter
 
-require("nvim-treesitter.configs").setup {
+require("nvim-treesitter.configs").setup({
   -- A list of parser names, or "all"
   ensure_installed = {
-    "bash", "c", "c_sharp", "cpp", "comment", "diff", "dot", "gitattributes",
-    "gitcommit", "gitignore", "git_rebase", "go", "haskell", "help", "html",
-    "http", "java", "json", "latex", "llvm", "lua", "make", "markdown",
-    "markdown_inline", "meson", "ninja", "python", "regex", "rust", "todotxt",
-    "toml", "typescript", "vala", "vim", "yaml"
+    "bash", "c", "c_sharp", "cmake", "comment", "cpp", "comment", "css",
+    "cuda", "devicetree", "diff", "fennel", "gitattributes", "gitcommit",
+    "gitignore", "git_rebase", "go", "haskell", "help", "html", "http", "java",
+    "javascript", "json", "kotlin", "latex", "llvm", "lua", "make", "markdown",
+    "markdown_inline", "meson", "ninja", "perl", "python", "regex", "rust",
+    "todotxt", "toml", "typescript", "vala", "verilog", "vim", "vue", "yaml"
   },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
@@ -128,5 +130,5 @@ require("nvim-treesitter.configs").setup {
       }
     }
   }
-}
+})
 
