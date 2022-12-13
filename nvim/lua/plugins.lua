@@ -375,6 +375,15 @@ require("packer").startup({
         vim.keymap.set("n", "<bs>", ":edit #<cr>", { silent = true })
       end
     }
+    use { "jghauser/auto-pandoc.nvim",
+      ft = { "markdown", "vimwiki" },
+      requires = { "nvim-lua/plenary.nvim", opt = true },
+      wants = "plenary.nvim",
+      cond = util.not_vscode,
+      config = function()
+        require("auto-pandoc")
+      end
+    }
 
     -- vimwiki
     use { "vimwiki/vimwiki",
