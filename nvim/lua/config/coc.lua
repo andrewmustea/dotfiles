@@ -12,10 +12,10 @@ vim.g.coc_global_extensions = {
   "coc-highlight", "coc-html", "coc-htmlhint", "coc-sumneko-lua",
   "coc-html-css-support", "coc-java", "coc-jedi", "coc-json", "coc-lists",
   "coc-markdownlint", "coc-markdown-preview-enhanced", "coc-markmap",
-  "coc-perl", "coc-prettier", "coc-pydocstring", "coc-pyright", "coc-rome",
-  "coc-rust-analyzer","coc-sh", "coc-stylelintplus", "coc-stylelint",
-  "coc-snippets", "coc-sql", "coc-toml", "coc-tag", "coc-tsserver",
-  "coc-vimlsp", "coc-xml", "coc-yaml", "coc-yank"
+  "coc-pairs", "coc-perl", "coc-prettier", "coc-pydocstring", "coc-pyright",
+  "coc-rome", "coc-rust-analyzer","coc-sh", "coc-stylelintplus",
+  "coc-stylelint", "coc-snippets", "coc-sql", "coc-toml", "coc-tag",
+  "coc-tsserver", "coc-vimlsp", "coc-xml", "coc-yaml", "coc-yank"
 }
 
 ----------------
@@ -173,7 +173,6 @@ map({ "n", "v", "i" }, "<C-b>",
   end,
   float_opts
 )
-
 
 ----------------
 -- Selections --
