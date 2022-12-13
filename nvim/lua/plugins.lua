@@ -198,6 +198,11 @@ require("packer").startup({
       wants = "nvim-treesitter",
       cond = util.not_vscode
     }
+    use { "theHamsta/nvim-treesitter-pairs",
+      requires = { "nvim-treesitter/nvim-treesitter", opt = true },
+      wants = "nvim-treesitter",
+      cond = util.not_vscode
+    }
     use { "m-demare/hlargs.nvim",
       requires = { "nvim-treesitter/nvim-treesitter", opt = true },
       wants = "nvim-treesitter",
