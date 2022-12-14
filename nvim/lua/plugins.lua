@@ -218,7 +218,7 @@ require("packer").startup({
       end
     }
     use { "tanvirtin/vgit.nvim",
-      cmd = "VGit",
+      event = { "CursorHold", "CmdlineEnter" },
       cond = util.not_vscode,
       requires = { "nvim-lua/plenary.nvim", opt = true },
       wants = "plenary.nvim",
