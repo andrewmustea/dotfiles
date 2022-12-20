@@ -6,7 +6,7 @@ local fn  = vim.fn
 local api = vim.api
 
 -- abbreviation to split buffers vertically
-api.nvim_command("cabbrev vsb vert sb")
+vim.cmd.cabbrev("vsb vert sb")
 
 -- map accidental shift when quitting
 api.nvim_create_user_command("Q", "q", { })
@@ -25,7 +25,7 @@ api.nvim_create_user_command("HighlightGroup", "echo synIDattr(synID(line('.'),c
 -- split helpfiles vertically to the left
 api.nvim_create_autocmd("BufEnter", {
   group = api.nvim_create_augroup("vert_help", { clear = true }),
-  pattern = { "*.txt" },
+  pattern = "*.txt",
   callback =
     function()
       if bo.buftype == "help" then
@@ -49,10 +49,10 @@ api.nvim_create_autocmd("BufWritePre", {
     end
 })
 
--- set lua, markdown, and vimwiki to shiftwidth 2 by default
-api.nvim_create_autocmd({ "FileType" }, {
+-- set gitcommit, lua, markdown, and vimwiki to shiftwidth 2 by default
+api.nvim_create_autocmd("FileType", {
   group = api.nvim_create_augroup("2shift_tabexpand", { clear = true }),
-  pattern = "lua, markdown, vimwiki",
+  pattern = "gitcommit, lua, markdown, vimwiki",
   callback =
     function()
       vim.opt_local.shiftwidth = 2
@@ -60,7 +60,7 @@ api.nvim_create_autocmd({ "FileType" }, {
     end
 })
 
--- set c/c++ files to shiftwidth 8 and noexpandtab
+-- set c/c++ files to shiftwidth 8 and noexpandtab by default
 api.nvim_create_autocmd("FileType", {
   group = api.nvim_create_augroup("8shift_noexpandtab", { clear = true }),
   pattern = { "c", "cpp" },
