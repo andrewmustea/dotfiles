@@ -1,0 +1,292 @@
+#!/bin/bash
+
+#
+# ~/.bashrc
+#
+
+# If not running interactively, don't do anything
+[[ "$-" != *i* ]] && return
+
+# bash_completion
+if ! shopt -oq posix; then
+    if [[ -f /usr/share/bash-completion/bash_completion ]]; then
+        source /usr/share/bash-completion/bash_completion
+    elif [[ -f /etc/bash_completion ]]; then
+        source /etc/bash_completion
+    else
+        echo "bash_completion not found"
+    fi
+fi
+
+# sudo
+alias sudo='sudo -v; sudo --preserve-env '
+
+# ls
+alias ls='ls -hF --color=auto'
+alias ll='ls -l'
+alias la='ls -Al'
+alias l='ls -C'
+
+# mkdir
+alias mkdir='mkdir --parents'
+
+# colors
+alias dir='dir --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias dmesg='dmesg --color'
+
+# diff
+alias diffdir='diff -qr'
+
+# nvim
+! which vim &>/dev/null && alias vim='nvim'
+alias {vi,nvi}='nvim'
+alias {vd,nvd,nvimdiff}='nvim -d'
+alias nvim-remove-swap='rm -rf "${XDG_STATE_HOME}/nvim/swap/"'
+
+# less
+alias less='less -QR'
+alias man='man -P "less -QR"'
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# python
+alias {pip,pip3}='python3 -m pip'
+alias venv='python3 -m venv'
+
+# wget
+alias wget="wget --hsts-file=\"${XDG_DATA_HOME}/wget-hsts\""
+
+
+# --------------------------------------------------
+# other
+# --------------------------------------------------
+
+# ip aliases
+alias pingpath='mtr'
+alias myip='curl -s checkip.amazonaws.com'
+
+# permissions
+alias mx='chmod a+x'
+
+
+# --------------------------------------------------
+# user paths
+# --------------------------------------------------
+
+# fzf
+export FZF_DIR="${XDG_DATA_HOME}/fzf"
+export FZF_ENV="${XDG_CONFIG_HOME}/fzf/fzf.bash"
+fzf_exe="${FZF_DIR}/bin/fzf"
+if [[ -f "${FZF_ENV}" ]] && [[ -x "${fzf_exe}" ]]; then
+    source "${FZF_ENV}"
+
+    update-fzf() {
+        if ! [[ -d "${FZF_DIR}" ]]; then
+            echo "Couldn't find fzf directory in '${FZF_DIR}'"
+            return 1
+        fi
+        git -C "${FZF_DIR}" pull
+        "${FZF_DIR}/install" --xdg --bin
+    }
+
+    if hash fd &>/dev/null; then
+        export FZF_DEFAULT_COMMAND='command fd -HIi --type file'
+        export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
+    fi
+fi
+
+# nvm
+export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
+if [[ -d "${NVM_DIR}" ]]; then
+    source "${NVM_DIR}/nvm.sh"
+    source "${NVM_DIR}/bash_completion"
+fi
+
+# rust
+alias cargo-update='cargo install-update --all'
+
+
+# --------------------------------------------------
+# projects
+# --------------------------------------------------
+
+# local projects
+export PROJECTS_DIR="${HOME}/projects"
+
+# ascii art
+ascii_art="${PROJECTS_DIR}/ascii_art/ascii.bash"
+[[ -f "${ascii_art}" ]] && source "${ascii_art}"
+
+
+# --------------------------------------------------
+# git aliases
+# --------------------------------------------------
+
+alias gs='git status'
+alias gf='git fetch'
+alias gfa='git fetch --all'
+alias gp='git pull'
+alias gst='git stash'
+alias ga='git add'
+alias gaa='git add .'
+alias gc='git commit'
+alias gca='git commit --amend'
+alias gb='git branch'
+alias gd='git diff'
+alias gdh='git diff HEAD'
+alias gds='git diff --staged'
+alias gdt='git difftool'
+alias gdth='git difftool HEAD'
+alias gdts='git difftool --staged'
+alias gmt='git mergetool'
+alias gr='git remote'
+alias grv='git remote -v'
+
+alias git-show-message='git show -s --format=%s'
+alias git-reset-last='git reset HEAD~1'
+
+alias rebase-origin='rebase-remote origin'
+alias rebase-upstream='rebase-remote upstream'
+
+alias diff-origin='diff-remote origin'
+alias diff-upstream='diff-remote upstream'
+alias difftool-origin='difftool-remote origin'
+alias difftool-upstream='difftool-remote upstream'
+
+
+# --------------------------------------------------
+# steam
+# --------------------------------------------------
+
+# Hack for the Qemu serial
+if [[ $(tty) == /dev/ttyS0 ]]; then
+    TERM=linux
+    eval "$(resize)"
+fi
+
+ischroot() {
+    local proc_root
+    local root
+
+    if ! proc_root="$(stat --printf "%d %i" /proc/1/root/ 2>/dev/null)" ||
+       ! root="$(stat --printf "%d %i" / 2>/dev/null)"
+    then
+        return 1
+    fi
+
+    test "$proc_root" != "$root"
+}
+
+isremovable() {
+    local devname
+    local devpath
+    local name
+
+    if ! devname="$(realpath "$1")"
+    then
+        return 1
+    fi
+
+    if ! devpath="$(realpath "/sys/class/block/${devname##*/}")"
+    then
+        return 1
+    fi
+
+    if ! test -e "$devpath/removable"
+    then
+        devpath="${devpath%/*}"
+    fi
+
+    if ! test -e "$devpath/removable"
+    then
+        return 1
+    fi
+
+    if grep -q 0 "$devpath/removable"
+    then
+        return 1
+    fi
+
+    mapfile -t name < <(cat "$devpath/device/vendor" "$devpath/device/model" 2>/dev/null)
+    name=("${name[@]//  /}")
+    name=("${name[@]%% }")
+    name=("${name[@]## }")
+    echo "${name[@]}"
+}
+
+__steamos_ps1() {
+    local read_only
+    local partset
+    local root
+    local name
+    local args
+    local arg
+
+    PS1="$1"
+
+    # Check if user is root
+    if [[ "$EUID" -ne 0 ]]
+    then
+        return
+    fi
+
+    # Set partition set to prompt
+    read root partlabel < <(findmnt --noheading --output SOURCE,PARTLABEL /)
+    if [[ "$root" ]]
+    then
+        # Set removable media name to prompt
+        if name=$(isremovable "$root")
+        then
+            PS1="(\[\033[36;1m\]$name\[\033[0m\])$PS1"
+        fi
+
+        # Extract the color from the file os-release
+        eval "$(. /etc/os-release; echo local ANSI_COLOR=\"$ANSI_COLOR\")"
+        partset="${partlabel#rootfs-}"
+        if steamos-readonly status | grep -q "enabled"
+        then
+            read_only=1
+        fi
+        if [[ "$partset" ]] && [[ ! "$read_only" ]]
+        then
+            partset+="+"
+        fi
+        if [[ "$partset" ]]
+        then
+            PS1="(\[\033[${ANSI_COLOR}m\]$partset\[\033[0m\])$PS1"
+        fi
+    fi
+}
+
+__steamos_prompt_command() {
+    # Preserve return code
+    local rc="$?"
+    local ps1="$1"
+    local partset
+
+    # Set chroot to prompt
+    if ischroot
+    then
+        partset="$(findmnt -no partlabel /)"
+        partset="${partset#rootfs-}"
+        ps1="(\[\033[33;1m\]chroot[$partset]\[\033[0m\])$ps1"
+    fi
+
+    # Set return code to prompt
+    if [[ "$rc" -ne 0 ]]
+    then
+        ps1="(\[\033[31;1m\]$rc\[\033[0m\])$ps1"
+    fi
+
+    # Set PS1
+    PS1="$ps1"
+
+    return "$rc"
+}
+
+__steamos_ps1 '(\[\033[1;32m\]\u@\h\[\033[1;34m\] \W\[\033[0m\])\$ '
+PROMPT_COMMAND="__steamos_prompt_command '$PS1'${PROMPT_COMMAND:+; $PROMPT_COMMAND; }"
+
