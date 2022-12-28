@@ -1,38 +1,37 @@
-#!/bin/sh
+#!/bin/bash
 
 DISTRO="$(grep "^ID=" /etc/os-release | awk -F "=" '{ print $2 }')"
 
-if [ "$DISTRO" = "arch" ]; then
+if [[ "${DISTRO}" == "arch" ]]; then
     sudo pacman -S --needed --noconfirm ghc shellcheck
-    exit
+    exit 0
 fi
 
-# install haskell
-if ! which cabal >/dev/null 2>&1; then
+if ! hash cabal &>/dev/null; then
     printf "Cabal not installed. Proceed to install? [Y/n] "
     read -r response
-    case "$response" in
+    case "${response}" in
         [yY] | [yY][eE][sS] | "")
             ;;
         [nN] | [nN][oO])
             echo "Not installing haskell."
-            exit
+            exit 0
             ;;
 
         *)
-            echo "Unknown response: $response"
+            echo "Unknown response: ${response}"
             echo "Not installing haskell."
-            exit
+            exit 1
             ;;
     esac
 
-    [ -z "$XDG_DATA_HOME" ] && export XDG_DATA_HOME="$HOME/.local/share"
-    [ -z "$XDG_CONFIG_HOME" ] && export XDG_CONFIG_HOME="$HOME/.config"
-    [ -z "$XDG_STATE_HOME" ] && export XDG_STATE_HOME="$HOME/.local/state"
-    [ -z "$XDG_CACHE_HOME" ] && export XDG_CACHE_HOME="$HOME/.cache"
+    [[ -z "${XDG_DATA_HOME}" ]] && export XDG_DATA_HOME="${HOME}/.local/share"
+    [[ -z "${XDG_CONFIG_HOME}" ]] && export XDG_CONFIG_HOME="${HOME}/.config"
+    [[ -z "${XDG_STATE_HOME}" ]] && export XDG_STATE_HOME="${HOME}/.local/state"
+    [[ -z "${XDG_CACHE_HOME}" ]] && export XDG_CACHE_HOME="${HOME}/.cache"
 
-    export CABAL_CONFIG="$XDG_CONFIG_HOME"/cabal/config
-    export CABAL_DIR="$XDG_DATA_HOME"/cabal
+    export CABAL_CONFIG="${XDG_CONFIG_HOME}/cabal/config"
+    export CABAL_DIR="${XDG_DATA_HOME}/cabal"
     export BOOTSTRAP_HASKELL_NONINTERACTIVE=true
     export GHCUP_USE_XDG_DIRS=true
     export BOOTSTRAP_HASKELL_INSTALL_STACK=true
@@ -41,23 +40,16 @@ if ! which cabal >/dev/null 2>&1; then
 
     curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 
-    case ":$PATH:" in
-        *:"$HOME/.local/bin":*)
-            ;;
-        *)
-            export PATH="$HOME/.local/bin:$PATH"
-            ;;
-    esac
+    local_bin="${HOME}/.local/bin"
+    if [[ ":${PATH}:" != ":${local_bin}:" ]]; then
+        export PATH="${local_bin}${PATH:+:${PATH}}"
+    fi
+
+    cabal_bin="${XDG_DATA_HOME}/cabal/bin"
+    if [[ ":${PATH}:" != ":${cabal_bin}:" ]]; then
+        export PATH="${cabal_bin}${PATH:+:${PATH}}"
+    fi
 fi
 
-# install binaries
-if cabal install ShellCheck; then
-    case ":$PATH:" in
-        *:"$XDG_DATA_HOME/cabal/bin":*)
-            ;;
-        *)
-            export PATH="$XDG_DATA_HOME/cabal/bin:$PATH"
-            ;;
-    esac
-fi
+cabal install shellcheck
 
