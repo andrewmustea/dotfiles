@@ -1,40 +1,34 @@
-#!/bin/sh
+#!/bin/bash
 
-if which fzf >/dev/null 2>&1; then
+if hash fzf &>/dev/null; then
     echo "fzf already installed"
-    exit
+    exit 0
 fi
 
-[ -z "$XDG_CONFIG_HOME" ] && export XDG_CONFIG_HOME=~/.config
-[ -z "$XDG_DATA_HOME" ] && export XDG_DATA_HOME=~/.local/share
+distro="$(grep "^ID=" /etc/os-release | awk -F "=" '{ print $2 }')"
 
-DISTRO="$(grep "^ID=" /etc/os-release | awk -F "=" '{ print $2 }')"
-
-if [ "$DISTRO" = "arch" ]; then
+if [[ "${distro}" == "arch" ]]; then
+    echo "Installing fzf using pacman..."
     sudo pacman -S --needed --noconfirm fzf
-    exit
-elif [ "$DISTRO" = "debian" ]; then
-    if which nala >/dev/null 2>&1; then
-        sudo nala install -y fzf
-    else
-        sudo apt install -y fzf
-    fi
-    exit
-elif [ "$DISTRO" != "ubuntu" ]; then
-    echo "Distro not supported: $DISTRO"
-    exit 1
+    exit 0
 fi
 
-if ! which fzf >/dev/null 2>&1; then
-    echo "Installing fzf..."
-    git clone https://github.com/junegunn/fzf.git "$XDG_DATA_HOME/fzf"
-    "$XDG_DATA_HOME/fzf/install" --xdg --bin
-    mkdir --parents "$XDG_CONFIG_HOME/fzf"
-    cp -rf "$(cd -- "$(dirname -- "$0")" && pwd -P)/../fzf/" "$XDG_CONFIG_HOME"
-    . "$XDG_CONFIG_HOME/fzf/fzf.bash"
-else
-    echo "Updating fzf..."
-    git -C "$XDG_DATA_HOME/fzf" pull
-    "$XDG_DATA_HOME/fzf/install --xdg --bin"
+if hash brew &>/dev/null; then
+    echo "Installing fzf using homebrew..."
+    brew install fzf
+    exit 0
 fi
+
+echo "Installing fzf using git..."
+
+[[ -z "${XDG_CONFIG_HOME}" ]] && export XDG_CONFIG_HOME="${HOME}/.config"
+[[ -z "${XDG_DATA_HOME}" ]] && export XDG_DATA_HOME="${HOME}/.local/share"
+
+fzf_dir="${XDG_DATA_HOME}/fzf"
+git clone https://github.com/junegunn/fzf.git "${fzf_dir}"
+"${fzf_dir}/install" --xdg --bin
+
+fzf_config="${XDG_CONFIG_HOME}/fzf/fzf.bash"
+cp "$(cd -- "$(dirname -- "$0")" && pwd -P)/../fzf/git_fzf.bash" "${fzf_config}"
+source "${fzf_config}"
 
