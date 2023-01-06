@@ -49,24 +49,3 @@ api.nvim_create_autocmd("BufWritePre", {
     end
 })
 
--- set gitcommit, lua, markdown, and vimwiki to shiftwidth 2 by default
-api.nvim_create_autocmd("FileType", {
-  group = api.nvim_create_augroup("2shift_tabexpand", { clear = true }),
-  pattern = "gitcommit, lua, markdown, vimwiki",
-  callback =
-    function()
-      vim.opt_local.shiftwidth = 2
-      vim.opt_local.expandtab = true
-    end
-})
-
--- set c/c++ files to shiftwidth 8 and noexpandtab by default
-api.nvim_create_autocmd("FileType", {
-  group = api.nvim_create_augroup("8shift_noexpandtab", { clear = true }),
-  pattern = { "c", "cpp" },
-  callback = function()
-    vim.opt_local.shiftwidth = 8
-    vim.opt_local.expandtab = false
-  end
-})
-
