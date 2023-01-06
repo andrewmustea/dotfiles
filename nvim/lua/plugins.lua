@@ -407,7 +407,10 @@ require("packer").startup({
     use { "vimwiki/vimwiki",
       event = "CmdlineEnter",
       ft = "vimwiki",
-      cond = util.not_vscode
+      cond = util.not_vscode,
+      setup = function()
+        vim.g.vimwiki_global_ext = 0
+      end
     }
 
     -- linting
