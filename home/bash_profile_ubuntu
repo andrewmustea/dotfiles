@@ -1,0 +1,309 @@
+#!/bin/bash
+
+#
+# ~/.bash_profile
+#
+
+# --------------------------------------------------
+# paths and environment variables
+# --------------------------------------------------
+
+append_path() {
+  if [[ -d "$1" ]] && [[ ":${PATH}:" != *":${1}:"* ]]; then
+    export PATH="${PATH:+"${PATH}:"}${1}"
+  fi
+}
+
+prepend_path() {
+  if [[ -d "$1" ]] && [[ ":${PATH}:" != *":${1}:"* ]]; then
+    export PATH="${1}${PATH:+":${PATH}"}"
+  fi
+}
+
+# local bin
+prepend_path "${HOME}/.local/bin"
+
+# azure
+export AZURE_CONFIG_DIR="${XDG_CONFIG_HOME}/azure"
+export AZURE_DEVOPS_CACHE_DIR="${XDG_CACHE_HOME}/azure-devops"
+
+# cabal
+export CABAL_DIR="${XDG_DATA_HOME}/cabal"
+prepend_path "${CABAL_DIR}/bin"
+
+# cargo
+export CARGO_HOME="${XDG_DATA_HOME}/cargo"
+prepend_path "${CARGO_HOME}/bin"
+
+# gcc
+export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# gem
+export GEM_SPEC_CACHE="${XDG_CACHE_HOME}/gem"
+
+# go
+if [[ -d /usr/local/go/bin ]]; then
+  export GO_BIN=/usr/local/go/bin
+  export GOPATH="${XDG_DATA_HOME}/go"
+  append_path "${GO_BIN}"
+  prepend_path "${GOPATH}/bin"
+fi
+
+# gpg
+GPG_TTY="$(tty)"
+export GPG_TTY
+
+# homebrew
+if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+  append_path "/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin"
+  export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+  export HOMEBREW_CELLAR="/home/linuxbrew/.linuxbrew/Cellar"
+  export HOMEBREW_REPOSITORY="/home/linuxbrew/.linuxbrew/Homebrew"
+  export INFOPATH="${INFOPATH+${INFOPATH}:}/home/linuxbrew/.linuxbrew/share/info"
+fi
+
+# less
+export LESSHISTFILE="${XDG_STATE_HOME}/less/history"
+LESS_TERMCAP_mb="$(printf '\E[01;31m')"
+LESS_TERMCAP_md="$(printf '\E[01;38;5;74m')"
+LESS_TERMCAP_me="$(printf '\E[0m')"
+LESS_TERMCAP_se="$(printf '\E[0m')"
+LESS_TERMCAP_so="$(printf '\E[38;5;246m')"
+LESS_TERMCAP_ue="$(printf '\E[0m')"
+LESS_TERMCAP_us="$(printf '\E[04;38;5;146m')"
+export LESS_TERMCAP_mb
+export LESS_TERMCAP_md
+export LESS_TERMCAP_me
+export LESS_TERMCAP_se
+export LESS_TERMCAP_so
+export LESS_TERMCAP_ue
+export LESS_TERMCAP_us
+
+# lesspipe
+[[ -x /usr/bin/lesspipe ]] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# nuget
+export NUGET_PACKAGES="${XDG_CACHE_HOME}/nuget_packages"
+
+# npm
+export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npm/npmrc"
+
+# nvim
+if hash nvim &>/dev/null; then
+  export EDITOR='nvim'
+else
+  export EDITOR='vim'
+fi
+
+# pass
+export PASSWORD_STORE_DIR="${XDG_DATA_HOME}/pass"
+
+# pylint
+export PYLINTHOME="${XDG_CACHE_HOME}/pylint"
+
+# rustup
+export RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
+
+# stack
+export STACK_ROOT="${XDG_DATA_HOME}/stack"
+prepend_path "${STACK_ROOT}/bin"
+
+unset -f append_path prepend_path
+
+# --------------------------------------------------
+# git functions
+# --------------------------------------------------
+
+# print the branch name of the current directory or a given one
+get-branch-name() {
+  local dir="${PWD}"
+  if (( $# > 1 )); then
+    echo "error: too many arguments: $*" 1>&2
+    echo "usage: get-branch-name [branch]" 1>&2
+    return 1
+  elif (( $# == 1 )); then
+    dir="$1"
+  fi
+
+  git -C "${dir}" rev-parse --abbrev-ref HEAD
+}
+
+# run an interactive rebase starting at a given commit
+rebase-at-commit() {
+  if (( $# == 0 )); then
+    echo "error: missing commit-id" 1>&2
+    echo "usage: rebase-at-commit <commit-id>" 1>&2
+    return 1
+  elif (( $# > 1 )); then
+    echo "error: too many arguments: $*" 1>&2
+    echo "usage: rebase-at-commit <commit-id>" 1>&2
+    return 1
+  fi
+
+  git rebase --interactive "${1}^"
+}
+
+# rebase a branch on a given remote without having to manually stash any changes
+rebase-remote() {
+  if (( $# == 0 )); then
+    echo 'error: need remote name'
+    echo 'usage: rebase-remote <remote> [branch]'
+  fi
+
+  local current_branch
+  current_branch=$(get-branch-name "$2")
+  if [[ -z "${current_branch}" ]]; then
+    return 1
+  fi
+
+  local branch="master"
+  if (( $# == 1 )); then
+    branch="$2"
+  fi
+
+  git fetch --all
+  git rebase "$1/${branch}" "${branch}"
+
+  if [[ "${current_branch}" != "${branch}" ]]; then
+    git checkout "${current_branch}"
+  fi
+}
+
+# add a pattern to .git/info/exclude
+add-exclude() {
+  local repo="${PWD}"
+  if (( $# == 0 )); then
+    echo "error: missing exclude argument" 1>&2
+    echo "usage: add-exclude <exclude-type> [directory]" 1>&2
+    return 1
+  elif (( $# > 2 )); then
+    echo "error: too many arguments: $*" 1>&2
+    echo "usage: add-exclude <exclude-type> [directory]" 1>&2
+    return 1
+  elif (( $# == 2 )); then
+    repo="$2"
+  fi
+
+  local exclude="${repo}/.git/info/exclude"
+  if [[ -z "${exclude}" ]]; then
+    echo "error: git exclude file not found: '${exclude}'" 1>&2
+    return 1
+  fi
+
+  if ! grep -q "$(printf '^%q$' "$1")" "${exclude}"; then
+    echo "adding '$1' to '${exclude}'"
+    echo "$1" >> "${exclude}"
+  else
+    echo "'$1' already exists in '${exclude}'"
+  fi
+}
+
+# add '.vscode*' to .git/info/exclude
+add-exclude-vscode() {
+  local repo="${PWD}"
+  if (( $# == 0 )); then
+    echo "error: missing exclude argument" 1>&2
+    echo "usage: add-exclude-vscode <exclude-type>" 1>&2
+    return 1
+  elif (( $# > 1 )); then
+    echo "error: too many arguments: $*" 1>&2
+    echo "usage: add-exclude-vscode <exclude-type>" 1>&2
+    return 1
+  elif (( $# == 1 )); then
+    repo="$1"
+  fi
+  add-exclude ".vscode*" "${repo}"
+}
+
+# run a diff against the same branch on a remote
+diff-remote() {
+  if (( $# == 0 )); then
+    echo "error: missing remote name" 1>&2
+    echo "usage: diff-remote <remote> [diff args]" 1>&2
+    return 1
+  fi
+
+  if ! git remote | grep -q "$1"; then
+    echo "error: unknown remote '$1'" 1>&2
+    return 1
+  fi
+
+  git diff "${1}/$(get-branch-name)" "${@:2}"
+}
+
+# run difftool against the same branch on a remote
+difftool-remote() {
+  if (( $# == 0 )); then
+    echo "error: missing remote name" 1>&2
+    echo "usage: difftool-remote <remote> [difftool args]" 1>&2
+    return 1
+  fi
+
+  if ! git remote | grep -q "$1"; then
+    echo "error: unknown remote '$1'" 1>&2
+    return 1
+  fi
+
+  git difftool "${1}/$(get-branch-name)" "${@:2}"
+}
+
+# --------------------------------------------------
+# other functions
+# --------------------------------------------------
+
+# print PATH
+print-path() {
+  echo "${PATH//":"/"\n"}"
+}
+
+# find process
+psgrep() {
+  pgrep "$@" | xargs --no-run-if-empty ps -fp
+}
+
+# find and kill process
+pskill() {
+  local pid
+  pid="$(pgrep "$@" | xargs -r ps --no-headers -fp | awk '{ print $2 }')"
+  echo "killing $1 (process ${pid})..."
+  kill -9 "${pid}"
+}
+
+# uncompress files
+extract() {
+  if [[ -f "$1" ]]; then
+    echo "not a valid file: '$1'"
+    return 1
+  elif [[ -r "$1" ]]; then
+    echo "file not readable: '$1'"
+    return 1
+  fi
+
+  case "$1" in
+    *.tar.bz2) tar xvjf "$1" ;;
+    *.tar.gz) tar xvzf "$1" ;;
+    *.tar.xz) tar xvf "$1" ;;
+    *.bz2) bunzip2 "$1" ;;
+    *.rar) unrar x "$1" ;;
+    *.gz) gunzip "$1" ;;
+    *.tar) tar xvf "$1" ;;
+    *.tbz2) tar xvjf "$1" ;;
+    *.tgz) tar xvzf "$1" ;;
+    *.zip) unzip "$1" ;;
+    *.Z) uncompress "$1" ;;
+    *.7z) 7z x "$1" ;;
+    *)
+      echo "unknown compressed file type '.${1#*.}'"
+      return 1
+      ;;
+  esac
+}
+
+# --------------------------------------------------
+# rc files
+# --------------------------------------------------
+
+[[ -f "${HOME}/.bash_login" ]] && source "${HOME}/.bash_login"
+
+[[ -f "${HOME}/.bashrc" ]] && source "${HOME}/.bashrc"
+

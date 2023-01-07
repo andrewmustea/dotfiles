@@ -5,51 +5,34 @@
 #
 
 # If not running interactively, don't do anything
-case $- in
-    *i*) ;;
-    *) return ;;
+case "$-" in
+  *i*) ;;
+  *) return ;;
 esac
 
 # --------------------------------------------------
-# user paths
+# programs
 # --------------------------------------------------
 
-# local home bin
-#
-HOME_BIN="$HOME/.local/bin"
-if [[ "$PATH" != *$HOME_BIN* ]]; then
-    export PATH="${PATH:+${PATH}:}$HOME_BIN"
-fi
+# fzf
+export FZF_ENV="${XDG_CONFIG_HOME}/fzf/fzf.bash"
+if [[ -r "${FZF_ENV}" ]]; then
+  source "${FZF_ENV}"
 
-# go
-#
-export GOPATH="$DATA"/go
-if [[ -d "$GOPATH"/bin ]] && [[ "$PATH" != *$GOPATH/bin* ]]; then
-    export PATH="${PATH:+${PATH}:}$GOPATH/bin"
-fi
-
-# haskell
-#
-export STACK_ROOT="$XDG_DATA_HOME"/stack
-export CABAL_DIR="$DATA"/cabal
-if [[ -d "$CABAL_DIR" ]] && [[ "$PATH" != *$CABAL_DIR/bin* ]]; then
-    export PATH="$CABAL_DIR/bin:$PATH"
-fi
-
-# rust
-#
-alias cargo-update='cargo install-update --all'
-
-export CARGO_HOME="$DATA"/cargo
-export RUSTUP_HOME="$DATA"/rustup
-if [[ -d "$CARGO_HOME/bin" ]] && [[ "$PATH" != *$CARGO_HOME/bin* ]]; then
-    export PATH="$CARGO_HOME/bin:$PATH"
-fi
-
-# fzf can use fd
-if which fd &>/dev/null; then
+  if hash fd &>/dev/null; then
     export FZF_DEFAULT_COMMAND='command fd -HIi --type file'
-    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+    export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
+  fi
+fi
+
+# nala
+hash nala &>/dev/null && alias apt='nala'
+
+# nvm
+export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
+if [[ -d "${NVM_DIR}" ]]; then
+  source "${NVM_DIR}/nvm.sh"
+  source "${NVM_DIR}/bash_completion"
 fi
 
 # --------------------------------------------------
@@ -57,15 +40,13 @@ fi
 # --------------------------------------------------
 
 # local projects
-#
-PROJECTS_DIR="$HOME/projects"
-export PROJECTS_DIR
+export PROJECTS_DIR="${HOME}/projects"
 
-ASCII_ART="$PROJECTS_DIR/ascii_art"
-[[ -d "$ASCII_ART" ]] && source "$ASCII_ART/ascii.bash"
+ascii_art="${PROJECTS_DIR}/ascii_art/ascii.bash"
+[[ -r "${ascii_art}" ]] && source "${ascii_art}"
 
 # --------------------------------------------------
-# git settings
+# git aliases
 # --------------------------------------------------
 
 # status
@@ -136,127 +117,4 @@ alias diff-origin='diff-remote origin'
 alias diff-upstream='diff-remote upstream'
 alias difftool-origin='difftool-remote origin'
 alias difftool-upstream='difftool-remote upstream'
-
-# print the branch name of the current directory or a given one
-get-branch-name() {
-    local dir=$PWD
-    if [[ -n "$1" ]]; then
-        dir="$1"
-    fi
-
-    git -C "$dir" rev-parse --abbrev-ref HEAD
-}
-
-# run an interactive rebase starting at a given commit inclusively
-rebase-at-commit() {
-    if [[ -z "$1" ]]; then
-        echo "error: missing commit-id"
-        echo "usage: rebase-at-commit <commit-id>"
-        return 1
-    fi
-
-    git rebase --interactive "$1"^
-}
-
-# rebase a branch on a given remote without having to manually stash any changes
-rebase-remote() {
-    if [[ $# -eq 0 ]]; then
-        echo 'error: need remote name'
-        echo 'usage: rebase-remote <remote> [branch]'
-    fi
-
-    local current_branch
-    current_branch=$(get-branch-name "$2")
-    if [[ -z "$current_branch" ]]; then
-        return 1
-    fi
-
-    local branch="master"
-    if [[ $# -gt 1 ]]; then
-        branch="$2"
-    fi
-
-    git fetch --all
-    git rebase "$1/$branch" "$branch"
-
-    if [[ "$current_branch" != "$branch" ]]; then
-        git checkout "$current_branch"
-    fi
-}
-
-# add a pattern to .git/info/exclude
-add-exclude() {
-    local repo_config="$PWD"
-    if [[ $# -eq 2 ]]; then
-        repo_config=$2
-    elif [[ $# -ne 1 ]]; then
-        echo "error: bad arguments: '$*'"
-        echo 'usage: add_exclude <exclude-line> [repo-directory]'
-        return 1
-    fi
-
-    repo_config+='/.git/info/exclude'
-    if [[ -z "$repo_config" ]]; then
-        echo "error: repo_config not found: '$repo_config'"
-        return 1
-    fi
-
-    if ! grep -q "$(printf '^%q$' "$1")" "$repo_config"; then
-        echo "adding '$1' to '$repo_config'"
-        echo "$1" >> "$repo_config"
-    else
-        echo "'$1' already exists in '$repo_config'"
-    fi
-}
-
-# add '.vscode*' to .git/info/exclude
-add-exclude-vscode() {
-    local repo=$PWD
-    if [[ -n "$1" ]]; then
-        repo=$1
-    fi
-    add-exclude ".vscode*" "$repo"
-}
-
-# diff compare against the same branch on a remote
-diff-remote() {
-    if [[ -z "$1" ]]; then
-        echo "error: missing remote name"
-        echo "usage: diff-remote <remote> [diff args]"
-        return 1
-    fi
-
-    if [[ ! -d .git/ ]]; then
-        echo "error: not a git directory"
-        return 1
-    fi
-
-    if ! git remote | grep -q "$1"; then
-        echo "error: unknown remote '$1'"
-        return 1
-    fi
-
-    git diff "$1/$(get-branch-name)" "${@:2}"
-}
-
-# run difftool against the same branch on a remote
-difftool-remote() {
-    if [[ -z "$1" ]]; then
-        echo "error: missing remote name"
-        echo "usage: difftool-remote <remote> [difftool args]"
-        return 1
-    fi
-
-    if [[ ! -d .git/ ]]; then
-        echo "error: not a git directory"
-        return 1
-    fi
-
-    if ! git remote | grep -q "$1"; then
-        echo "error: unknown remote '$1'"
-        return 1
-    fi
-
-    git difftool "$1/$(get-branch-name)" "${@:2}"
-}
 
