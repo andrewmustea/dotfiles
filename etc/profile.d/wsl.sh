@@ -1,51 +1,34 @@
 #!/bin/bash
 
-# add wsl path
-case "$PATH" in
-    */usr/lib/wsl/lib*)
-        ;;
-    *)
-        PATH="$PATH:/usr/lib/wsl/lib:/mnt/c/Windows/system32:/mnt/c/Windows:/mnt/c/Windows/System32/Wbem:/mnt/c/Windows/System32/WindowsPowerShell/v1.0/"
-        ;;
-esac
+#
+# /etc/profile.d/wsl.sh
+#
 
 # run powershell command
 run-ps() {
-    if [[ $# -eq 0 ]]; then
-        echo "Error: no command provided"
-        echo "Usage: run-ps <command-string>"
-        return 1
-    fi
+  if (( $# == 0 )); then
+    echo "error: no command provided" 1>&2
+    echo "usage: run-ps <command-string>" 1>&2
+    return 1
+  fi
 
-    pwsh="$(powershell.exe -command "$*" | sed 's/\\/\//g')"
-    echo "${pwsh%$'\r'}"
+  powershell.exe -command "$*" | tr -d "\r" | sed 's|\\|/|g'
 }
 
-# get path from windows path
-get-winpath() {
-    if ! [[ $# -eq 1 ]]; then
-        echo "Error: bad arguments: $*"
-        echo "Usage: get-winpath <path>"
-        return 1
-    fi
+# windows user paths
+WINUSER="$(wslpath "$(run-ps "echo \"\${env:USERPROFILE}\"")")"
+WINDOC="$(wslpath "$(run-ps "[Environment]::GetFolderPath(\"MyDocuments\")")")"
+export WINUSER
+export WINDOC
+export WINDOWN="${WINUSER}/Downloads"
 
-    winpath="$(wslpath "$1")"
-    echo "${winpath%$'\r'}"
-}
-
-# windows paths
-winuser="$(get-winpath "$(run-ps "echo \"\${env:USERPROFILE}\"")")"
-windoc="$(get-winpath "$(run-ps "[Environment]::GetFolderPath(\"MyDocuments\")")")"
-export winuser
-export windoc
-export windown="$winuser/Downloads"
-
-alias winuser='cd "$winuser"'
-alias windoc='cd "$windoc"'
-alias windown='cd "$windown"'
+# cd functions
+winuser() { cd "${WINUSER}" || return 1; }
+windoc() { cd "${WINDOC}" || return 1; }
+windown() { cd "${WINDOWN}" || return 1; }
 
 # print path
 print-path-wsl() {
-    printf "%s\n" "${PATH//:/$'\n'}" | grep -v '^/mnt/c/'
+  echo "${PATH//":"/"\n"}" | grep -v "^/mnt/c/"
 }
 
