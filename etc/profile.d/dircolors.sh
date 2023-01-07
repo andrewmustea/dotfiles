@@ -4,9 +4,9 @@
 # /etc/profile.d/dircolors.sh
 #
 
-if [ -f "/etc/dircolors" ] ; then
-    eval $(dircolors -b /etc/dircolors)
-elif [ -f "$HOME/.dircolors" ] ; then
-    eval $(dircolors -b $HOME/.dircolors)
+if [ -r "${HOME}/.dircolors" ]; then
+  eval "$(dircolors -b "${HOME}/.dircolors")"
+elif [ -r "/etc/dircolors" ]; then
+  eval "$(dircolors -b /etc/dircolors)"
 fi
 
