@@ -4,78 +4,74 @@
 # /etc/profile
 #
 
-# Set our umask
 umask 022
 
-# Append "$1" to $PATH when not already in.
-# This function API is accessible to scripts in /etc/profile.d
+uid="$(id -u)"
+
+# --------------------------------------------------
+# path
+# --------------------------------------------------
+
 append_path () {
-    case ":$PATH:" in
-        *:"$1":*)
-            ;;
-        *)
-            PATH="${PATH:+$PATH:}$1"
-    esac
+  case ":${PATH}:" in
+    *":$1:"*)
+      ;;
+    *)
+      PATH="${PATH:+"${PATH}:"}$1"
+  esac
 }
 
-# Append our default paths
 append_path '/usr/local/sbin'
 append_path '/usr/local/bin'
 append_path '/usr/bin'
 
-# Force PATH to be environment
 export PATH
 
-# XDG defaults
-#
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_STATE_HOME="$HOME/.local/state"
-export XDG_CACHE_HOME="$HOME/.cache"
+# --------------------------------------------------
+# environment variables
+# --------------------------------------------------
 
-uid="$(id -u)"
-if pidof "systemd" &>/dev/null; then
-    export XDG_RUNTIME_DIR="/run/user/$uid"
+export XDG_CACHE_HOME="${HOME}/.cache"
+export XDG_CONFIG_HOME="${HOME}/.config"
+export XDG_DATA_HOME="${HOME}/.local/share"
+export XDG_STATE_HOME="${HOME}/.local/state"
+
+if pidof systemd >/dev/null 2>&1; then
+  export XDG_RUNTIME_DIR="/run/user/${uid}"
 else
-    mkdir --parents "/tmp/user/$uid"
-    export XDG_RUNTIME_DIR="/tmp/user/$uid"
-fi
-unset uid
-
-export DATA="$XDG_DATA_HOME"
-export CONFIG="$XDG_CONFIG_HOME"
-export STATE="$XDG_STATE_HOME"
-export CACHE="$XDG_CACHE_HOME"
-export RUNTIME="$XDG_RUNTIME_DIR"
-
-# Load profiles from /etc/profile.d
-if test -d /etc/profile.d/; then
-    for profile in /etc/profile.d/*.sh; do
-        test -r "$profile" && . "$profile"
-    done
-    unset profile
+  mkdir --parents "/tmp/user/${uid}"
+  export XDG_RUNTIME_DIR="/tmp/user/${uid}"
 fi
 
-# Unload our profile API functions
+# --------------------------------------------------
+# source config files
+# --------------------------------------------------
+
+# source profiles from /etc/profile.d
+if [ -d /etc/profile.d/ ]; then
+  for profile in /etc/profile.d/*.sh; do
+    [ -r "${profile}" ] && . "${profile}"
+  done
+  unset profile
+fi
+
+# source the global bashrc if applicable
+if [ -n "${BASH}" ] && [ -n "${PS1}" ] && [ -z "${POSIXLY_CORRECT}" ] && \
+   [ "${0#-}" != "sh" ] && [ -r /etc/bash.bashrc ]; then
+  . /etc/bash.bashrc
+elif [ "${uid}" -eq 0 ]; then
+  PS1='# '
+else
+  PS1='$ '
+fi
+
+# --------------------------------------------------
+# cleanup environment
+# --------------------------------------------------
+
+# unset functions
 unset -f append_path
 
-# Source global bash config, when interactive but not posix or sh mode
-if test "$BASH" && \
-   test "$PS1" && \
-   test -z "$POSIXLY_CORRECT" && \
-   test "${0#-}" != sh && \
-   test -r /etc/bash.bashrc
-then
-    . /etc/bash.bashrc
-elif [ "$(id -u)" -eq 0 ]; then
-    PS1='# '
-else
-    PS1='$ '
-fi
-
-# Termcap is outdated, old, and crusty, kill it.
-unset TERMCAP
-
-# Man is much better than us at figuring this out
-unset MANPATH
+# unset variables
+unset TERMCAP MANPATH uid
 
