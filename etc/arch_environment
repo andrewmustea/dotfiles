@@ -1,6 +1,7 @@
 #
-# This file is parsed by pam_env module
+# /etc/environment
 #
-# Syntax: simple "KEY=VAL" pairs on separate lines
-#
+
+GTK_THEME=Adwaita:dark
 MOZ_ENABLE_WAYLAND=1
+
