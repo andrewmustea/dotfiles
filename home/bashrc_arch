@@ -1,0 +1,119 @@
+#!/bin/bash
+
+#
+# ~/.bashrc
+#
+
+# If not running interactively, don't do anything
+case "$-" in
+  *i*) ;;
+  *) return ;;
+esac
+
+# --------------------------------------------------
+# programs
+# --------------------------------------------------
+
+# fzf
+export FZF_ENV="${XDG_CONFIG_HOME}/fzf/fzf.bash"
+if [[ -r "${FZF_ENV}" ]]; then
+  source "${FZF_ENV}"
+
+  if hash fd &>/dev/null; then
+    export FZF_DEFAULT_COMMAND='command fd -HIi --type file'
+    export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
+  fi
+fi
+
+# pacman
+alias pac='"${PACKAGE_MANAGER}"'
+alias pacsearch='"${PACKAGE_MANAGER}" -Ss'
+alias pacquery='"${PACKAGE_MANAGER}" -Q'
+
+# nvm
+export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
+[[ -d "${NVM_DIR}" ]] && source "${NVM_DIR}/nvm.sh"
+
+# --------------------------------------------------
+# projects
+# --------------------------------------------------
+
+# local projects
+export PROJECTS_DIR="${HOME}/projects"
+
+ascii_art="${PROJECTS_DIR}/ascii_art/ascii.bash"
+[[ -r "${ascii_art}" ]] && source "${ascii_art}"
+
+# --------------------------------------------------
+# git aliases
+# --------------------------------------------------
+
+# status
+alias gs='git status'
+alias gss='git status --short'
+
+# fetch
+alias gf='git fetch'
+alias gfa='git fetch --all'
+
+# log
+alias gl='git log'
+alias glp='git log --patch'
+
+# show
+alias gsh='git show'
+alias gshn='git show --name-only'
+alias gshs='git show --short'
+alias {gshm,git-show-message}='git show -s --format=%s'
+
+# branch
+alias gb='git branch'
+alias gba='git branch -a'
+
+# pull
+alias gp='git pull'
+alias gpr='git pull --rebase'
+
+# reset
+alias gr='git reset'
+
+# add
+alias ga='git add'
+alias gaa='git add .'
+
+# commit
+alias gc='git commit'
+alias gca='git commit --amend'
+
+# stash
+alias gst='git stash'
+alias gsti='git stash --include-untracked'
+alias gsta='git stash apply'
+
+# diff
+alias gd='git diff'
+alias gds='git diff --staged'
+alias gdh='git diff HEAD'
+
+# difftool
+alias gdt='git difftool'
+alias gdts='git difftool --staged'
+alias gdth='git difftool HEAD'
+
+# mergetool
+alias gmt='git mergetool'
+
+# remote
+alias gr='git remote'
+alias grv='git remote -v'
+
+# rebase-remote
+alias rebase-origin='rebase-remote origin'
+alias rebase-upstream='rebase-remote upstream'
+
+# diff-remote
+alias diff-origin='diff-remote origin'
+alias diff-upstream='diff-remote upstream'
+alias difftool-origin='difftool-remote origin'
+alias difftool-upstream='difftool-remote upstream'
+
