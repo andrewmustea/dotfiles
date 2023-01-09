@@ -3,21 +3,16 @@
 
 local g = vim.g
 local o = vim.o
+local wo = vim.wo
 
--- clipboard
-o.clipboard = "unnamedplus"
+------------------------------
+-- usability
+------------------------------
 
 -- mouse support
 o.mouse = "nv"
 
--- highlighting
-o.syntax = true
-o.termguicolors = true
-
--- signcolumn
-vim.wo.signcolumn = "yes"
-
--- timing
+-- update time swap file write and CursorHold
 o.updatetime = 300
 
 -- turn off all sounds
@@ -26,13 +21,24 @@ o.belloff = true
 -- command line history size
 o.history = 10000
 
--- set line and column numbers
+------------------------------
+-- ui
+------------------------------
+
+-- enable snytax highlighting
+o.syntax = true
+o.termguicolors = true
+
+-- show line and column numbers
 o.number = true
 o.ruler = true
 
--- show commands but not mode on last line
+-- last line should only show commands
 o.showcmd = true
 o.showmode = false
+
+-- signcolumn
+wo.signcolumn = "yes"
 
 -- show cursorline
 o.cursorline = true
@@ -40,12 +46,8 @@ o.cursorline = true
 -- wrap text
 o.wrap = true
 
--- highlight previous and incremental searches
-o.hlsearch = true
-o.incsearch = true
-
--- split buffers to the right
-o.splitright = true
+-- number of lines to keep above and below cursor
+o.scrolloff = 8
 
 -- show matching bracket
 o.showmatch = true
@@ -55,33 +57,54 @@ o.autoindent = true
 o.cindent = true
 o.expandtab = true
 o.shiftwidth = 0
-o.smartindent = true
 o.smarttab = true
 o.softtabstop = -1
 o.tabstop = 4
+
+-- diff options
+o.diffopt = "internal,filler,closeoff,vertical,hiddenoff"
+
+------------------------------
+-- buffers
+------------------------------
+
+-- prefer splitting buffers to the right
+o.splitright = true
+
+-- do not save when switching buffers
+o.hidden = true
+
+------------------------------
+-- search
+------------------------------
 
 -- case insensitive search unless /C or capital in search
 o.ignorecase = true
 o.smartcase = true
 
--- wrap search at end or beginning of file
+-- highlight previous and incremental matches during search
+o.hlsearch = true
+o.incsearch = true
+
+-- wrap search at beginning or end of file
 o.wrapscan = true
 
--- diff options
-o.diffopt = "internal,filler,closeoff,vertical,hiddenoff"
+------------------------------
+-- providers
+------------------------------
 
--- number of lines to keep above and below cursor
-o.scrolloff = 8
-
--- do not save when switching buffers
-o.hidden = true
+-- clipboard
+o.clipboard = "unnamedplus"
 
 -- python3 provider
 g.python3_host_prog = "/usr/bin/python3"
 
--- non-vscode options
+------------------------------
+-- not vscode
+------------------------------
+
 if g.vscode == nil then
-  -- save undo history in separate file
+  -- save undo history after closing buffer
   o.undofile = true
 end
 
