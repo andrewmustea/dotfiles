@@ -1,2 +1,6 @@
-vim.opt_local.shiftwidth = 2
+-- sh.lua
+--
+
 vim.opt_local.expandtab = true
+vim.opt_local.tabstop = 2
+

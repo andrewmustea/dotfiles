@@ -54,11 +54,11 @@ o.showmatch = true
 o.autoindent = true
 o.cindent = true
 o.expandtab = true
-o.shiftwidth = 4
+o.shiftwidth = 0
 o.smartindent = true
 o.smarttab = true
 o.softtabstop = -1
-o.tabstop = 8
+o.tabstop = 4
 
 -- case insensitive search unless /C or capital in search
 o.ignorecase = true
