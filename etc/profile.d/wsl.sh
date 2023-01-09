@@ -4,6 +4,13 @@
 # /etc/profile.d/wsl.sh
 #
 
+# set default powershell
+if hash pwsh.exe &>/dev/null; then
+  export POWERSHELL_EXEC="pwsh.exe"
+else
+  export POWERSHELL_EXEC="powershell.exe"
+fi
+
 # run powershell command
 run-ps() {
   if (( $# == 0 )); then
@@ -12,7 +19,7 @@ run-ps() {
     return 1
   fi
 
-  powershell.exe -command "$*" | tr -d "\r" | sed 's|\\|/|g'
+  "${POWERSHELL_EXEC}" -command "$*" | tr -d "\r" | sed 's|\\|/|g'
 }
 
 # windows user paths
