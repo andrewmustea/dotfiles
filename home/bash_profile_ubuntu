@@ -146,8 +146,8 @@ rebase-at-commit() {
 # rebase a branch on a given remote without having to manually stash any changes
 rebase-remote() {
   if (( $# == 0 )); then
-    echo 'error: need remote name'
-    echo 'usage: rebase-remote <remote> [branch]'
+    echo "error: need remote name" 1>&2
+    echo "usage: rebase-remote <remote> [branch]" 1>&2
   fi
 
   local current_branch
@@ -194,7 +194,7 @@ add-exclude() {
     echo "adding '$1' to '${exclude}'"
     echo "$1" >> "${exclude}"
   else
-    echo "'$1' already exists in '${exclude}'"
+    echo "'$1' already exists in '${exclude}'" 1>&2
   fi
 }
 
@@ -272,10 +272,10 @@ pskill() {
 # uncompress files
 extract() {
   if ! [[ -f "$1" ]]; then
-    echo "not a valid file: '$1'"
+    echo "not a valid file: '$1'" 1>&2
     return 1
   elif ! [[ -r "$1" ]]; then
-    echo "file not readable: '$1'"
+    echo "file not readable: '$1'" 1>&2
     return 1
   fi
 
@@ -293,7 +293,7 @@ extract() {
     *.Z) uncompress "$1" ;;
     *.7z) 7z x "$1" ;;
     *)
-      echo "unknown compressed file type '.${1#*.}'"
+      echo "unknown compressed file type '.${1#*.}'" 1>&2
       return 1
       ;;
   esac
