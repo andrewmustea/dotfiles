@@ -96,10 +96,6 @@ require("packer").startup({
       wants = "editorconfig-vim",
       config = util.get_config("indent-o-matic")
     }
-    use { "https://gitlab.com/madyanov/svart.nvim",
-      keys = util.get_keys({"n", "x", "o" }, { "s", "gs" }),
-      config = util.get_config("svart")
-    }
     use { "phaazon/hop.nvim",
       config = function()
         require("hop").setup()
