@@ -90,8 +90,11 @@ require("packer").startup({
     -- movement and targets
     use "tpope/vim-repeat"
     use "wellle/targets.vim"
-    use "editorconfig/editorconfig-vim"
+    use { "editorconfig/editorconfig-vim",
+      event = "BufReadPost"
+    }
     use { "Darazaki/indent-o-matic",
+      event = "BufReadPost",
       requires = "editorconfig/editorconfig-vim",
       wants = "editorconfig-vim",
       config = util.get_config("indent-o-matic")
