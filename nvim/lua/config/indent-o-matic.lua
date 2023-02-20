@@ -3,7 +3,7 @@
 
 require("indent-o-matic").setup {
   filetype_ = {
-    standard_widths = { 2, 4 },
+    standard_widths = { 2, 4, 8 },
   },
   filetype_lua = {
     standard_widths = { 2 }
