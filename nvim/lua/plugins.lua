@@ -252,10 +252,6 @@ require("packer").startup({
     }
 
     -- lsp
-    -- use { "neovim/nvim-lspconfig",
-    --   cond = util.not_vscode,
-    --   config = util.get_config("nvim-lspconfig")
-    -- },
     use { "neoclide/coc.nvim",
       event = { "CursorHold", "CursorMoved" },
       branch = "release",
