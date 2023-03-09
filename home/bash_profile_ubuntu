@@ -108,8 +108,6 @@ export RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
 export STACK_ROOT="${XDG_DATA_HOME}/stack"
 prepend_path "${STACK_ROOT}/bin"
 
-unset -f append_path prepend_path
-
 # --------------------------------------------------
 # git functions
 # --------------------------------------------------
@@ -151,7 +149,7 @@ rebase-remote() {
   fi
 
   local current_branch
-  current_branch=$(get-branch-name "$2")
+  current_branch="$(get-branch-name "$2")"
   if [[ -z "${current_branch}" ]]; then
     return 1
   fi
