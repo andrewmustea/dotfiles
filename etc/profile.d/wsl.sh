@@ -8,7 +8,7 @@
 run-ps() {
   if (( $# == 0 )); then
     echo "error: no command provided" 1>&2
-    echo "usage: run-ps <command-string>" 1>&2
+    echo "usage: run-ps <command>" 1>&2
     return 1
   fi
 
@@ -22,13 +22,17 @@ export WINUSER
 export WINDOC
 export WINDOWN="${WINUSER}/Downloads"
 
-# cd functions
+# directory functions
 winuser() { cd "${WINUSER}" || return 1; }
 windoc() { cd "${WINDOC}" || return 1; }
 windown() { cd "${WINDOWN}" || return 1; }
 
 # print path
 print-path-wsl() {
-  echo "${PATH//":"/"\n"}" | grep -v "^/mnt/c/"
+  if hash rg &>/dev/null; then
+    echo "${PATH//":"/"\n"}" | rg -v "^/mnt/c/"
+  else
+    echo "${PATH//":"/"\n"}" | grep -v "^/mnt/c/"
+  fi
 }
 
