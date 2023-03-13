@@ -35,6 +35,13 @@ prepend_path "${CABAL_DIR}/bin"
 export CARGO_HOME="${XDG_DATA_HOME}/cargo"
 prepend_path "${CARGO_HOME}/bin"
 
+# dotnet
+export DOTNET_ADD_GLOBAL_TOOLS_TO_PATH=0
+export DOTNET_ROOT="${XDG_DATA_HOME}/dotnet"
+export DOTNET_TOOLS="${DOTNET_HOME}/tools"
+prepend_path "${DOTNET_ROOT}"
+prepend_path "${DOTNET_TOOLS}"
+
 # gcc
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
@@ -45,7 +52,7 @@ export GEM_SPEC_CACHE="${XDG_CACHE_HOME}/gem"
 if [[ -d /usr/local/go/bin ]]; then
   export GO_BIN=/usr/local/go/bin
   export GOPATH="${XDG_DATA_HOME}/go"
-  append_path "${GO_BIN}"
+  prepend_path "${GO_BIN}"
   prepend_path "${GOPATH}/bin"
 fi
 
