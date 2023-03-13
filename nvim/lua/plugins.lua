@@ -413,6 +413,14 @@ require("packer").startup({
       cond = util.not_vscode,
       config = util.get_config("ale")
     }
+
+    -- copilot
+    use { "github/copilot.vim",
+      event = "InsertEnter",
+      cmd = "Copilot",
+      cond = util.not_vscode,
+      config = util.get_config("copilot")
+    }
   end
 })
 
