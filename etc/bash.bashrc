@@ -49,12 +49,12 @@ PS4="+ "
 # title
 case "${TERM}" in
   xterm*|rxvt*|Eterm|aterm|kterm|gnome*)
-    PROMPT_COMMAND="${PROMPT_COMMAND:+"${PROMPT_COMMAND}; "}"'printf \
+    export PROMPT_COMMAND="${PROMPT_COMMAND:+"${PROMPT_COMMAND}; "}"'printf \
       "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#"${HOME}"/"~"}"'
 
     ;;
   screen*)
-    PROMPT_COMMAND="${PROMPT_COMMAND:+"${PROMPT_COMMAND}; "}"'printf \
+    export PROMPT_COMMAND="${PROMPT_COMMAND:+"${PROMPT_COMMAND}; "}"'printf \
       "\033_%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#"${HOME}"/"~"}"'
     ;;
 esac
@@ -92,12 +92,12 @@ command_not_found_handle() {
 }
 
 # bash history
-export HISTCONTROL=ignoredups
+export HISTCONTROL"=ignoredups"
 export HISTFILE="${XDG_STATE_HOME}/bash/history"
 export HISTFILESIZE=100000
-export HISTIGNORE='history:pwd:ls:ll:la:l:dir:'
+export HISTIGNORE="history:pwd:ls:ll:la:l:dir:"
 export HISTSIZE=100000
-export HISTTIMEFORMAT='%F %T '
+export HISTTIMEFORMAT="%F %T "
 
 if [[ "${PROMPT_COMMAND}" != *"history -a"* ]]; then
   export PROMPT_COMMAND="history -a${PROMPT_COMMAND:+"; ${PROMPT_COMMAND}"}"
