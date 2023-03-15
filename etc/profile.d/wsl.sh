@@ -29,10 +29,6 @@ windown() { cd "${WINDOWN}" || return 1; }
 
 # print path
 print-path-wsl() {
-  if hash rg &>/dev/null; then
-    echo "${PATH//":"/"\n"}" | rg -v "^/mnt/c/"
-  else
-    echo "${PATH//":"/"\n"}" | grep -v "^/mnt/c/"
-  fi
+  echo "${PATH//":"/"\n"}" | grep -v "^/mnt/c/"
 }
 
