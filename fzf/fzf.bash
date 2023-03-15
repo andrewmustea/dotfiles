@@ -4,21 +4,45 @@
 # ~/.config/fzf/fzf.bash
 #
 
+# check if fzf is available
+if ! hash fzf &>/dev/null; then
+  echo "no fzf binary found" 1>&2
+  return 1
+fi
+
 # XDG directory
 [[ -z "${XDG_DATA_HOME}" ]] && export XDG_DATA_HOME="${HOME}/.local/share"
 
+# set paths
+unset AUTOCOMPLETE KEY_BINDINGS FZF_PATH
+LOCAL_FZF="${XDG_DATA_HOME}/fzf/bin"
+SYSTEM_FZF="/usr/share/fzf"
+if [[ -d "${LOCAL_FZF}" ]]; then
+  FZF_PATH="${LOCAL_FZF}"
+  AUTOCOMPLETE="${XDG_DATA_HOME}/fzf/shell/completion.bash"
+  KEY_BINDINGS="${XDG_DATA_HOME}/fzf/shell/key-bindings.bash"
+elif [[ -d "${SYSTEM_FZF}" ]]; then
+  FZF_PATH="${SYSTEM_FZF}"
+  AUTOCOMPLETE="${SYSTEM_FZF}/completion.bash"
+  KEY_BINDINGS="${SYSTEM_FZF}/key-bindings.bash"
+else
+  echo "no fzf directory found" 1>&2
+  unset AUTOCOMPLETE KEY_BINDINGS
+  return 1
+fi
+
 # add fzf to path
-if [[ ":${PATH}:" != ":${XDG_DATA_HOME}/fzf/bin:" ]]; then
-  export PATH="${XDG_DATA_HOME}/fzf/bin${PATH:+":${PATH}"}"
+if [[ ":${PATH}:" != ":${FZF_PATH}:" ]]; then
+  export PATH="${FZF_PATH}${PATH:+":${PATH}"}"
 fi
 
 # auto-completion
 if [[ "$-" == *i* ]]; then
-  source "${XDG_DATA_HOME}/fzf/shell/completion.bash" 2> /dev/null
+  source "${AUTOCOMPLETE}" 2>/dev/null
 fi
 
 # key bindings
-source "${XDG_DATA_HOME}/fzf/shell/key-bindings.bash"
+source "${KEY_BINDINGS}"
 
 # colors
 if [[ "${FZF_DEFAULT_OPTS}" != *color* ]]; then
@@ -28,4 +52,6 @@ if [[ "${FZF_DEFAULT_OPTS}" != *color* ]]; then
         "--color=marker:#0040bb,spinner:#b02828,header:#0078c8")
   export FZF_DEFAULT_OPTS+=" ${OPTS[*]}"
 fi
+
+unset AUTOCOMPLETE KEY_BINDINGS FZF_PATH
 
