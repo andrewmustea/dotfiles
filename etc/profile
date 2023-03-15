@@ -4,14 +4,17 @@
 # /etc/profile
 #
 
+# set mask
 umask 022
 
+# get user id
 uid="$(id -u)"
 
 # --------------------------------------------------
 # path
 # --------------------------------------------------
 
+# append a given path to PATH
 append_path () {
   case ":${PATH}:" in
     *":$1:"*)
@@ -21,21 +24,25 @@ append_path () {
   esac
 }
 
+# append default paths
 append_path '/usr/local/sbin'
 append_path '/usr/local/bin'
 append_path '/usr/bin'
 
+# export PATH to environment
 export PATH
 
 # --------------------------------------------------
 # environment variables
 # --------------------------------------------------
 
+# XDG directories
 export XDG_CACHE_HOME="${HOME}/.cache"
 export XDG_CONFIG_HOME="${HOME}/.config"
 export XDG_DATA_HOME="${HOME}/.local/share"
 export XDG_STATE_HOME="${HOME}/.local/state"
 
+# XDG runtime directory
 if pidof systemd >/dev/null 2>&1; then
   export XDG_RUNTIME_DIR="/run/user/${uid}"
 else
