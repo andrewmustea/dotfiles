@@ -40,10 +40,12 @@ fi
 # --------------------------------------------------
 
 # local projects
-export PROJECTS_DIR="${HOME}/projects"
+export PROJECTS="${HOME}/projects"
 
-ascii_art="${PROJECTS_DIR}/ascii_art/ascii.bash"
+# ascii art
+ascii_art="${PROJECTS}/ascii_art/ascii.sh"
 [[ -r "${ascii_art}" ]] && source "${ascii_art}"
+unset ascii_art
 
 # --------------------------------------------------
 # git aliases
