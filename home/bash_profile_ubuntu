@@ -8,17 +8,29 @@
 # paths and environment variables
 # --------------------------------------------------
 
+# add a directory to the front of PATH if the directory exists
+prepend_path() {
+  if [[ -d "$1" ]] && [[ ":${PATH}:" != *":${1}:"* ]]; then
+    export PATH="${1}${PATH:+":${PATH}"}"
+  fi
+}
+
+# add a directory to the end of PATH if the directory exists
 append_path() {
   if [[ -d "$1" ]] && [[ ":${PATH}:" != *":${1}:"* ]]; then
     export PATH="${PATH:+"${PATH}:"}${1}"
   fi
 }
 
-prepend_path() {
-  if [[ -d "$1" ]] && [[ ":${PATH}:" != *":${1}:"* ]]; then
-    export PATH="${1}${PATH:+":${PATH}"}"
-  fi
-}
+# homebrew
+if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
+  prepend_path "/home/linuxbrew/.linuxbrew/sbin"
+  prepend_path "/home/linuxbrew/.linuxbrew/bin"
+  export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
+  export HOMEBREW_CELLAR="/home/linuxbrew/.linuxbrew/Cellar"
+  export HOMEBREW_REPOSITORY="/home/linuxbrew/.linuxbrew/Homebrew"
+  export INFOPATH="${INFOPATH+${INFOPATH}:}/home/linuxbrew/.linuxbrew/share/info"
+fi
 
 # local bin
 prepend_path "${HOME}/.local/bin"
@@ -59,16 +71,6 @@ fi
 # gpg
 GPG_TTY="$(tty)"
 export GPG_TTY
-
-# homebrew
-if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
-  prepend_path "/home/linuxbrew/.linuxbrew/sbin"
-  prepend_path "/home/linuxbrew/.linuxbrew/bin"
-  export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
-  export HOMEBREW_CELLAR="/home/linuxbrew/.linuxbrew/Cellar"
-  export HOMEBREW_REPOSITORY="/home/linuxbrew/.linuxbrew/Homebrew"
-  export INFOPATH="${INFOPATH+${INFOPATH}:}/home/linuxbrew/.linuxbrew/share/info"
-fi
 
 # less
 export LESSHISTFILE="${XDG_STATE_HOME}/less/history"
@@ -207,13 +209,9 @@ add-exclude() {
 # add '.vscode*' to .git/info/exclude
 add-exclude-vscode() {
   local repo="${PWD}"
-  if (( $# == 0 )); then
-    echo "error: missing exclude argument" 1>&2
-    echo "usage: add-exclude-vscode <exclude-type>" 1>&2
-    return 1
-  elif (( $# > 1 )); then
+  if (( $# > 1 )); then
     echo "error: too many arguments: $*" 1>&2
-    echo "usage: add-exclude-vscode <exclude-type>" 1>&2
+    echo "usage: add-exclude-vscode [repository]" 1>&2
     return 1
   elif (( $# == 1 )); then
     repo="$1"
@@ -262,12 +260,12 @@ print-path() {
   echo "${PATH//":"/"\n"}"
 }
 
-# find process
+# find a process
 psgrep() {
   pgrep "$@" | xargs --no-run-if-empty ps -fp
 }
 
-# find and kill process
+# find and kill a process
 pskill() {
   local pid
   pid="$(pgrep "$@" | xargs -r ps --no-headers -fp | awk '{ print $2 }')"
@@ -277,11 +275,25 @@ pskill() {
 
 # uncompress files
 extract() {
-  if ! [[ -f "$1" ]]; then
-    echo "not a valid file: '$1'" 1>&2
+  usage() {
+    echo "usage: extract <file>" 1>&2
+    return 1
+  }
+
+  if (( $# == 0 )); then
+    echo "error: missing file argument" 1>&2
+    usage
+  elif (( $# > 1 )); then
+    echo "error: too many arguments: $*" 1>&2
+    usage
+  elif [[ -d "$1" ]]; then
+    echo "error: directory given: $1" 1>&2
+    usage
+  elif ! [[ -f "$1" ]]; then
+    echo "error: file does not exist: $1" 1>&2
     return 1
   elif ! [[ -r "$1" ]]; then
-    echo "file not readable: '$1'" 1>&2
+    echo "error: file not readable: $1" 1>&2
     return 1
   fi
 
@@ -299,7 +311,7 @@ extract() {
     *.Z) uncompress "$1" ;;
     *.7z) 7z x "$1" ;;
     *)
-      echo "unknown compressed file type '.${1#*.}'" 1>&2
+      echo "error: unknown compressed file type '.${1#*.}'" 1>&2
       return 1
       ;;
   esac
@@ -309,7 +321,7 @@ extract() {
 # rc files
 # --------------------------------------------------
 
-[[ -f "${HOME}/.bash_login" ]] && source "${HOME}/.bash_login"
+[[ -r "${HOME}/.bash_login" ]] && source "${HOME}/.bash_login"
 
-[[ -f "${HOME}/.bashrc" ]] && source "${HOME}/.bashrc"
+[[ -r "${HOME}/.bashrc" ]] && source "${HOME}/.bashrc"
 
