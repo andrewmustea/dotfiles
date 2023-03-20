@@ -4,7 +4,7 @@
 # ~/.bash_logout
 #
 
-if (( SHLVL == 1 )); then
-  [[ -x /usr/bin/clear_console ]] && /usr/bin/clear_console -q
+if (( SHLVL == 1 )) && [[ -x /usr/bin/clear_console ]]; then
+  /usr/bin/clear_console -q
 fi
 
