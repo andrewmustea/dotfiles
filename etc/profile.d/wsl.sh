@@ -12,7 +12,7 @@ run-ps() {
     return 1
   fi
 
-  powershell.exe -command "$*" | tr -d "\r" | sed 's|\\|/|g'
+  powershell.exe -command "$*" | tr -d "\r"
 }
 
 # windows user paths
