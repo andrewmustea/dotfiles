@@ -16,14 +16,14 @@ run-ps() {
 }
 
 # windows user paths
-WINUSER="$(wslpath "$(run-ps "echo \"\${env:USERPROFILE}\"")")"
+WINHOME="$(wslpath "$(run-ps "echo \"\${env:USERPROFILE}\"")")"
 WINDOC="$(wslpath "$(run-ps "[Environment]::GetFolderPath(\"MyDocuments\")")")"
-export WINUSER
+export WINHOME
 export WINDOC
-export WINDOWN="${WINUSER}/Downloads"
+export WINDOWN="${WINHOME}/Downloads"
 
 # directory functions
-winuser() { cd "${WINUSER}" || return 1; }
+winhome() { cd "${WINHOME}" || return 1; }
 windoc() { cd "${WINDOC}" || return 1; }
 windown() { cd "${WINDOWN}" || return 1; }
 
