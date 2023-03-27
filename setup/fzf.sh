@@ -12,6 +12,11 @@ if hash fzf &>/dev/null; then
   exit 0
 fi
 
+# error message
+error-msg() {
+  echo -e "$(tput setaf 1)Error$(tput sgr0): $*" 1>&2
+}
+
 # check if user is root
 if (( EUID == 0 )); then
   error-msg "don't run script as root"
@@ -39,7 +44,7 @@ fi
 [[ -z "${XDG_DATA_HOME}" ]] && export XDG_DATA_HOME="${HOME}/.local/share"
 
 # git install
-FZF_DIR="${XDG_DATA_HOME}/fzf"
+readonly FZF_DIR="${XDG_DATA_HOME}/fzf"
 git clone https://github.com/junegunn/fzf.git "${FZF_DIR}"
 "${FZF_DIR}/install" --xdg --bin
 
