@@ -12,12 +12,12 @@
 
 # warning message
 warn-msg() {
-  echo -e "$(tput setaf 1)Warning$(tput sgr0): $*" 1>&2
+  echo -e "$(tput setaf 3)Warning$(tput sgr0): $*" 1>&2
 }
 
 # error message
 error-msg() {
-  echo -e "$(tput setaf 3)Error$(tput sgr0): $*" 1>&2
+  echo -e "$(tput setaf 1)Error$(tput sgr0): $*" 1>&2
 }
 
 # get os name
@@ -96,8 +96,8 @@ sudo "${PACKAGE_MANAGER}" install -y \
   libtool libtool-bin libvala-dev lldb llvm lua5.3 luajit luarocks make \
   man-db mesa-common-dev meson mtools neovim ninja-build openssl pandoc pass \
   pkg-config python-is-python3 python3 python3-pip python3-venv scdoc socat \
-  texinfo unzip valac wget wl-clipboard xclip xdg-utils xterm xz-utils yank \
-  zstd
+  texinfo universal-ctags unzip valac wget wl-clipboard xclip xdg-utils xterm \
+  xz-utils yank zstd
 
 # homebrew
 export NONINTERACTIVE=1
