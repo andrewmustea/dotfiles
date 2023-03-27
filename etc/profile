@@ -15,7 +15,7 @@ uid="$(id -u)"
 # --------------------------------------------------
 
 # append a given path to PATH
-append_path () {
+append_path() {
   case ":${PATH}:" in
     *":$1:"*)
       ;;
@@ -36,7 +36,7 @@ export PATH
 # environment variables
 # --------------------------------------------------
 
-# XDG directories
+# XDG home directories
 export XDG_CACHE_HOME="${HOME}/.cache"
 export XDG_CONFIG_HOME="${HOME}/.config"
 export XDG_DATA_HOME="${HOME}/.local/share"
@@ -63,7 +63,7 @@ if [ -d /etc/profile.d/ ]; then
 fi
 
 # source the global bashrc if applicable
-if [ -n "${BASH}" ] && [ -n "${PS1}" ] && [ -z "${POSIXLY_CORRECT}" ] && \
+if [ -n "${BASH}" ] && [ -n "${PS1}" ] && [ -z "${POSIXLY_CORRECT}" ] &&
    [ "${0#-}" != "sh" ] && [ -r /etc/bash.bashrc ]; then
   . /etc/bash.bashrc
 elif [ "${uid}" -eq 0 ]; then
