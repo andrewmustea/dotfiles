@@ -6,6 +6,8 @@
 	helper = /usr/local/bin/git-credential-manager
 	credentialStore = gpg
 	guiPrompt = false
+[init]
+	defaultBranch = main
 [interactive]
 	diffFilter = delta --color-only
 [add.interactive]
