@@ -100,6 +100,12 @@ else
   export EDITOR='vim'
 fi
 
+# nvm
+export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
+if [[ -r /usr/share/nvm/init-nvm.sh ]]; then
+  source /usr/share/nvm/init-nvm.sh
+fi
+
 # pacman
 if hash paru &>/dev/null; then
   export PACKAGE_MANAGER="paru"
@@ -214,9 +220,9 @@ add-exclude() {
 # add '.vscode*' to .git/info/exclude
 add-exclude-vscode() {
   local repo="${PWD}"
-  if (( $# > 1 )); then
+  if (( $# > 0 )); then
     echo "error: too many arguments: $*" 1>&2
-    echo "usage: add-exclude-vscode [repository]" 1>&2
+    echo "usage: add-exclude-vscode" 1>&2
     return 1
   elif (( $# == 1 )); then
     repo="$1"

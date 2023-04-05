@@ -30,13 +30,6 @@ alias pac='"${PACKAGE_MANAGER}"'
 alias pacsearch='"${PACKAGE_MANAGER}" -Ss'
 alias pacquery='"${PACKAGE_MANAGER}" -Q'
 
-# nvm
-export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
-if [[ -d "${NVM_DIR}" ]]; then
-  source "${NVM_DIR}/nvm.sh"
-  source "${NVM_DIR}/bash_completion"
-fi
-
 # --------------------------------------------------
 # projects
 # --------------------------------------------------
