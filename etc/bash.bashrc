@@ -140,6 +140,7 @@ alias mkdir='mkdir --parents'
 hash vim &>/dev/null || alias vim='nvim'
 alias {vi,nvi}='nvim'
 alias {vd,nvd,nvimdiff}='nvim -d'
+alias {vo,vv}='nvim -O'
 alias nvim-remove-swap='rm -rf "${XDG_STATE_HOME}/nvim/swap/*"'
 
 # permissions
