@@ -105,6 +105,13 @@ else
   export EDITOR='vim'
 fi
 
+# nvm
+export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
+if [[ -d "${NVM_DIR}" ]]; then
+  source "${NVM_DIR}/nvm.sh"
+  source "${NVM_DIR}/bash_completion"
+fi
+
 # pass
 export PASSWORD_STORE_DIR="${XDG_DATA_HOME}/pass"
 

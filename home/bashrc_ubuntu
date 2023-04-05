@@ -28,13 +28,6 @@ fi
 # nala
 hash nala &>/dev/null && alias apt='nala'
 
-# nvm
-export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
-if [[ -d "${NVM_DIR}" ]]; then
-  source "${NVM_DIR}/nvm.sh"
-  source "${NVM_DIR}/bash_completion"
-fi
-
 # --------------------------------------------------
 # projects
 # --------------------------------------------------
