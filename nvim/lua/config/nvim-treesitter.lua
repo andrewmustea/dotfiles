@@ -7,7 +7,7 @@ require("nvim-treesitter.configs").setup({
   ensure_installed = {
     "bash", "c", "c_sharp", "cmake", "comment", "cpp", "comment", "css",
     "cuda", "devicetree", "diff", "fennel", "gitattributes", "gitcommit",
-    "gitignore", "git_rebase", "go", "haskell", "help", "html", "http", "java",
+    "gitignore", "git_rebase", "go", "haskell", "html", "http", "java",
     "javascript", "json", "kotlin", "latex", "llvm", "lua", "make", "markdown",
     "markdown_inline", "meson", "ninja", "perl", "python", "regex", "rust",
     "todotxt", "toml", "typescript", "vala", "verilog", "vim", "vue", "yaml"
