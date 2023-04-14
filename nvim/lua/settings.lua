@@ -59,7 +59,7 @@ o.expandtab = true
 o.shiftwidth = 0
 o.smarttab = true
 o.softtabstop = -1
-o.tabstop = 4
+o.tabstop = 2
 
 -- diff options
 o.diffopt = "internal,filler,closeoff,vertical,hiddenoff"
