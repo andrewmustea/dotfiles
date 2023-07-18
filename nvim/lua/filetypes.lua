@@ -1,6 +1,7 @@
 -- filetype.lua
 --
 
+-- manually set filetypes
 vim.filetype.add({
   filename = {
     [".luacheckrc"] = "lua",
@@ -11,4 +12,7 @@ vim.filetype.add({
     ["vimrc"] = "vim"
   }
 })
+
+-- zsh files should use bash treesitter syntax
+vim.treesitter.language.register("bash", "zsh")
 
