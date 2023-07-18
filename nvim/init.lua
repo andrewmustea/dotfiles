@@ -14,5 +14,5 @@ require("plugins")
 require("keybinds")
 
 -- filetypes
-require("filetype")
+require("filetypes")
 
