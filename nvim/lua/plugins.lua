@@ -271,7 +271,7 @@ require("packer").startup({
     -- telescope
     use { "nvim-telescope/telescope.nvim",
       cmd = "Telescope",
-      keys = util.get_keys({ "n" }, {
+      keys = util.get_key_combinations({ "n" }, {
         { "f" }, { "b", "c", "f", "g", "h", "m", "n", "p", "r", "s", "t", "y" }
       }),
       branch = "0.1.x",
