@@ -371,40 +371,30 @@ require("packer").startup({
     -- markdown
     use { "iamcco/markdown-preview.nvim",
       run = "cd app && npm install",
-      ft = { "markdown", "vimwiki" },
+      ft = "markdown",
       cond = util.not_vscode,
       setup = function()
-        vim.g.mkdp_filetypes = { "markdown", "vimwiki" }
+        vim.g.mkdp_filetypes = "markdown"
       end
     }
     use { "ellisonleao/glow.nvim",
-      ft = { "markdown", "vimwiki" },
+      ft = "markdown",
       cond = util.not_vscode
     }
     use { "jghauser/follow-md-links.nvim",
-      ft = { "markdown", "vimwiki" },
+      ft = "markdown",
       cond = util.not_vscode,
       config = function()
         vim.keymap.set("n", "<bs>", ":edit #<cr>", { silent = true })
       end
     }
     use { "jghauser/auto-pandoc.nvim",
-      ft = { "markdown", "vimwiki" },
+      ft = "markdown",
       requires = { "nvim-lua/plenary.nvim", opt = true },
       wants = "plenary.nvim",
       cond = util.not_vscode,
       config = function()
         require("auto-pandoc")
-      end
-    }
-
-    -- vimwiki
-    use { "vimwiki/vimwiki",
-      event = "CmdlineEnter",
-      ft = "vimwiki",
-      cond = util.not_vscode,
-      setup = function()
-        vim.g.vimwiki_global_ext = 0
       end
     }
 
