@@ -13,3 +13,6 @@ require("plugins")
 -- keybinds
 require("keybinds")
 
+-- filetypes
+require("filetype")
+
