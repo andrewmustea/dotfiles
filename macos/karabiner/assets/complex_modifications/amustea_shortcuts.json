@@ -1,0 +1,29 @@
+{
+  "title": "amustea shortcuts",
+  "rules": [
+    {
+        "description": "Forward delete (Ctrl-delete)",
+        "manipulators": [
+            {
+                "from": {
+                    "key_code": "delete_or_backspace",
+                    "modifiers": {
+                        "mandatory": [
+                            "left_control"
+                        ],
+                        "optional": [
+                            "caps_lock"
+                        ]
+                    }
+                },
+                "to": [
+                    {
+                        "key_code": "delete_forward"
+                    }
+                ],
+                "type": "basic"
+            }
+        ]
+    }
+  ]
+}
