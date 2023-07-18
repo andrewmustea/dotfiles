@@ -231,7 +231,7 @@ require("packer").startup({
       event = "CmdlineEnter",
       cond = util.not_vscode
     }
-    use { "TimUntersberger/neogit",
+    use { "NeogitOrg/neogit",
       event = "CmdlineEnter",
       requires = { "nvim-lua/plenary.nvim", opt = true },
       wants = "plenary.nvim",
