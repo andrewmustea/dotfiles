@@ -74,13 +74,13 @@ export GPG_TTY
 
 # less
 export LESSHISTFILE="${XDG_STATE_HOME}/less/history"
-LESS_TERMCAP_mb="$(printf '\E[01;31m')"
-LESS_TERMCAP_md="$(printf '\E[01;38;5;74m')"
-LESS_TERMCAP_me="$(printf '\E[0m')"
-LESS_TERMCAP_se="$(printf '\E[0m')"
-LESS_TERMCAP_so="$(printf '\E[38;5;246m')"
-LESS_TERMCAP_ue="$(printf '\E[0m')"
-LESS_TERMCAP_us="$(printf '\E[04;38;5;146m')"
+LESS_TERMCAP_mb="$(printf $'\E[01;31m')"
+LESS_TERMCAP_md="$(printf $'\E[01;38;5;74m')"
+LESS_TERMCAP_me="$(printf $'\E[0m')"
+LESS_TERMCAP_se="$(printf $'\E[0m')"
+LESS_TERMCAP_so="$(printf $'\E[38;5;246m')"
+LESS_TERMCAP_ue="$(printf $'\E[0m')"
+LESS_TERMCAP_us="$(printf $'\E[04;38;5;146m')"
 export LESS_TERMCAP_mb
 export LESS_TERMCAP_md
 export LESS_TERMCAP_me
