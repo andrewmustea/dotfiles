@@ -1,4 +1,7 @@
--- plugins.lua
+#!/usr/bin/env lua
+
+--
+-- nvim/lua/plugins.lua
 --
 
 local util = require("util")
@@ -9,24 +12,28 @@ require("packer").startup({
     use "wbthomason/packer.nvim"
 
     -- session info
-    use { "dstein64/vim-startuptime",
-      cmd = "StartupTime",
-      cond = util.not_vscode
-    }
     use { "rmagatti/auto-session",
       cond = util.not_vscode,
       config = util.get_config("auto-session")
     }
-    use { "tversteeg/registers.nvim",
-      cmd = "Registers",
-      keys = { { "n", "\"" }, { "v", "\"" }, { "i", "<C-r>" } },
+    use { "chentoast/marks.nvim",
       cond = util.not_vscode,
       config = function()
-        require("registers").setup()
+        require("marks").setup()
       end
+    }
+    use { "dstein64/vim-startuptime",
+      cmd = "StartupTime",
+      cond = util.not_vscode
     }
 
     -- ui
+    use { "andrewmustea/black_sun",
+      cond = util.not_vscode,
+      config = function()
+        vim.cmd.colorscheme("black_sun")
+      end
+    }
     use { "kyazdani42/nvim-web-devicons",
       cond = util.not_vscode,
       config = function()
@@ -65,8 +72,6 @@ require("packer").startup({
       cond = util.not_vscode,
       config = util.get_config("dressing")
     }
-
-    -- buffers/windows
     use { "akinsho/bufferline.nvim",
       requires = { "kyazdani42/nvim-web-devicons", opt = true },
       wants = "nvim-web-devicons",
@@ -79,41 +84,13 @@ require("packer").startup({
       cond = util.not_vscode,
       config = util.get_config("lualine")
     }
-    use { "akinsho/toggleterm.nvim",
-      event = "CmdlineEnter",
-      tag = "*",
-      config = function()
-        require("toggleterm").setup()
-      end
-    }
 
-    -- movement and targets
+    -- movement
     use "tpope/vim-repeat"
     use "wellle/targets.vim"
-    use { "editorconfig/editorconfig-vim",
-      event = "BufReadPost"
-    }
-    use { "Darazaki/indent-o-matic",
-      event = "BufReadPost",
-      requires = "editorconfig/editorconfig-vim",
-      wants = "editorconfig-vim",
-      config = util.get_config("indent-o-matic")
-    }
     use { "phaazon/hop.nvim",
       config = function()
         require("hop").setup()
-      end
-    }
-    use { "kylechui/nvim-surround",
-      event = "CursorMoved",
-      config = function()
-        require("nvim-surround").setup()
-      end
-    }
-    use { "chentoast/marks.nvim",
-      cond = util.not_vscode,
-      config = function()
-        require("marks").setup()
       end
     }
 
@@ -142,8 +119,64 @@ require("packer").startup({
         require("nvim-autopairs").setup()
       end
     }
+    use { "kylechui/nvim-surround",
+      event = "CursorMoved",
+      config = function()
+        require("nvim-surround").setup()
+      end
+    }
 
-    -- keybinds
+    -- file settings
+    use { "editorconfig/editorconfig-vim",
+      event = "BufReadPost"
+    }
+    use { "Darazaki/indent-o-matic",
+      event = "BufReadPost",
+      requires = "editorconfig/editorconfig-vim",
+      wants = "editorconfig-vim",
+      config = util.get_config("indent-o-matic")
+    }
+    use { "pangloss/vim-javascript",
+      ft = "javascript",
+      cond = util.not_vscode
+    }
+    use { "rust-lang/rust.vim",
+      ft = "rust",
+      cond = util.not_vscode
+    }
+    use { "andrewmustea/vim-bitbake",
+      branch = "remove_newbb_newbbappend_from_BufReadPost",
+      ft = "bitbake",
+      cond = util.not_vscode
+    }
+    use { "arrufat/vala.vim",
+      ft = "vala",
+      cond = util.not_vscode
+    }
+    use { "cuducos/yaml.nvim",
+      ft = "yaml",
+      requires = {
+        { "nvim-telescope/telescope.nvim", opt = true },
+        { "nvim-treesitter/nvim-treesitter", opt = true },
+      },
+      wants = {
+        "nvim-treesitter",
+        "telescope.nvim",
+      },
+      cond = util.not_vscode
+    }
+
+    -- diff
+    use { "AndrewRadev/linediff.vim",
+      event = "DiffUpdated",
+      cond = util.not_vscode
+    }
+    use { "rickhowe/spotdiff.vim",
+      event = "DiffUpdated",
+      cond = util.not_vscode
+    }
+
+    -- tools
     use { "Pocco81/AbbrevMan.nvim",
       event = "InsertEnter",
       config = function()
@@ -163,6 +196,72 @@ require("packer").startup({
         "popup.nvim"
       },
       cond = util.not_vscode
+    }
+    use { "tversteeg/registers.nvim",
+      cmd = "Registers",
+      keys = { { "n", "\"" }, { "v", "\"" }, { "i", "<C-r>" } },
+      cond = util.not_vscode,
+      config = function()
+        require("registers").setup()
+      end
+    }
+    use { "akinsho/toggleterm.nvim",
+      event = "CmdlineEnter",
+      tag = "*",
+      config = function()
+        require("toggleterm").setup()
+      end
+    }
+    use { "kyazdani42/nvim-tree.lua",
+      cmd = "NvimTreeToggle",
+      cond = util.not_vscode,
+      config = function()
+        require("nvim-tree").setup()
+      end
+    }
+
+    -- git
+    use { "lewis6991/gitsigns.nvim",
+      cond = util.not_vscode,
+      config = function()
+        require("gitsigns").setup()
+      end
+    }
+    use { "tanvirtin/vgit.nvim",
+      event = { "CursorHold", "CmdlineEnter" },
+      cond = util.not_vscode,
+      requires = { "nvim-lua/plenary.nvim", opt = true },
+      wants = "plenary.nvim",
+      config = util.get_config("vgit")
+    }
+    use { "samoshkin/vim-mergetool",
+      cmd = "MergetoolStart",
+      cond = util.not_vscode
+    }
+    use { "tpope/vim-fugitive",
+      event = "CmdlineEnter",
+      cond = util.not_vscode
+    }
+    use { "NeogitOrg/neogit",
+      event = "CmdlineEnter",
+      requires = { "nvim-lua/plenary.nvim", opt = true },
+      wants = "plenary.nvim",
+      cond = util.not_vscode,
+      config = function()
+        require("neogit").setup()
+      end
+    }
+
+    -- lsp and linting
+    use { "neoclide/coc.nvim",
+      event = { "CursorHold", "CursorMoved" },
+      branch = "release",
+      cond = util.not_vscode,
+      config = util.get_config("coc")
+    }
+    use { "dense-analysis/ale",
+      cond = util.not_vscode,
+      config = util.get_config("ale")
     }
 
     -- treesitter
@@ -208,64 +307,11 @@ require("packer").startup({
       cond = util.not_vscode,
       config = util.get_config("hlargs")
     }
-
-    -- git
-    use { "lewis6991/gitsigns.nvim",
+    use { "lukas-reineke/indent-blankline.nvim",
+      requires = { "nvim-treesitter/nvim-treesitter", opt = true },
+      wants = "nvim-treesitter",
       cond = util.not_vscode,
-      config = function()
-        require("gitsigns").setup()
-      end
-    }
-    use { "tanvirtin/vgit.nvim",
-      event = { "CursorHold", "CmdlineEnter" },
-      cond = util.not_vscode,
-      requires = { "nvim-lua/plenary.nvim", opt = true },
-      wants = "plenary.nvim",
-      config = util.get_config("vgit")
-    }
-    use { "samoshkin/vim-mergetool",
-      cmd = "MergetoolStart",
-      cond = util.not_vscode
-    }
-    use { "tpope/vim-fugitive",
-      event = "CmdlineEnter",
-      cond = util.not_vscode
-    }
-    use { "NeogitOrg/neogit",
-      event = "CmdlineEnter",
-      requires = { "nvim-lua/plenary.nvim", opt = true },
-      wants = "plenary.nvim",
-      cond = util.not_vscode,
-      config = function()
-        require("neogit").setup()
-      end
-    }
-
-    -- diff
-    use { "AndrewRadev/linediff.vim",
-      event = "DiffUpdated",
-      cond = util.not_vscode
-    }
-    use { "rickhowe/spotdiff.vim",
-      event = "DiffUpdated",
-      cond = util.not_vscode
-    }
-
-    -- lsp
-    use { "neoclide/coc.nvim",
-      event = { "CursorHold", "CursorMoved" },
-      branch = "release",
-      cond = util.not_vscode,
-      config = util.get_config("coc")
-    }
-
-    -- file explorer
-    use { "kyazdani42/nvim-tree.lua",
-      cmd = "NvimTreeToggle",
-      cond = util.not_vscode,
-      config = function()
-        require("nvim-tree").setup()
-      end
+      config = util.get_config("indent-blankline")
     }
 
     -- telescope
@@ -318,63 +364,13 @@ require("packer").startup({
       config = util.get_config("telescope")
     }
 
-    -- syntax
-    use { "andrewmustea/black_sun",
-      cond = util.not_vscode,
-      config = function()
-        vim.cmd.colorscheme("black_sun")
-      end
-    }
-    use { "lukas-reineke/indent-blankline.nvim",
-      requires = { "nvim-treesitter/nvim-treesitter", opt = true },
-      wants = "nvim-treesitter",
-      cond = util.not_vscode,
-      config = util.get_config("indent-blankline")
-    }
-    use { "pangloss/vim-javascript",
-      ft = "javascript",
-      cond = util.not_vscode
-    }
-    use { "rust-lang/rust.vim",
-      ft = "rust",
-      cond = util.not_vscode
-    }
-    use { "andrewmustea/vim-bitbake",
-      branch = "remove_newbb_newbbappend_from_BufReadPost",
-      ft = "bitbake",
-      cond = util.not_vscode
-    }
-    use { "arrufat/vala.vim",
-      ft = "vala",
-      cond = util.not_vscode
-    }
-    use { "cuducos/yaml.nvim",
-      ft = "yaml",
-      requires = {
-        { "nvim-telescope/telescope.nvim", opt = true },
-        { "nvim-treesitter/nvim-treesitter", opt = true },
-      },
-      wants = {
-        "nvim-treesitter",
-        "telescope.nvim",
-      },
-      cond = util.not_vscode
-    }
-    use { "stsewd/sphinx.nvim",
-      run = ":UpdateRemotePlugins",
-      ft = "rst",
-      requires = { "nvim-treesitter/nvim-treesitter", opt = true },
-      wants = "nvim-treesitter",
-      cond = util.not_vscode
-    }
-
-    -- markdown
+    -- markdown and rst
     use { "iamcco/markdown-preview.nvim",
       run = "cd app && npm install",
       ft = "markdown",
       cond = util.not_vscode,
       setup = function()
-        vim.g.mkdp_filetypes = "markdown"
+        vim.g.mkdp_filetypes = { "markdown", "vimwiki" }
       end
     }
     use { "ellisonleao/glow.nvim",
@@ -397,11 +393,12 @@ require("packer").startup({
         require("auto-pandoc")
       end
     }
-
-    -- linting
-    use { "dense-analysis/ale",
-      cond = util.not_vscode,
-      config = util.get_config("ale")
+    use { "stsewd/sphinx.nvim",
+      run = ":UpdateRemotePlugins",
+      ft = "rst",
+      requires = { "nvim-treesitter/nvim-treesitter", opt = true },
+      wants = "nvim-treesitter",
+      cond = util.not_vscode
     }
   end
 })
