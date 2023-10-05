@@ -1,7 +1,10 @@
--- dressing.nvim
+#!/usr/bin/env lua
+
+--
+-- nvim/lua/config/dressing.nvim
 --
 
-require('dressing').setup {
+require("dressing").setup({
   input = {
     -- Set to false to disable the vim.ui.input implementation
     enabled = true,
@@ -10,7 +13,7 @@ require('dressing').setup {
     default_prompt = "Input:",
 
     -- Can be 'left', 'right', or 'center'
-    prompt_align = "left",
+    title_pos = "left",
 
     -- When true, <Esc> will close the modal
     insert_only = true,
@@ -19,7 +22,6 @@ require('dressing').setup {
     start_in_insert = true,
 
     -- These are passed to nvim_open_win
-    anchor = "SW",
     border = "rounded",
     -- 'editor' and 'win' will default to being centered
     relative = "cursor",
@@ -38,6 +40,11 @@ require('dressing').setup {
       winblend = 10,
       -- Disable line wrapping
       wrap = false,
+      -- Indicator for when text exceeds window
+      list = true,
+      listchars = "precedes:…,extends:…",
+      -- Increase this for more context when text scrolls off the window
+      sidescrolloff = 0,
     },
 
     -- Set to `false` to disable
@@ -86,12 +93,12 @@ require('dressing').setup {
       },
     },
 
-    -- Options for fzf_lua selector
+    -- Options for fzf-lua
     fzf_lua = {
-      winopts = {
-        width = 0.5,
-        height = 0.4,
-      },
+      -- winopts = {
+      --   height = 0.5,
+      --   width = 0.5,
+      -- },
     },
 
     -- Options for nui Menu
@@ -118,7 +125,6 @@ require('dressing').setup {
     -- Options for built-in selector
     builtin = {
       -- These are passed to nvim_open_win
-      anchor = "NW",
       border = "rounded",
       -- 'editor' and 'win' will default to being centered
       relative = "editor",
@@ -127,6 +133,8 @@ require('dressing').setup {
       win_options = {
         -- Window transparency (0-100)
         winblend = 10,
+        cursorline = true,
+        cursorlineopt = "both",
       },
 
       -- These can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
@@ -159,5 +167,4 @@ require('dressing').setup {
     -- see :help dressing_get_config
     get_config = nil,
   },
-}
-
+})
