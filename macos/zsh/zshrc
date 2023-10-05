@@ -1,0 +1,197 @@
+#!/bin/zsh
+
+#
+# ~/.config/zsh/.zshrc
+#
+
+
+# ohmyzsh
+# --------------------
+
+export ZSH="${ZDOTDIR}/ohmyzsh"
+ZSH_THEME="black_sun"
+zstyle ':omz:update' mode reminder
+DISABLE_AUTO_TITLE="true"
+plugins=(command-not-found gitfast macos safe-paste zsh-interactive-cd)
+source "${ZSH}/oh-my-zsh.sh"
+
+
+# history
+# --------------------
+
+# command history
+export HISTFILE="${XDG_STATE_HOME}/zsh/history"
+export HISTFILESIZE=100000
+export HISTORY_IGNORE="history:pwd:ls:ll:la:l:dir:"
+export HISTSIZE=100000
+
+# history options
+setopt inc_append_history
+setopt extended_history
+setopt hist_ignore_dups
+unsetopt share_history
+
+
+# programs
+# --------------------
+
+# fzf
+safe_source "${XDG_CONFIG_HOME}/fzf/fzf.zsh"
+
+# iterm2
+safe_source "${ZDOTDIR:-"${HOME}"}/.iterm2_shell_integration.zsh"
+
+
+# projects
+# --------------------
+
+# local projects
+export PROJECTS="${HOME}/projects"
+
+# ascii art
+safe_source "${PROJECTS}/ascii_art/ascii.sh"
+
+
+# aliases
+# --------------------
+
+# cargo
+alias cargo-update='cargo install-update --all'
+
+# colors
+alias dir='dir --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias dmesg='dmesg --color'
+
+# diff
+alias diffdir='diff -qr'
+
+# ls
+alias ls='ls -Fh --color=auto'
+alias ll='ls -Fhl --color=auto'
+alias la='ls -AFhl --color=auto'
+alias l='ls -CFh --color=auto'
+
+# mkdir
+alias mkdir='mkdir -p'
+
+# nvim
+alias {vi,nvi}='nvim'
+alias {vd,nvd,nvimdiff}='nvim -d'
+alias {vo,vv}='nvim -O'
+alias nvim-remove-swap='rm -rf "${XDG_STATE_HOME}/nvim/swap/*"'
+
+# permissions
+alias mx='chmod a+x'
+
+# python
+alias {pip,pip3}='python3 -m pip'
+alias {pipi,pip3i}='python3 -m pip install --user'
+alias venv='python3 -m venv'
+
+# rsync
+alias rsync-copy='rsync -avz --progress -h'
+alias rsync-move='rsync -avz --progress -h --remove-source-files'
+alias rsync-update='rsync -avzu --progress -h'
+alias rsync-sync='rsync -avzu --delete --progress -h'
+
+# sudo
+alias sudo='sudo -v; sudo --preserve-env '
+
+# tcp/ip
+alias pingpath='mtr'
+alias myip='curl -s checkip.amazonaws.com'
+alias net='ifconfig | grep "inet "'
+
+# wget
+alias wget='wget --hsts-file="${XDG_DATA_HOME}/wget-hsts"'
+
+# other functions
+alias print-path='print_path'
+alias safe-source='safe_source'
+
+
+# git aliases
+# --------------------
+
+# status
+alias gs='git status'
+alias gss='git status --short'
+
+# fetch
+alias gf='git fetch'
+alias gfa='git fetch --all'
+
+# log
+alias gl='git log'
+alias glp='git log --patch'
+
+# show
+alias gsh='git show'
+alias gshn='git show --name-only'
+alias gshs='git show --short'
+alias {gshm,git_show_message,git-show-message}='git show -s'
+alias {gsht,git_show_title,git-show-title}='git show -s --format=%s'
+
+# branch
+alias gb='git branch'
+alias gba='git branch -a'
+alias {gcb,cb,git-current-branch,current_branch,current-branch}='git_current_branch'
+
+# pull
+alias gp='git pull'
+alias gpr='git pull --rebase'
+
+# reset
+alias gr='git reset'
+alias grh='git reset HEAD'
+
+# add
+alias ga='git add'
+alias gaa='git add .'
+
+# commit
+alias gc='git commit'
+alias gca='git commit --amend'
+
+# stash
+alias gst='git stash'
+alias gsti='git stash --include-untracked'
+alias gsta='git stash apply'
+
+# diff
+alias gd='git diff'
+alias gds='git diff --staged'
+alias gdh='git diff HEAD'
+
+# difftool
+alias gdt='git difftool'
+alias gdts='git difftool --staged'
+alias gdth='git difftool HEAD'
+
+# mergetool
+alias gmt='git mergetool'
+
+# remote
+alias gr='git remote'
+alias grv='git remote -v'
+
+# rebase_remote
+alias rebase-remote='rebase_remote'
+alias {rebase_origin,rebase-origin}='rebase_remote origin'
+alias {rebase_upstream,rebase-upstream}='rebase_remote upstream'
+
+# diff_remote
+alias diff-remote='diff_remote'
+alias difftool-remote='difftool_remote'
+alias {diff_origin,diff-origin}='diff_remote origin'
+alias {diff_upstream,diff-upstream}='diff_remote upstream'
+alias {difftool_origin,difftool-origin}='difftool_remote origin'
+alias {difftool_upstream,difftool-upstream}='difftool_remote upstream'
+
+# other custom functions
+alias {rbc,rebase-at-commit}='rebase_at_commit'
+alias add-exclude='add_exclude'
+alias add-exclude-vscode='add_exclude_vscode'
