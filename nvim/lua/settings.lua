@@ -1,18 +1,22 @@
+#!/usr/bin/env lua
+
+--
 -- settings.lua
 --
+
 
 local g = vim.g
 local o = vim.o
 local wo = vim.wo
 
-------------------------------
--- usability
-------------------------------
+
+-- session settings
+--------------------
 
 -- mouse support
 o.mouse = "nv"
 
--- update time swap file write and CursorHold
+-- update time for swap file write and CursorHold
 o.updatetime = 300
 
 -- turn off all sounds
@@ -21,9 +25,14 @@ o.belloff = true
 -- command line history size
 o.history = 10000
 
-------------------------------
+-- save undo history after closing buffer
+if g.vscode == nil then
+  o.undofile = true
+end
+
+
 -- ui
-------------------------------
+--------------------
 
 -- enable snytax highlighting
 o.syntax = true
@@ -64,19 +73,19 @@ o.tabstop = 2
 -- diff options
 o.diffopt = "internal,filler,closeoff,vertical,hiddenoff"
 
-------------------------------
+
 -- buffers
-------------------------------
+--------------------
 
 -- prefer splitting buffers to the right
 o.splitright = true
 
--- do not save when switching buffers
+-- don't save when switching buffers
 o.hidden = true
 
-------------------------------
+
 -- search
-------------------------------
+--------------------
 
 -- case insensitive search unless /C or capital in search
 o.ignorecase = true
@@ -89,22 +98,13 @@ o.incsearch = true
 -- wrap search at beginning or end of file
 o.wrapscan = true
 
-------------------------------
+
 -- providers
-------------------------------
+--------------------
 
 -- clipboard
 o.clipboard = "unnamedplus"
 
 -- python3 provider
 g.python3_host_prog = "/usr/bin/python3"
-
-------------------------------
--- not vscode
-------------------------------
-
-if g.vscode == nil then
-  -- save undo history after closing buffer
-  o.undofile = true
-end
 
