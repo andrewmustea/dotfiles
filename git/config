@@ -14,8 +14,6 @@
 	useBuiltin = false
 [url "https://"]
 	insteadOf = git://
-[credential "https://dev.azure.com"]
-	useHttpPath = true
 [push]
 	autoSetupRemote = true
 [diff]
@@ -33,7 +31,7 @@
 	prompt = false
 	keepBackup = false
 [mergetool "nvim_mergetool"]
-	cmd = nvim -f -c "MergetoolStart" "$MERGED" "$BASE" "$LOCAL" "$REMOTE"
+	cmd = nvim -f -c "MergetoolStart" "${MERGED}" "${BASE}" "${LOCAL}" "${REMOTE}"
 [delta]
 	navigate = true  # use n and N to move between diff sections
 	light = false
@@ -70,4 +68,3 @@
 	line-numbers-plus-style = green
 	plus-emph-style = "#bbbbbb" "#105010"
 	plus-style = "#bbbbbb" "#003000"
-
