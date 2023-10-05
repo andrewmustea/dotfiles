@@ -10,9 +10,6 @@ require("indent-o-matic").setup {
   },
   filetype_markdown = {
     standard_widths = { 2 }
-  },
-  filetype_vimwiki = {
-    standard_widths = { 2 }
   }
 }
 
