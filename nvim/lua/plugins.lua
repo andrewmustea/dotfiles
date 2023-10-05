@@ -288,6 +288,7 @@ require("packer").startup({
       config = util.get_config("hlargs")
     }
     use { "lukas-reineke/indent-blankline.nvim",
+      tag = "v2.20.8",
       requires = { "nvim-treesitter/nvim-treesitter", opt = true },
       wants = "nvim-treesitter",
       cond = util.not_vscode,
