@@ -177,26 +177,6 @@ require("packer").startup({
     }
 
     -- tools
-    use { "Pocco81/AbbrevMan.nvim",
-      event = "InsertEnter",
-      config = function()
-        require("abbrev-man").setup()
-      end
-    }
-    use { "sudormrfbin/cheatsheet.nvim",
-      cmd = { "Cheatsheet", "CheatsheetEdit" },
-      requires = {
-        { "nvim-lua/plenary.nvim", opt = true },
-        { "nvim-lua/popup.nvim", opt = true },
-        { "nvim-telescope/telescope.nvim", opt = true },
-      },
-      wants = {
-        "telescope.nvim",
-        "plenary.nvim",
-        "popup.nvim"
-      },
-      cond = util.not_vscode
-    }
     use { "tversteeg/registers.nvim",
       cmd = "Registers",
       keys = { { "n", "\"" }, { "v", "\"" }, { "i", "<C-r>" } },
@@ -229,9 +209,9 @@ require("packer").startup({
     }
     use { "tanvirtin/vgit.nvim",
       event = { "CursorHold", "CmdlineEnter" },
-      cond = util.not_vscode,
       requires = { "nvim-lua/plenary.nvim", opt = true },
       wants = "plenary.nvim",
+      cond = util.not_vscode,
       config = util.get_config("vgit")
     }
     use { "samoshkin/vim-mergetool",
