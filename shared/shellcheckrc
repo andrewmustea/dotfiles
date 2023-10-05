@@ -1,0 +1,7 @@
+#
+# ~/.config/shellcheckrc
+#
+
+# Disable "can't follow non-constant source" warning (SC1090)
+# Disable "not following external sources" warning (SC1091)
+disable=SC1090,SC1091
