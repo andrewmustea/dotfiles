@@ -51,13 +51,19 @@ source "${key_bindings}"
 
 # colors
 if [[ "${FZF_DEFAULT_OPTS}" != *color* ]]; then
-  OPTS=("--color=fg:#888888,hl:#b030a0"
-        "--color=fg+:#bbbbbb,bg+:#151a1e,hl+:#36a3d9"
-        "--color=info:#508040,prompt:#8030e0,pointer:#f06722"
-        "--color=marker:#0040bb,spinner:#b02828,header:#0078c8")
-  FZF_DEFAULT_OPTS+=" ${OPTS[*]}"
+  colors=( "--color=fg:#888888,hl:#b030a0"
+           "--color=fg+:#bbbbbb,bg+:#151a1e,hl+:#36a3d9"
+           "--color=info:#508040,prompt:#8030e0,pointer:#f06722"
+           "--color=marker:#0040bb,spinner:#b02828,header:#0078c8" )
+  FZF_DEFAULT_OPTS+=" ${colors[*]}"
   export FZF_DEFAULT_OPTS
+  unset colors
 fi
 
 unset autocomplete key_bindings fzf_path local_fzf system_fzf
 
+# default commands
+if hash fd &>/dev/null; then
+  export FZF_DEFAULT_COMMAND='command fd -HIi --type file'
+  export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
+fi
