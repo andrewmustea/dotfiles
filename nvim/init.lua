@@ -1,4 +1,7 @@
--- init.lua
+#!/usr/bin/env lua
+
+--
+-- nvim/init.lua
 --
 
 -- vim settings
