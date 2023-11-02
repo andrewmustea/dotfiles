@@ -8,7 +8,7 @@
 require("settings")
 
 -- autocommands and functions
-require("autocmd")
+require("autocmds")
 
 -- plugins
 require("plugins")
@@ -18,4 +18,3 @@ require("keybinds")
 
 -- filetypes
 require("filetypes")
-
