@@ -1,18 +1,25 @@
--- filetype.lua
+#!/usr/bin/env lua
+
+--
+-- nvim/lua/filetype.lua
 --
 
 -- manually set filetypes
 vim.filetype.add({
   filename = {
-    [".luacheckrc"] = "lua",
-    ["bashrc"] = "sh",
     ["env"] = "sh",
     ["gitconfig"] = "gitconfig",
     ["profile"] = "sh",
     ["vimrc"] = "vim"
+  },
+  pattern = {
+    [".*/git/config"] = "gitconfig",
+    [".*bash_profile"] = "sh",
+    [".*bashrc"] = "sh",
+    [".*luacheckrc"] = "lua",
+    [".*requirements.*%.txt"] = "config"
   }
 })
 
 -- zsh files should use bash treesitter syntax
 vim.treesitter.language.register("bash", "zsh")
-
