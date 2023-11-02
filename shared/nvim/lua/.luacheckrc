@@ -1,4 +1,0 @@
-std = {
-   globals = {"vim", "require"}
-}
-
