@@ -4,7 +4,7 @@
 -- nvim/lua/plugins.lua
 --
 
-local util = require("util")
+local utils = require("utils")
 
 require("packer").startup({
   function(use)
@@ -13,36 +13,36 @@ require("packer").startup({
 
     -- session info
     use { "rmagatti/auto-session",
-      cond = util.not_vscode,
-      config = util.get_config("auto-session")
+      cond = utils.not_vscode,
+      config = utils.get_config("auto-session")
     }
     use { "chentoast/marks.nvim",
-      cond = util.not_vscode,
+      cond = utils.not_vscode,
       config = function()
         require("marks").setup()
       end
     }
     use { "dstein64/vim-startuptime",
       cmd = "StartupTime",
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
 
     -- ui
     use { "andrewmustea/black_sun",
-      cond = util.not_vscode,
+      cond = utils.not_vscode,
       config = function()
         vim.cmd.colorscheme("black_sun")
       end
     }
     use { "kyazdani42/nvim-web-devicons",
-      cond = util.not_vscode,
+      cond = utils.not_vscode,
       config = function()
         require("nvim-web-devicons").get_icons()
       end
     }
     use { "norcalli/nvim-colorizer.lua",
       cmd = "ColorizerToggle",
-      cond = util.not_vscode,
+      cond = utils.not_vscode,
       config = function()
         require("colorizer").setup()
       end
@@ -53,36 +53,36 @@ require("packer").startup({
         { "kevinhwang91/nvim-hlslens", opt = true }
       },
       wants = "gitsigns.nvim",
-      cond = util.not_vscode,
-      config = util.get_config("nvim-scrollbar")
+      cond = utils.not_vscode,
+      config = utils.get_config("nvim-scrollbar")
     }
     use { "kevinhwang91/nvim-hlslens",
       event = "CmdlineEnter",
       keys = { "n", "N" },
-      cond = util.not_vscode,
-      config = util.get_config("nvim-hlslens")
+      cond = utils.not_vscode,
+      config = utils.get_config("nvim-hlslens")
     }
     use { "rcarriga/nvim-notify",
       cmd = "Notifications",
       branch = "master",
-      cond = util.not_vscode,
-      config = util.get_config("nvim-notify")
+      cond = utils.not_vscode,
+      config = utils.get_config("nvim-notify")
     }
     use { "stevearc/dressing.nvim",
-      cond = util.not_vscode,
-      config = util.get_config("dressing")
+      cond = utils.not_vscode,
+      config = utils.get_config("dressing")
     }
     use { "akinsho/bufferline.nvim",
       requires = { "kyazdani42/nvim-web-devicons", opt = true },
       wants = "nvim-web-devicons",
-      cond = util.not_vscode,
-      config = util.get_config("bufferline")
+      cond = utils.not_vscode,
+      config = utils.get_config("bufferline")
     }
     use { "nvim-lualine/lualine.nvim",
       requires = { "kyazdani42/nvim-web-devicons", opt = true },
       wants = "nvim-web-devicons",
-      cond = util.not_vscode,
-      config = util.get_config("lualine")
+      cond = utils.not_vscode,
+      config = utils.get_config("lualine")
     }
 
     -- movement
@@ -97,7 +97,7 @@ require("packer").startup({
     -- text manipulation
     use "matze/vim-move"
     use { "gbprod/cutlass.nvim",
-      config = util.get_config("cutlass")
+      config = utils.get_config("cutlass")
     }
     use { "numToStr/Comment.nvim",
       event = "CursorMoved",
@@ -106,15 +106,15 @@ require("packer").startup({
       end
     }
     use { "gbprod/substitute.nvim",
-      config = util.get_config("substitute")
+      config = utils.get_config("substitute")
     }
     use { "gbprod/yanky.nvim",
       requires = "gbprod/substitute.nvim",
-      config = util.get_config("yanky")
+      config = utils.get_config("yanky")
     }
     use { "windwp/nvim-autopairs",
       event = "InsertEnter",
-      cond = util.not_vscode,
+      cond = utils.not_vscode,
       config = function()
         require("nvim-autopairs").setup()
       end
@@ -134,24 +134,24 @@ require("packer").startup({
       event = "BufReadPost",
       requires = "editorconfig/editorconfig-vim",
       wants = "editorconfig-vim",
-      config = util.get_config("indent-o-matic")
+      config = utils.get_config("indent-o-matic")
     }
     use { "pangloss/vim-javascript",
       ft = "javascript",
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
     use { "rust-lang/rust.vim",
       ft = "rust",
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
     use { "andrewmustea/vim-bitbake",
       branch = "remove_newbb_newbbappend_from_BufReadPost",
       ft = "bitbake",
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
     use { "arrufat/vala.vim",
       ft = "vala",
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
     use { "cuducos/yaml.nvim",
       ft = "yaml",
@@ -163,24 +163,24 @@ require("packer").startup({
         "nvim-treesitter",
         "telescope.nvim",
       },
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
 
     -- diff
     use { "AndrewRadev/linediff.vim",
       event = "DiffUpdated",
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
     use { "rickhowe/spotdiff.vim",
       event = "DiffUpdated",
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
 
     -- tools
     use { "tversteeg/registers.nvim",
       cmd = "Registers",
       keys = { { "n", "\"" }, { "v", "\"" }, { "i", "<C-r>" } },
-      cond = util.not_vscode,
+      cond = utils.not_vscode,
       config = function()
         require("registers").setup()
       end
@@ -194,7 +194,7 @@ require("packer").startup({
     }
     use { "kyazdani42/nvim-tree.lua",
       cmd = "NvimTreeToggle",
-      cond = util.not_vscode,
+      cond = utils.not_vscode,
       config = function()
         require("nvim-tree").setup()
       end
@@ -202,7 +202,7 @@ require("packer").startup({
 
     -- git
     use { "lewis6991/gitsigns.nvim",
-      cond = util.not_vscode,
+      cond = utils.not_vscode,
       config = function()
         require("gitsigns").setup()
       end
@@ -211,22 +211,22 @@ require("packer").startup({
       event = { "CursorHold", "CmdlineEnter" },
       requires = { "nvim-lua/plenary.nvim", opt = true },
       wants = "plenary.nvim",
-      cond = util.not_vscode,
-      config = util.get_config("vgit")
+      cond = utils.not_vscode,
+      config = utils.get_config("vgit")
     }
     use { "samoshkin/vim-mergetool",
       cmd = "MergetoolStart",
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
     use { "tpope/vim-fugitive",
       event = "CmdlineEnter",
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
     use { "NeogitOrg/neogit",
       event = "CmdlineEnter",
       requires = { "nvim-lua/plenary.nvim", opt = true },
       wants = "plenary.nvim",
-      cond = util.not_vscode,
+      cond = utils.not_vscode,
       config = function()
         require("neogit").setup()
       end
@@ -236,69 +236,69 @@ require("packer").startup({
     use { "neoclide/coc.nvim",
       event = { "CursorHold", "CursorMoved" },
       branch = "release",
-      cond = util.not_vscode,
-      config = util.get_config("coc")
+      cond = utils.not_vscode,
+      config = utils.get_config("coc")
     }
     use { "dense-analysis/ale",
-      cond = util.not_vscode,
-      config = util.get_config("ale")
+      cond = utils.not_vscode,
+      config = utils.get_config("ale")
     }
 
     -- treesitter
     use { "nvim-treesitter/nvim-treesitter",
       run = ":TSUpdate",
-      cond = util.not_vscode,
-      config = util.get_config("nvim-treesitter")
+      cond = utils.not_vscode,
+      config = utils.get_config("nvim-treesitter")
     }
     use { "RRethy/nvim-treesitter-endwise",
       requires = { "nvim-treesitter/nvim-treesitter", opt = true },
       wants = "nvim-treesitter",
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
     use { "nvim-treesitter/playground",
       cmd = "TSPlaygroundToggle",
       requires = { "nvim-treesitter/nvim-treesitter", opt = true },
       wants = "nvim-treesitter",
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
     use { "nvim-treesitter/nvim-treesitter-textobjects",
       requires = { "nvim-treesitter/nvim-treesitter", opt = true },
       wants = "nvim-treesitter",
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
     use { "nvim-treesitter/nvim-treesitter-refactor",
       requires = { "nvim-treesitter/nvim-treesitter", opt = true },
       wants = "nvim-treesitter",
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
     use { "nvim-treesitter/nvim-treesitter-context",
       requires = { "nvim-treesitter/nvim-treesitter", opt = true },
       wants = "nvim-treesitter",
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
     use { "theHamsta/nvim-treesitter-pairs",
       requires = { "nvim-treesitter/nvim-treesitter", opt = true },
       wants = "nvim-treesitter",
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
     use { "m-demare/hlargs.nvim",
       requires = { "nvim-treesitter/nvim-treesitter", opt = true },
       wants = "nvim-treesitter",
-      cond = util.not_vscode,
-      config = util.get_config("hlargs")
+      cond = utils.not_vscode,
+      config = utils.get_config("hlargs")
     }
     use { "lukas-reineke/indent-blankline.nvim",
       tag = "v2.20.8",
       requires = { "nvim-treesitter/nvim-treesitter", opt = true },
       wants = "nvim-treesitter",
-      cond = util.not_vscode,
-      config = util.get_config("indent-blankline")
+      cond = utils.not_vscode,
+      config = utils.get_config("indent-blankline")
     }
 
     -- telescope
     use { "nvim-telescope/telescope.nvim",
       cmd = "Telescope",
-      keys = util.get_key_combinations({ "n" }, {
+      keys = utils.get_key_combinations({ "n" }, {
         { "f" }, { "b", "c", "f", "g", "h", "m", "n", "p", "r", "s", "t", "y" }
       }),
       branch = "0.1.x",
@@ -341,26 +341,26 @@ require("packer").startup({
         "telescope-scriptnames.nvim",
         "telescope-tabs"
       },
-      cond = util.not_vscode,
-      config = util.get_config("telescope")
+      cond = utils.not_vscode,
+      config = utils.get_config("telescope")
     }
 
     -- markdown and rst
     use { "iamcco/markdown-preview.nvim",
       run = "cd app && npm install",
       ft = "markdown",
-      cond = util.not_vscode,
+      cond = utils.not_vscode,
       setup = function()
         vim.g.mkdp_filetypes = { "markdown", "vimwiki" }
       end
     }
     use { "ellisonleao/glow.nvim",
       ft = "markdown",
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
     use { "jghauser/follow-md-links.nvim",
       ft = "markdown",
-      cond = util.not_vscode,
+      cond = utils.not_vscode,
       config = function()
         vim.keymap.set("n", "<bs>", ":edit #<cr>", { silent = true })
       end
@@ -369,7 +369,7 @@ require("packer").startup({
       ft = "markdown",
       requires = { "nvim-lua/plenary.nvim", opt = true },
       wants = "plenary.nvim",
-      cond = util.not_vscode,
+      cond = utils.not_vscode,
       config = function()
         require("auto-pandoc")
       end
@@ -379,8 +379,7 @@ require("packer").startup({
       ft = "rst",
       requires = { "nvim-treesitter/nvim-treesitter", opt = true },
       wants = "nvim-treesitter",
-      cond = util.not_vscode
+      cond = utils.not_vscode
     }
   end
 })
-

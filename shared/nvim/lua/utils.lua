@@ -1,13 +1,10 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/util.lua
+-- nvim/lua/utils.lua
 --
 
 local M = { }
-
--- packer.nvim
---------------
 
 -- return and source a matching config file from ./config/
 function M.get_config(name)
@@ -69,4 +66,3 @@ function M.get_key_combinations(modes, keys)
 end
 
 return M
-
