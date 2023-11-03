@@ -1,5 +1,10 @@
--- lualine.nvim
+#!/usr/bin/env lua
+
 --
+-- nvim/lua/config/lualine.lua
+--
+
+-- https://github.com/nvim-lualine/lualine.nvim
 
 local red = "#b02828"
 local blue = "#0040bb"
@@ -16,7 +21,7 @@ local function read_only()
   return "[-]"
 end
 
-require("lualine").setup {
+require("lualine").setup({
   options = {
     icons_enabled = true,
     theme = "black_sun",
@@ -89,5 +94,4 @@ require("lualine").setup {
     lualine_z = { }
   },
   extensions = { "nvim-tree" }
-}
-
+})

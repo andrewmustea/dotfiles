@@ -1,7 +1,12 @@
--- indent-o-matic
+#!/usr/bin/env lua
+
+--
+-- nvim/lua/config/indent-o-matic.lua
 --
 
-require("indent-o-matic").setup {
+-- https://github.com/Darazaki/indent-o-matic
+
+require("indent-o-matic").setup({
   filetype_ = {
     standard_widths = { 2, 4, 8 },
   },
@@ -10,6 +15,8 @@ require("indent-o-matic").setup {
   },
   filetype_markdown = {
     standard_widths = { 2 }
+  },
+  filetype_python = {
+    standard_widths = { 4 }
   }
-}
-
+})

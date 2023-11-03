@@ -1,5 +1,10 @@
--- coc.nvim
+#!/usr/bin/env lua
+
 --
+-- nvim/lua/config/coc.lua
+--
+
+-- https://github.com/neoclide/coc.nvim
 
 local api = vim.api
 local fn  = vim.fn
@@ -231,4 +236,3 @@ api.nvim_create_user_command("OR", "call CocActionAsync('runCommand', 'editor.ac
 
 -- Resume latest coc list
 -- map("n", "<space>p", ":<C-u>CocListResume<cr>", list_opts)
-

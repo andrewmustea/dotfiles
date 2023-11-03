@@ -1,7 +1,11 @@
--- cutlass.nvim
+#!/usr/bin/env lua
+
+--
+-- nvim/lua/config/cutlass.lua
 --
 
-require("cutlass").setup {
-  exclude = { "nd", "xd", "nD", "xD" }
-}
+-- https://github.com/gbprod/cutlass.nvim
 
+require("cutlass").setup({
+  exclude = { "nd", "xd", "nD", "xD" }
+})

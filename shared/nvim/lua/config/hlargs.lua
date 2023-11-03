@@ -1,6 +1,10 @@
--- m-demare/hlargs.nvim
+#!/usr/bin/env lua
+
 --
--- nvim-treesitter argument highlighter
+-- nvim/lua/config/hlargs.lua
+--
+
+-- https://github.com/m-demare/hlargs.nvim
 
 local blue = "#0078c8"
 
@@ -41,4 +45,3 @@ require("hlargs").setup({
     }
   }
 })
-

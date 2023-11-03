@@ -1,7 +1,12 @@
--- vgit.nvim
+#!/usr/bin/env lua
+
+--
+-- nvim/lua/config/vgit.lua
 --
 
-require("vgit").setup {
+-- https://github.com/tanvirtin/vgit.nvim
+
+require("vgit").setup({
   settings = {
     hls = {
       GitComment = {
@@ -16,4 +21,4 @@ require("vgit").setup {
       diff_preference = "split"
     }
   }
-}
+})
