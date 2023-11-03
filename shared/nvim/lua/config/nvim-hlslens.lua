@@ -1,5 +1,10 @@
--- nvim-hlslens
+#!/usr/bin/env lua
+
 --
+-- nvim/lua/config/nvim-hlslens.lua
+--
+
+-- https://github.com/kevinhwang91/nvim-hlslens
 
 local map = vim.keymap.set
 
@@ -9,14 +14,14 @@ require("hlslens").setup({
   end,
 })
 
-require("scrollbar").setup {
+require("scrollbar").setup({
   marks = {
     Search = { color = "#8030e0"}
   },
   handlers = {
     search = true
   }
-}
+})
 
 local kopts = { noremap = true, silent = true }
 
@@ -27,4 +32,3 @@ map("n", "#", "#<Cmd>lua require('hlslens').start()<CR>", kopts)
 map("n", "g*", "g*<Cmd>lua require('hlslens').start()<CR>", kopts)
 map("n", "g#", "g#<Cmd>lua require('hlslens').start()<CR>", kopts)
 map("n", "<Leader>l", ":noh<CR>", kopts)
-

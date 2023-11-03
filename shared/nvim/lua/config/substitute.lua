@@ -1,9 +1,13 @@
--- substitute.lua
+#!/usr/bin/env lua
+
+--
+-- nvim/lua/config/substitute.lua
 --
 
-require("substitute").setup {
+-- https://github.com/gbprod/substitute.nvim
+
+require("substitute").setup({
   on_substitute = function(event)
     require("yanky").init_ring("p", event.register, event.count, event.vmode:match("[vV]"))
   end
-}
-
+})

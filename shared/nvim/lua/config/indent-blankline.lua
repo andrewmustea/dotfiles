@@ -1,8 +1,10 @@
 #!/usr/bin/env lua
 
 --
--- indent-blankline.nvim
+-- nvim/lua/config/indent-blankline.lua
 --
+
+-- https://github.com/lukas-reineke/indent-blankline.nvim
 
 vim.opt.list = true
 vim.opt.listchars:append("space:⋅")
@@ -13,4 +15,3 @@ require("indent_blankline").setup({
   show_current_context_start = true,
   space_char_blankline = " "
 })
-

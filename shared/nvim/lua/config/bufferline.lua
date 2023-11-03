@@ -1,5 +1,10 @@
--- bufferline.nvim
+#!/usr/bin/env lua
+
 --
+-- nvim/lua/config/bufferline.lua
+--
+
+-- https://github.com/akinsho/bufferline.nvim
 
 local fn = vim.fn
 local map = vim.keymap.set
@@ -14,30 +19,27 @@ local dark_blue  = "#042a4a"
 local sage       = "#508040"
 local red        = "#b02828"
 
-require("bufferline").setup {
+require("bufferline").setup({
   options = {
     mode = "buffers", -- set to "tabs" to only show tabpages instead
-    numbers =
-      function(opts)
-        local winlist = fn.win_findbuf(tonumber(opts.id))
-        if next(winlist) then
-          local tablist = fn.win_id2tabwin(winlist[1])
-          if next(tablist) then
-            return ""
-          end
+    numbers = function(opts)
+      local winlist = fn.win_findbuf(tonumber(opts.id))
+      if next(winlist) then
+        local tablist = fn.win_id2tabwin(winlist[1])
+        if next(tablist) then
+          return ""
         end
-        return string.format("(%s)", opts.id)
-      end,
+      end
+      return string.format("(%s)", opts.id)
+    end,
     diagnostics = false,
     diagnostics_update_in_insert = false,
-    diagnostics_indicator =
-      function(count, level, diagnostics_dict, context)
-        local icon = level:match("error") and " " or " "
-        return " " .. icon .. count
-      end,
+    diagnostics_indicator = function(count, level, diagnostics_dict, context)
+      local icon = level:match("error") and " " or " "
+      return " " .. icon .. count
+    end,
     offsets = {
-      {
-        filetype = "NvimTree",
+      { filetype = "NvimTree",
         highlight = "Directory",
         text_align = "left"
       }
@@ -50,7 +52,7 @@ require("bufferline").setup {
   highlights = {
     background             = { fg = blue_gray,  bg = black_gray },
     buffer                 = { fg = blue_gray,  bg = black_gray },
-    buffer_selected        = { fg = white_gray, bg = dark_blue, bold = false, italic = false },
+    buffer_selected        = { fg = white_gray, bg = dark_blue,    bold = false, italic = false },
     buffer_visible         = { fg = steel_gray, bg = dusk },
     close_button           = { fg = blue_gray,  bg = black_gray },
     close_button_selected  = { fg = white_gray, bg = dark_blue },
@@ -107,7 +109,7 @@ require("bufferline").setup {
     -- warning_diagnostic_selected = { },
     -- warning_diagnostic_visible  = { },
   }
-}
+})
 
 -- These commands will navigate through buffers in order regardless of which mode you are using
 -- e.g. if you change the order of buffers :bnext and :bprevious will not respect the custom ordering
@@ -126,4 +128,3 @@ map("n", "<leader>6", "<Cmd>BufferLineGoToBuffer 6<CR>", { silent = true, norema
 map("n", "<leader>7", "<Cmd>BufferLineGoToBuffer 7<CR>", { silent = true, noremap = true })
 map("n", "<leader>8", "<Cmd>BufferLineGoToBuffer 8<CR>", { silent = true, noremap = true })
 map("n", "<leader>9", "<Cmd>BufferLineGoToBuffer 9<CR>", { silent = true, noremap = true })
-

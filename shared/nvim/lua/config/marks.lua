@@ -1,5 +1,10 @@
--- marks.nvim
+#!/usr/bin/env lua
+
 --
+-- nvim/lua/config/marks.lua
+--
+
+-- https://github.com/chentoast/marks.nvim
 
 require("marks").setup({
   -- whether to map keybinds or not. default true

@@ -1,8 +1,10 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/dressing.nvim
+-- nvim/lua/config/dressing.lua
 --
+
+-- https://github.com/stevearc/dressing.nvim
 
 require("dressing").setup({
   input = {
@@ -34,7 +36,7 @@ require("dressing").setup({
     max_width = { 140, 0.9 },
     min_width = { 20, 0.2 },
 
-    buf_options = {},
+    buf_options = { },
     win_options = {
       -- Window transparency (0-100)
       winblend = 10,
@@ -165,6 +167,6 @@ require("dressing").setup({
     format_item_override = {},
 
     -- see :help dressing_get_config
-    get_config = nil,
-  },
+    get_config = nil
+  }
 })

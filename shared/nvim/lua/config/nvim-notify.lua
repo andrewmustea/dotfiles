@@ -1,7 +1,11 @@
--- nvim-notify
+#!/usr/bin/env lua
+
+--
+-- nvim/lua/config/nvim-notify.lua
 --
 
-require("notify").setup {
-  fps = 60
-}
+-- https://github.com/rcarriga/nvim-notify
 
+require("notify").setup({
+  fps = 60
+})

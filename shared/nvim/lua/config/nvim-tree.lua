@@ -1,5 +1,10 @@
--- nvim-tree
+#!/usr/bin/env lua
+
 --
+-- nvim/lua/config/nvim-tree.lua
+--
+
+-- https://github.com/kyazdani42/nvim-tree.lua
 
 require("nvim-tree").setup({
   sort_by = "case_sensitive",
@@ -7,7 +12,7 @@ require("nvim-tree").setup({
     adaptive_size = true,
     mappings = {
       list = {
-        { key = "u", action = "dir_up" },
+        { key = "u", action = "dir_up" }
       },
     },
   },
@@ -16,6 +21,5 @@ require("nvim-tree").setup({
   },
   filters = {
     dotfiles = false,
-  },
+  }
 })
-

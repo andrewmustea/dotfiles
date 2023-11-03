@@ -1,5 +1,10 @@
--- yanky.nvim
+#!/usr/bin/env lua
+
 --
+-- nvim/lua/config/yanky.lua
+--
+
+-- https://github.com/gbprod/yanky.nvim
 
 local map = vim.keymap.set
 
@@ -31,8 +36,8 @@ require("yanky").setup {
   }
 }
 
-map("x", "p", function() require('substitute').visual() end, { noremap = true })
-map("x", "P", function() require('substitute').visual() end, { noremap = true })
+map("x", "p", function() require("substitute").visual() end, { noremap = true })
+map("x", "P", function() require("substitute").visual() end, { noremap = true })
 
 map({ "n", "x" }, "gp", "<Plug>(YankyGPutAfter)")
 map({ "n", "x" }, "gP", "<Plug>(YankyGPutBefore)")
@@ -52,4 +57,3 @@ map("n", "<P", "<Plug>(YankyPutIndentBeforeShiftLeft)")
 
 map("n", "=p", "<Plug>(YankyPutAfterFilter)")
 map("n", "=P", "<Plug>(YankyPutBeforeFilter)")
-

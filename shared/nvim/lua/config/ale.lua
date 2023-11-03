@@ -1,5 +1,11 @@
--- ale
+#!/usr/bin/env lua
+
 --
+-- nvim/lua/config/ale.lua
+--
+
+-- https://github.com/dense-analysis/ale
+
 local g = vim.g
 
 -- ale settings
@@ -17,4 +23,3 @@ g.ale_linters = {
   ["python"] = { },
   ["sh"] = { }
 }
-

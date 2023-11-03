@@ -1,6 +1,10 @@
--- telescope.nvim
+#!/usr/bin/env lua
+
 --
--- highly extendible fuzzy finder
+-- nvim/lua/config/telescope.lua
+--
+
+-- https://github.com/nvim-telescope/telescope.nvim
 
 local api = vim.api
 local map = vim.keymap.set
@@ -11,12 +15,12 @@ api.nvim_command("packadd plenary.nvim")
 
 telescope.setup({
   defaults = {
-    file_ignore_patterns = { "node_modules", ".terraform", "%.jpg", "%.png" },
+    file_ignore_patterns = { "node_modules", ".terraform", "%.jpg", "%.png" }
   },
   extensions = {
     command_palette = {
       { "Telescope",
-        { "buffers", ":lua require('telescope.builtin').buffers()" },
+        { "buffers", ":lua require('telescope.builtin').buffers()" }
       },
       { "File",
         { "entire selection (C-a)", ":call feedkeys('GVgg')" },
@@ -26,7 +30,7 @@ telescope.setup({
         { "file browser (C-i)", ":lua require('telescope').extensions.file_browser.file_browser()", 1 },
         { "search word (A-w)", ":lua require('telescope.builtin').live_grep()", 1 },
         { "git files (A-f)", ":lua require('telescope.builtin').git_files()", 1 },
-        { "files (C-f)",     ":lua require('telescope.builtin').find_files()", 1 },
+        { "files (C-f)",     ":lua require('telescope.builtin').find_files()", 1 }
       },
       { "Help",
         { "tips", ":help tips" },
@@ -34,7 +38,7 @@ telescope.setup({
         { "tutorial", ":help tutor" },
         { "summary", ":help summary" },
         { "quick reference", ":help quickref" },
-        { "search help(F1)", ":lua require('telescope.builtin').help_tags()", 1 },
+        { "search help(F1)", ":lua require('telescope.builtin').help_tags()", 1 }
       },
       { "Vim",
         { "reload vimrc", ":source $MYVIMRC" },
@@ -53,14 +57,14 @@ telescope.setup({
         { "cursor column", ":set cursorcolumn!" },
         { "spell checker", ":set spell!" },
         { "relative number", ":set relativenumber!" },
-        { "search highlighting (F12)", ":set hlsearch!" },
+        { "search highlighting (F12)", ":set hlsearch!" }
       }
     },
     fzf = {
       fuzzy = true,                    -- false will only do exact matching
       override_generic_sorter = true,  -- override the generic sorter
       override_file_sorter = true,     -- override the file sorter
-      case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+      case_mode = "smart_case"         -- or "ignore_case" or "respect_case"
     },
     hop = {
       -- the shown `keys` are the defaults, no need to set `keys` if defaults work for you ;)
@@ -84,7 +88,7 @@ telescope.setup({
       -- note: mutually exclusive with `clear_selection_hl`
       trace_entry = true,
       -- jump to entry where hoop loop was started from
-      reset_selection = true,
+      reset_selection = true
     },
     recent_files = {
       stat_files = true,
@@ -93,20 +97,20 @@ telescope.setup({
     telescope_tabs = {
       close_tab_shortcut_i = '<C-d>', -- if you're in insert mode
       close_tab_shortcut_n = 'D',     -- if you're in normal mode
-      show_preview = true,
+      show_preview = true
     }
   },
   pickers = {
     find_files = {
-      hidden = false,
+      hidden = false
     },
     buffers = {
       ignore_current_buffer = true,
-      sort_lastused = true,
+      sort_lastused = true
     }
       -- find_command = { "fd", "--hidden", "--type", "file", "--follow", "--strip-cwd-prefix" },
       -- find_command = { "rg", "--files", "--hidden", "--glob", "!.git/*" },
-  },
+  }
 })
 
 -- load extensions
@@ -147,4 +151,3 @@ map("n", "fp", function() return require("telescope").extensions.packer.packer()
 map("n", "fr", function() return require("telescope").extensions.file_browser.file_browser() end, opts)
 map("n", "ft", function() return require("telescope-tabs").list_tabs() end, opts)
 map("n", "fy", function() return require("telescope").extensions.yank_history.yank_history() end, opts)
-
