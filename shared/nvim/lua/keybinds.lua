@@ -1,4 +1,7 @@
--- keybinds.lua
+#!/usr/bin/env lua
+
+--
+-- nvim/lua/keybinds.lua
 --
 
 local function map(mode, keys, exec, opts)
@@ -42,4 +45,3 @@ if vim.g.vscode ~= nil then
   map({ "n", "x" }, "<C-w><M-h>", workbench_action("moveActiveEditorGroupLeft"))
   map({ "n", "x" }, "<C-w><M-l>", workbench_action("moveActiveEditorGroupRight"))
 end
-
