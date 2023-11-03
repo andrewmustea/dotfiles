@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- settings.lua
+-- nvim/lua/settings.lua
 --
 
 
@@ -105,6 +105,5 @@ o.wrapscan = true
 -- clipboard
 o.clipboard = "unnamedplus"
 
--- python3 provider
+-- python3
 g.python3_host_prog = "/usr/bin/python3"
-
