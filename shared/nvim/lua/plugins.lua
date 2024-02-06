@@ -140,11 +140,6 @@ require("packer").startup({
       ft = "rust",
       cond = utils.not_vscode
     }
-    use { "andrewmustea/vim-bitbake",
-      branch = "remove_newbb_newbbappend_from_BufReadPost",
-      ft = "bitbake",
-      cond = utils.not_vscode
-    }
     use { "arrufat/vala.vim",
       ft = "vala",
       cond = utils.not_vscode
