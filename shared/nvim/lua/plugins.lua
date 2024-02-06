@@ -12,10 +12,6 @@ require("packer").startup({
     use "wbthomason/packer.nvim"
 
     -- session info
-    use { "rmagatti/auto-session",
-      cond = utils.not_vscode,
-      config = utils.get_config("auto-session")
-    }
     use { "chentoast/marks.nvim",
       cond = utils.not_vscode,
       config = function()
