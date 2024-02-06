@@ -4,4 +4,5 @@
 
 # Disable "can't follow non-constant source" warning (SC1090)
 # Disable "not following external sources" warning (SC1091)
-disable=SC1090,SC1091
+# Disable "this expands client side" warning (SC2029)
+disable=SC1090,SC1091,SC2029
