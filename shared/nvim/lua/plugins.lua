@@ -184,6 +184,11 @@ local plugins = {
     cond = not_vscode,
     config = true
   },
+  { "folke/todo-comments.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    cond = not_vscode,
+    config = true
+  },
 
   -- git
   { "lewis6991/gitsigns.nvim",
