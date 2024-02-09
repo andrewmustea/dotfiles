@@ -10,9 +10,6 @@ local api = vim.api
 local map = vim.keymap.set
 local telescope = require("telescope")
 
--- load required plugins
-api.nvim_command("packadd plenary.nvim")
-
 telescope.setup({
   defaults = {
     file_ignore_patterns = { "node_modules", ".terraform", "%.jpg", "%.png" }
@@ -126,7 +123,6 @@ telescope.load_extension("file_browser")
 telescope.load_extension("fzf")
 telescope.load_extension("heading")
 telescope.load_extension("hop")
-telescope.load_extension("packer")
 telescope.load_extension("recent_files")
 telescope.load_extension("scriptnames")
 telescope.load_extension("telescope-tabs")
@@ -147,7 +143,6 @@ map("n", "fs", function() return require("telescope.builtin").search_history() e
 -- extension keybinds
 map("n", "fc", function() return require("telescope").extensions.coc.coc() end, opts)
 map("n", "fn", function() return require("telescope").extensions.notify.notify() end, opts)
-map("n", "fp", function() return require("telescope").extensions.packer.packer() end, opts)
 map("n", "fr", function() return require("telescope").extensions.file_browser.file_browser() end, opts)
 map("n", "ft", function() return require("telescope-tabs").list_tabs() end, opts)
 map("n", "fy", function() return require("telescope").extensions.yank_history.yank_history() end, opts)
