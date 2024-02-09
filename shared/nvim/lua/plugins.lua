@@ -331,7 +331,7 @@ local plugins = {
 
   -- markdown and rst
   { "iamcco/markdown-preview.nvim",
-    build = "cd app && npm install",
+    build = "cd app && npm install && git restore .",
     ft = "markdown",
     cond = not_vscode,
     setup = function()
