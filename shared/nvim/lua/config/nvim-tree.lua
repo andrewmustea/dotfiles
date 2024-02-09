@@ -23,3 +23,5 @@ require("nvim-tree").setup({
     dotfiles = false,
   }
 })
+
+vim.api.nvim_create_user_command("Tree", "NvimTreeToggle", { })
