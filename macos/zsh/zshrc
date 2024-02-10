@@ -32,7 +32,7 @@ setopt hist_ignore_dups
 unsetopt share_history
 
 
-# programs
+# shell integrations
 # --------------------
 
 # fzf
@@ -47,9 +47,6 @@ safe_source "${ZDOTDIR:-"${HOME}"}/.iterm2_shell_integration.zsh"
 
 # local projects
 export PROJECTS="${HOME}/projects"
-
-# ascii art
-safe_source "${PROJECTS}/ascii_art/ascii.sh"
 
 
 # aliases
@@ -92,13 +89,13 @@ alias {pipi,pip3i}='python3 -m pip install --user'
 alias venv='python3 -m venv'
 
 # rsync
-alias rsync-copy='rsync -avz --progress -h'
-alias rsync-move='rsync -avz --progress -h --remove-source-files'
-alias rsync-update='rsync -avzu --progress -h'
-alias rsync-sync='rsync -avzu --delete --progress -h'
+alias rsync-copy='rsync -avzhP --partial'
+alias rsync-move='rsync -avzhP --partial --remove-source-files'
+alias rsync-update='rsync -avzhPu --partial -h'
+alias rsync-sync='rsync -avzhPu --delete --partial -h'
 
 # sudo
-alias sudo='sudo -v; sudo --preserve-env '
+alias sudo='sudo --preserve-env '
 
 # tcp/ip
 alias pingpath='mtr'
