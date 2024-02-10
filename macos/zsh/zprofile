@@ -8,7 +8,7 @@
 # paths and environment variables
 # --------------------
 
-# remove given paths from a path string
+# remove given directories from a path string
 __path_remove() {
   if (( $# < 2 )); then
     echo "error: $0 needs a path string and at least one path to remove" 1>&2
@@ -26,7 +26,7 @@ __path_remove() {
   echo "${new_path:1:-1}"
 }
 
-# prepend given paths to a path string
+# prepend given directories to a path string
 __path_prepend() {
   if (( $# < 2 )); then
     echo "error: $0 needs a path string and at least one path to prepend" 1>&2
@@ -47,7 +47,7 @@ __path_prepend() {
   echo "${prepend:+"${prepend}:"}${old_path}"
 }
 
-# append given paths to a path string
+# append given directories to a path string
 __path_append() {
   if (( $# < 2 )); then
     echo "error: $0 needs a path string and at least one path to append" 1>&2
@@ -117,6 +117,9 @@ prepend_path "${CABAL_DIR}/bin"
 export CARGO_HOME="${XDG_DATA_HOME}/cargo"
 prepend_path "${CARGO_HOME}/bin"
 
+# docker
+export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker"
+
 # gcc
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
@@ -177,6 +180,11 @@ export RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
 export STACK_ROOT="${XDG_DATA_HOME}/stack"
 prepend_path "${STACK_ROOT}/bin"
 
+# wezterm
+export WEZTERM_CONFIG_FILE="${XDG_CONFIG_HOME}/wezterm/wezterm.lua"
+
+# wine
+export WINEPREFIX="${XDG_DATA_HOME}/wine"
 
 # git functions
 # --------------------
@@ -252,7 +260,7 @@ add_exclude() {
   fi
 
   local exclude="${repo}/.git/info/exclude"
-  if [[ -z "${exclude}" ]]; then
+  if [[ ! -f "${exclude}" ]]; then
     echo "error: git exclude file not found: '${exclude}'" 1>&2
     return 1
   fi
@@ -269,7 +277,7 @@ add_exclude() {
 add_exclude_vscode() {
   local repo="${PWD}"
   if (( $# > 1 )); then
-    echo "error: too many arguments: $*" 1>&2
+    echo "error: too many arguments" 1>&2
     echo "usage: $0 [repository]" 1>&2
     return 1
   elif (( $# == 1 )); then
