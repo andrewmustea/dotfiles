@@ -334,7 +334,7 @@ local plugins = {
     build = "cd app && npm install && git restore .",
     ft = "markdown",
     cond = not_vscode,
-    setup = function()
+    init = function()
       vim.g.mkdp_filetypes = { "markdown" }
     end
   },
