@@ -9,5 +9,6 @@
             "command": "vala-language-server",
             "filetypes": ["vala", "genie"]
         }
-    }
+    },
+    "snippets.ultisnips.pythonPrompt": false
 }
