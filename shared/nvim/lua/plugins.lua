@@ -27,7 +27,7 @@ local plugins = {
   { "stevearc/dressing.nvim",
     cond = not_vscode,
     config = function()
-      require("config.dressing")
+      require("configs.dressing")
     end
   },
 
@@ -35,7 +35,7 @@ local plugins = {
   { "chentoast/marks.nvim",
     cond = not_vscode,
     config = function()
-      require("config.marks")
+      require("configs.marks")
     end
   },
   { "dstein64/vim-startuptime",
@@ -56,33 +56,33 @@ local plugins = {
     },
     cond = not_vscode,
     config = function()
-      require("config.nvim-scrollbar")
+      require("configs.nvim-scrollbar")
     end
   },
   { "kevinhwang91/nvim-hlslens",
     cond = not_vscode,
     config = function()
-      require("config.nvim-hlslens")
+      require("configs.nvim-hlslens")
     end
   },
   { "rcarriga/nvim-notify",
     cond = not_vscode,
     config = function()
-      require("config.nvim-notify")
+      require("configs.nvim-notify")
     end
   },
   { "akinsho/bufferline.nvim",
     dependencies = "kyazdani42/nvim-web-devicons",
     cond = not_vscode,
     config = function()
-      require("config.bufferline")
+      require("configs.bufferline")
     end
   },
   { "nvim-lualine/lualine.nvim",
     dependencies = "kyazdani42/nvim-web-devicons",
     cond = not_vscode,
     config = function()
-      require("config.lualine")
+      require("configs.lualine")
     end
   },
 
@@ -97,7 +97,7 @@ local plugins = {
   "matze/vim-move",
   { "gbprod/cutlass.nvim",
     config = function()
-      require("config.cutlass")
+      require("configs.cutlass")
     end
   },
   { "numToStr/Comment.nvim",
@@ -106,13 +106,13 @@ local plugins = {
   },
   { "gbprod/substitute.nvim",
     config = function()
-      require("config.substitute")
+      require("configs.substitute")
     end
   },
   { "gbprod/yanky.nvim",
     dependencies = "gbprod/substitute.nvim",
     config = function()
-      require("config.yanky")
+      require("configs.yanky")
     end
   },
   { "windwp/nvim-autopairs",
@@ -133,7 +133,7 @@ local plugins = {
     event = "BufReadPost",
     dependencies = "editorconfig/editorconfig-vim",
     config = function()
-      require("config.indent-o-matic")
+      require("configs.indent-o-matic")
     end
   },
   { "pangloss/vim-javascript",
@@ -185,7 +185,7 @@ local plugins = {
     cmd = { "NvimTreeToggle", "Tree" },
     cond = not_vscode,
     config = function()
-      require("config.nvim-tree")
+      require("configs.nvim-tree")
     end
   },
   { "folke/todo-comments.nvim",
@@ -204,7 +204,7 @@ local plugins = {
     dependencies = "nvim-lua/plenary.nvim",
     cond = not_vscode,
     config = function()
-      require("config.vgit")
+      require("configs.vgit")
     end
   },
   { "samoshkin/vim-mergetool",
@@ -228,13 +228,13 @@ local plugins = {
     branch = "release",
     cond = not_vscode,
     config = function()
-      require("config.coc")
+      require("configs.coc")
     end
   },
   { "dense-analysis/ale",
     cond = not_vscode,
     config = function()
-      require("config.ale")
+      require("configs.ale")
     end
   },
 
@@ -243,7 +243,7 @@ local plugins = {
     build = ":TSUpdate",
     cond = not_vscode,
     config = function()
-      require("config.nvim-treesitter")
+      require("configs.nvim-treesitter")
     end
   },
   { "RRethy/nvim-treesitter-endwise",
@@ -275,7 +275,7 @@ local plugins = {
     dependencies = "nvim-treesitter/nvim-treesitter",
     cond = not_vscode,
     config = function()
-      require("config.hlargs")
+      require("configs.hlargs")
     end
   },
   { "lukas-reineke/indent-blankline.nvim",
@@ -283,7 +283,7 @@ local plugins = {
     dependencies = "nvim-treesitter/nvim-treesitter",
     cond = not_vscode,
     config = function()
-      require("config.indent-blankline")
+      require("configs.indent-blankline")
     end
   },
 
@@ -329,7 +329,7 @@ local plugins = {
     },
     cond = not_vscode,
     config = function()
-      require("config.telescope")
+      require("configs.telescope")
     end
   },
 
