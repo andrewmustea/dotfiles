@@ -34,7 +34,9 @@ local plugins = {
   -- session info
   { "chentoast/marks.nvim",
     cond = not_vscode,
-    config = true
+    config = function()
+      require("config.marks")
+    end
   },
   { "dstein64/vim-startuptime",
     cmd = "StartupTime"
@@ -182,7 +184,9 @@ local plugins = {
   { "kyazdani42/nvim-tree.lua",
     cmd = { "NvimTreeToggle", "Tree" },
     cond = not_vscode,
-    config = true
+    config = function()
+      require("config.nvim-tree")
+    end
   },
   { "folke/todo-comments.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
