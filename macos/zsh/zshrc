@@ -42,13 +42,6 @@ safe_source "${XDG_CONFIG_HOME}/fzf/fzf.zsh"
 safe_source "${ZDOTDIR:-"${HOME}"}/.iterm2_shell_integration.zsh"
 
 
-# projects
-# --------------------
-
-# local projects
-export PROJECTS="${HOME}/projects"
-
-
 # aliases
 # --------------------
 

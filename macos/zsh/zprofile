@@ -186,6 +186,7 @@ export WEZTERM_CONFIG_FILE="${XDG_CONFIG_HOME}/wezterm/wezterm.lua"
 # wine
 export WINEPREFIX="${XDG_DATA_HOME}/wine"
 
+
 # git functions
 # --------------------
 
