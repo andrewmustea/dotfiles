@@ -10,6 +10,15 @@ if ! hash fzf &>/dev/null; then
   return 1
 fi
 
+# homebrew directory
+[[ -z "${HOMEBREW_PREFIX}" ]] && HOMEBREW_PREFIX="$(brew --prefix)" && export HOMEBREW_PREFIX
+
+# check if homebrew fzf install exists
+if [[ ! -d "${HOMEBREW_PREFIX}/opt/fzf" ]]; then
+  echo "couldn't find homebrew fzf directory at '${HOMEBREW_PREFIX}/opt/fzf'" 1>&2
+  return 1
+fi
+
 # auto-completion
 if [[ "$-" == *i* ]]; then
   source "${HOMEBREW_PREFIX}/opt/fzf/shell/completion.zsh" 2>/dev/null
@@ -20,13 +29,13 @@ source "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh"
 
 # colors
 if [[ "${FZF_DEFAULT_OPTS}" != *color* ]]; then
-  colors=( "--color=fg:#888888,hl:#b030a0"
-           "--color=fg+:#bbbbbb,bg+:#151a1e,hl+:#36a3d9"
-           "--color=info:#508040,prompt:#8030e0,pointer:#f06722"
-           "--color=marker:#0040bb,spinner:#b02828,header:#0078c8" )
-  FZF_DEFAULT_OPTS+=" ${colors[*]}"
+  FZF_DEFAULT_OPTS+=(
+    "--color=fg:#888888,hl:#b030a0"
+    "--color=fg+:#bbbbbb,bg+:#151a1e,hl+:#36a3d9"
+    "--color=info:#508040,prompt:#8030e0,pointer:#f06722"
+    "--color=marker:#0040bb,spinner:#b02828,header:#0078c8"
+  )
   export FZF_DEFAULT_OPTS
-  unset colors
 fi
 
 # default commands
