@@ -31,6 +31,6 @@ fi
 
 # default commands
 if hash fd &>/dev/null; then
-  export FZF_DEFAULT_COMMAND='command fd -HIi --type file'
+  export FZF_DEFAULT_COMMAND="command fd -HIi --type file"
   export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
 fi
