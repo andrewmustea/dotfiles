@@ -121,7 +121,7 @@ prepend_path "${CARGO_HOME}/bin"
 export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker"
 
 # gcc
-export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+export GCC_COLORS="error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01"
 
 # gem
 export GEM_SPEC_CACHE="${XDG_CACHE_HOME}/gem"
@@ -155,9 +155,9 @@ export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npm/npmrc"
 
 # nvim
 if hash nvim &>/dev/null; then
-  export EDITOR='nvim'
+  export EDITOR="nvim"
 else
-  export EDITOR='vim'
+  export EDITOR="vim"
 fi
 
 # nvm
