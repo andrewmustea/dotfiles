@@ -21,14 +21,16 @@ source "${ZSH}/oh-my-zsh.sh"
 
 # command history
 export HISTFILE="${XDG_STATE_HOME}/zsh/history"
-export HISTFILESIZE=100000
+export HISTFILESIZE=1000000
 export HISTORY_IGNORE="history:pwd:ls:ll:la:l:dir:"
-export HISTSIZE=100000
+export HISTSIZE=1000000
+export SAVEHIST=1000000
 
 # history options
-setopt inc_append_history
 setopt extended_history
 setopt hist_ignore_dups
+setopt hist_reduce_blanks
+setopt inc_append_history
 unsetopt share_history
 
 
