@@ -106,9 +106,6 @@ if [[ -x /opt/homebrew/bin/brew ]]; then
   unset hb_cnf_handler
 fi
 
-# home local bin
-prepend_path "${HOME}/.local/bin"
-
 # cabal
 export CABAL_DIR="${XDG_DATA_HOME}/cabal"
 prepend_path "${CABAL_DIR}/bin"
@@ -159,6 +156,8 @@ if hash nvim &>/dev/null; then
 else
   export EDITOR="vim"
 fi
+export VISUAL="${EDITOR}"
+export SUDO_EDITOR="${EDITOR}"
 
 # nvm
 export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
@@ -170,8 +169,14 @@ fi
 # pass
 export PASSWORD_STORE_DIR="${XDG_DATA_HOME}/pass"
 
+# pex
+export PEX_ROOT="${XDG_CACHE_HOME}/pex"
+
 # pylint
 export PYLINTHOME="${XDG_CACHE_HOME}/pylint"
+
+# python
+export IPYTHONDIR="${XDG_CONFIG_HOME}/ipython"
 
 # rustup
 export RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
@@ -180,11 +185,17 @@ export RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
 export STACK_ROOT="${XDG_DATA_HOME}/stack"
 prepend_path "${STACK_ROOT}/bin"
 
+# tldr
+export TLDR_CACHE_DIR="${XDG_CACHE_HOME}/tldr"
+
 # wezterm
 export WEZTERM_CONFIG_FILE="${XDG_CONFIG_HOME}/wezterm/wezterm.lua"
 
 # wine
 export WINEPREFIX="${XDG_DATA_HOME}/wine"
+
+# home local bin
+prepend_path "${HOME}/.local/bin"
 
 
 # git functions
