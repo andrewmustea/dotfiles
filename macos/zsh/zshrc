@@ -9,10 +9,11 @@
 # --------------------
 
 export ZSH="${ZDOTDIR}/ohmyzsh"
-ZSH_THEME="black_sun"
+export ZSH_THEME="black_sun"
+export VSCODE="codium"
 zstyle ':omz:update' mode reminder
 DISABLE_AUTO_TITLE="true"
-plugins=(command-not-found gitfast macos safe-paste zsh-interactive-cd)
+plugins=(command-not-found gitfast macos safe-paste vscode zsh-interactive-cd)
 source "${ZSH}/oh-my-zsh.sh"
 
 
