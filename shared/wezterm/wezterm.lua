@@ -48,6 +48,26 @@ wezterm.on("gui-startup", function(cmd)
   window:gui_window():maximize()
 end)
 
+-- open links with control or command clicks only
+config.mouse_bindings = {
+  -- control click
+  { event = { Up = { streak = 1, button = "Left" } },
+    mods = "CTRL",
+    action = wezterm.action.OpenLinkAtMouseCursor
+  },
+  -- command click (macOS only)
+  { event = { Up = { streak = 1, button = "Left" } },
+    mods = "CMD",
+    action = wezterm.action.OpenLinkAtMouseCursor
+  },
+  -- don't open links without a key modifier
+  {
+    event = { Up = { streak = 1, button = "Left" } },
+    mods = "",
+    action = wezterm.action.Nop
+  }
+}
+
 -- colorscheme
 local black         = "#0c0c0c"
 local red           = "#c50f1f"
