@@ -1,4 +1,9 @@
+--
+-- ~/.config/wezterm/wezterm.lua
+--
+
 local wezterm = require("wezterm")
+local mux = wezterm.mux
 local config = { }
 
 -- bell
@@ -37,8 +42,13 @@ config.window_frame = {
   border_top_color = "gray",
 }
 
+-- open in full screen
+wezterm.on("gui-startup", function(cmd)
+  local _, _, window = mux.spawn_window(cmd or {})
+  window:gui_window():maximize()
+end)
+
 -- colorscheme
--- TODO: move to separate file
 local black         = "#0c0c0c"
 local red           = "#c50f1f"
 local green         = "#13a10e"
