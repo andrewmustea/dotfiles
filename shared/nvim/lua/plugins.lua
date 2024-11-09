@@ -48,8 +48,9 @@ return {
   { "andrewmustea/black_sun",
     cond = not_vscode,
     config = function()
-      vim.cmd.colorscheme("black_sun")
-    end
+      require("black_sun.black_sun")
+    end,
+    priority = 1000
   },
   { "petertriho/nvim-scrollbar",
     dependencies = {
