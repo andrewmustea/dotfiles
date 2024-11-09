@@ -26,7 +26,7 @@ return {
   default_cursor_style = "BlinkingBar",
   cursor_blink_ease_in = { CubicBezier = { 0.0, 0.0, 0.0, 0.0 } },
   cursor_blink_ease_out = { CubicBezier = { 0.0, 0.0, 0.0, 0.0 } },
-  cursor_blink_rate = 750,
+  cursor_blink_rate = 500,
 
   -- window
   use_fancy_tab_bar = true,
