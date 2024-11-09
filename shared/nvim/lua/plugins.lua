@@ -4,15 +4,17 @@
 -- nvim/lua/plugins.lua
 --
 
+
 -- functions
 
 local function not_vscode()
   return vim.g.vscode == nil
 end
 
+
 -- plugins list
 
-local plugins = {
+return {
   -- libraries
   { "nvim-lua/plenary.nvim",
     lazy = true,
@@ -189,7 +191,7 @@ local plugins = {
     end
   },
   { "folke/todo-comments.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
+    dependencies = "nvim-lua/plenary.nvim",
     cond = not_vscode,
     config = true
   },
@@ -368,5 +370,3 @@ local plugins = {
     cond = not_vscode
   }
 }
-
-return plugins
