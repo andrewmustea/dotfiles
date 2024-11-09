@@ -14,7 +14,8 @@ require("nvim-treesitter.configs").setup({
     "gitignore", "git_rebase", "go", "haskell", "html", "http", "java",
     "javascript", "json", "kotlin", "latex", "llvm", "lua", "make", "markdown",
     "markdown_inline", "meson", "ninja", "perl", "python", "regex", "rust",
-    "todotxt", "toml", "typescript", "vala", "verilog", "vim", "vue", "yaml"
+    "todotxt", "toml", "typescript", "vala", "verilog", "vim", "vue", "yaml",
+    "zig"
   },
 
   -- Install parsers synchronously (only applied to `ensure_installed`)
