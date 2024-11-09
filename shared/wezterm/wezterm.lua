@@ -22,6 +22,16 @@ return {
   -- font
   font_size = 12,
   font = wezterm.font("CaskaydiaCove Nerd Font"),
+  adjust_window_size_when_changing_font_size = false,
+
+  --keys
+  use_dead_keys = false,
+  keys = {
+    { key = "t",
+      mods = "CMD|SHIFT",
+      action = act.SpawnCommandInNewTab({ cwd = wezterm.home_dir })
+    }
+  },
 
   -- cursor
   default_cursor_style = "BlinkingBar",
@@ -30,6 +40,7 @@ return {
   cursor_blink_rate = 500,
 
   -- window
+  default_cwd = wezterm.home_dir,
   use_fancy_tab_bar = true,
   window_decorations = "RESIZE",
   window_frame = {
