@@ -3,6 +3,7 @@
 --
 
 local wezterm = require("wezterm")
+local act = wezterm.action
 local mux = wezterm.mux
 
 return {
@@ -53,18 +54,18 @@ return {
     -- control click
     { event = { Up = { streak = 1, button = "Left" } },
       mods = "CTRL",
-      action = wezterm.action.OpenLinkAtMouseCursor
+      action = act.OpenLinkAtMouseCursor
     },
     -- command click (macOS only)
     { event = { Up = { streak = 1, button = "Left" } },
       mods = "CMD",
-      action = wezterm.action.OpenLinkAtMouseCursor
+      action = act.OpenLinkAtMouseCursor
     },
     -- don't open links without a key modifier
     {
       event = { Up = { streak = 1, button = "Left" } },
       mods = "",
-      action = wezterm.action.Nop
+      action = act.Nop
     }
   },
 
