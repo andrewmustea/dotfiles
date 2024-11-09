@@ -20,7 +20,7 @@ o.mouse = "nv"
 o.updatetime = 300
 
 -- turn off all sounds
-o.belloff = true
+o.belloff = "all"
 
 -- command line history size
 o.history = 10000
@@ -35,7 +35,7 @@ end
 --------------------
 
 -- enable snytax highlighting
-o.syntax = true
+o.syntax = "off"
 o.termguicolors = true
 
 -- show line and column numbers
