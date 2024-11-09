@@ -218,6 +218,7 @@ return {
     cond = not_vscode
   },
   { "NeogitOrg/neogit",
+    tag = "v0.0.1",
     event = "CmdlineEnter",
     dependencies = "nvim-lua/plenary.nvim",
     cond = not_vscode,
