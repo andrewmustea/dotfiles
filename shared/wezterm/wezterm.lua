@@ -4,111 +4,94 @@
 
 local wezterm = require("wezterm")
 local mux = wezterm.mux
-local config = { }
 
--- bell
-config.audible_bell = "Disabled"
-config.visual_bell = {
-  fade_in_function = "EaseIn",
-  fade_in_duration_ms = 50,
-  fade_out_function = "EaseOut",
-  fade_out_duration_ms = 50,
-}
-
--- scrollback
-config.scrollback_lines = 10000
-
--- font
-config.font_size = 12
-config.font = wezterm.font("CaskaydiaCove Nerd Font")
-
--- cursor
-config.default_cursor_style = "BlinkingBar"
-config.cursor_blink_ease_in = { CubicBezier = { 0.0, 0.0, 0.0, 0.0 } }
-config.cursor_blink_ease_out = { CubicBezier = { 0.0, 0.0, 0.0, 0.0 } }
-config.cursor_blink_rate = 750
-
--- window
-config.use_fancy_tab_bar = true
-config.window_decorations = "RESIZE"
-config.window_frame = {
-  border_left_width = "0.1cell",
-  border_right_width = "0.1cell",
-  border_bottom_height = "0.1cell",
-  border_top_height = "0.1cell",
-  border_left_color = "gray",
-  border_right_color = "gray",
-  border_bottom_color = "gray",
-  border_top_color = "gray",
-}
-
--- open in full screen
-wezterm.on("gui-startup", function(cmd)
-  local _, _, window = mux.spawn_window(cmd or {})
-  window:gui_window():maximize()
-end)
-
--- open links with control or command clicks only
-config.mouse_bindings = {
-  -- control click
-  { event = { Up = { streak = 1, button = "Left" } },
-    mods = "CTRL",
-    action = wezterm.action.OpenLinkAtMouseCursor
+return {
+  -- bell
+  audible_bell = "Disabled",
+  visual_bell = {
+    fade_in_function = "EaseIn",
+    fade_in_duration_ms = 50,
+    fade_out_function = "EaseOut",
+    fade_out_duration_ms = 50,
   },
-  -- command click (macOS only)
-  { event = { Up = { streak = 1, button = "Left" } },
-    mods = "CMD",
-    action = wezterm.action.OpenLinkAtMouseCursor
+
+  -- scrollback
+  scrollback_lines = 10000,
+
+  -- font
+  font_size = 12,
+  font = wezterm.font("CaskaydiaCove Nerd Font"),
+
+  -- cursor
+  default_cursor_style = "BlinkingBar",
+  cursor_blink_ease_in = { CubicBezier = { 0.0, 0.0, 0.0, 0.0 } },
+  cursor_blink_ease_out = { CubicBezier = { 0.0, 0.0, 0.0, 0.0 } },
+  cursor_blink_rate = 750,
+
+  -- window
+  use_fancy_tab_bar = true,
+  window_decorations = "RESIZE",
+  window_frame = {
+    border_left_width = "0.1cell",
+    border_right_width = "0.1cell",
+    border_bottom_height = "0.1cell",
+    border_top_height = "0.1cell",
+    border_left_color = "gray",
+    border_right_color = "gray",
+    border_bottom_color = "gray",
+    border_top_color = "gray",
   },
-  -- don't open links without a key modifier
-  {
-    event = { Up = { streak = 1, button = "Left" } },
-    mods = "",
-    action = wezterm.action.Nop
+
+  -- open in full screen
+  wezterm.on("gui-startup", function(cmd)
+    local _, _, window = mux.spawn_window(cmd or {})
+    window:gui_window():maximize()
+  end),
+
+  -- open links with control or command clicks only
+  mouse_bindings = {
+    -- control click
+    { event = { Up = { streak = 1, button = "Left" } },
+      mods = "CTRL",
+      action = wezterm.action.OpenLinkAtMouseCursor
+    },
+    -- command click (macOS only)
+    { event = { Up = { streak = 1, button = "Left" } },
+      mods = "CMD",
+      action = wezterm.action.OpenLinkAtMouseCursor
+    },
+    -- don't open links without a key modifier
+    {
+      event = { Up = { streak = 1, button = "Left" } },
+      mods = "",
+      action = wezterm.action.Nop
+    }
+  },
+
+  -- colorscheme
+  colors = {
+    foreground = "#cccccc", --white
+    background = "#0c0c0c", -- black
+    ansi = {
+      "#0c0c0c", -- black
+      "#c50f1f", -- red
+      "#13a10e", -- green
+      "#c19c00", -- yellow
+      "#0037da", -- blue
+      "#881798", -- purple
+      "#3a96dd", -- cyan
+      "#cccccc"  -- white
+    },
+    brights = {
+      "#767676", -- bright black
+      "#e74856", -- bright red
+      "#16c60c", -- bright green
+      "#f9f1a5", -- bright yellow
+      "#3b78ff", -- bright blue
+      "#b4009e", -- bright purple
+      "#61d6d6", -- bright cyan
+      "#dddddd"  -- bright white
+    },
+    visual_bell = "#101010"
   }
 }
-
--- colorscheme
-local black         = "#0c0c0c"
-local red           = "#c50f1f"
-local green         = "#13a10e"
-local yellow        = "#c19c00"
-local blue          = "#0037da"
-local purple        = "#881798"
-local cyan          = "#3a96dd"
-local white         = "#cccccc"
-local bright_black  = "#767676"
-local bright_red    = "#e74856"
-local bright_green  = "#16c60c"
-local bright_yellow = "#f9f1a5"
-local bright_blue   = "#3b78ff"
-local bright_purple = "#b4009e"
-local bright_cyan   = "#61d6d6"
-local bright_white  = "#dddddd"
-config.colors = {
-  foreground = white,
-  background = black,
-  ansi = {
-    black,
-    red,
-    green,
-    yellow,
-    blue,
-    purple,
-    cyan,
-    white
-  },
-  brights = {
-    bright_black,
-    bright_red,
-    bright_green,
-    bright_yellow,
-    bright_blue,
-    bright_purple,
-    bright_cyan,
-    bright_white
-  },
-  visual_bell = "#101010"
-}
-
-return config
