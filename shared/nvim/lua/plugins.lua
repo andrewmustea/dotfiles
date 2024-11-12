@@ -283,9 +283,9 @@ return {
     end
   },
   { "lukas-reineke/indent-blankline.nvim",
-    tag = "v2.20.8",
     dependencies = "nvim-treesitter/nvim-treesitter",
     cond = not_vscode,
+    main = "ibl",
     config = function()
       require("configs.indent-blankline")
     end

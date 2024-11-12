@@ -73,6 +73,10 @@ o.tabstop = 2
 -- diff options
 o.diffopt = "internal,filler,closeoff,vertical,hiddenoff"
 
+-- list whitespace
+o.list = true
+o.listchars = "tab:» ,lead:⋅,trail:⋅"
+
 
 -- buffers
 --------------------
