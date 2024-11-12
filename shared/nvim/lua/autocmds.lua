@@ -24,9 +24,6 @@ api.nvim_create_user_command("WQA", "wqa", { })
 -- show syntax highlights
 api.nvim_create_user_command("ShowHighlights", "silent runtime syntax/hitest.vim", { bang = true })
 
--- print syntax highlighting group from under cursor
-api.nvim_create_user_command("HighlightGroup", "echo synIDattr(synID(line('.'),col('.'),1),'name')", { bang = true })
-
 -- split helpfiles vertically to the left
 api.nvim_create_autocmd(
   "BufEnter",
