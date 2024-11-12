@@ -32,6 +32,10 @@ return {
       require("configs.dressing")
     end
   },
+  { "ibhagwan/fzf-lua",
+    lazy = true,
+    cond = not_vscode
+  },
 
   -- session info
   { "chentoast/marks.nvim",
@@ -218,10 +222,17 @@ return {
     event = "CmdlineEnter",
     cond = not_vscode
   },
-  { "NeogitOrg/neogit",
-    tag = "v0.0.1",
+  { "sindrets/diffview.nvim",
     event = "CmdlineEnter",
-    dependencies = "nvim-lua/plenary.nvim",
+    cond = not_vscode
+  },
+  { "NeogitOrg/neogit",
+    event = "CmdlineEnter",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "sindrets/diffview.nvim",
+      "ibhagwan/fzf-lua"
+    },
     cond = not_vscode,
     config = true
   },
