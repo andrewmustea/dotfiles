@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/bufferline.lua
+-- nvim/lua/configs/bufferline.lua
 --
 
 -- https://github.com/akinsho/bufferline.nvim

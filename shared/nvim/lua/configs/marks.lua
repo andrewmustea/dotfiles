@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/marks.lua
+-- nvim/lua/configs/marks.lua
 --
 
 -- https://github.com/chentoast/marks.nvim

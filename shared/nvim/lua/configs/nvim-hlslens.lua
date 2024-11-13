@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/nvim-hlslens.lua
+-- nvim/lua/configs/nvim-hlslens.lua
 --
 
 -- https://github.com/kevinhwang91/nvim-hlslens

@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/hlargs.lua
+-- nvim/lua/configs/hlargs.lua
 --
 
 -- https://github.com/m-demare/hlargs.nvim

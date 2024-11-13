@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/lualine.lua
+-- nvim/lua/configs/lualine.lua
 --
 
 -- https://github.com/nvim-lualine/lualine.nvim

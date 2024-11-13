@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/yanky.lua
+-- nvim/lua/configs/yanky.lua
 --
 
 -- https://github.com/gbprod/yanky.nvim

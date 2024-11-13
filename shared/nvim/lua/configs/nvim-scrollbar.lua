@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/nvim-scrollbar.lua
+-- nvim/lua/configs/nvim-scrollbar.lua
 --
 
 -- https://github.com/petertriho/nvim-scrollbar

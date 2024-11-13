@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/vgit.lua
+-- nvim/lua/configs/vgit.lua
 --
 
 -- https://github.com/tanvirtin/vgit.nvim

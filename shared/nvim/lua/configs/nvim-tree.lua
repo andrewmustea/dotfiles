@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/nvim-tree.lua
+-- nvim/lua/configs/nvim-tree.lua
 --
 
 -- https://github.com/kyazdani42/nvim-tree.lua

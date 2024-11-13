@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/nvim-notify.lua
+-- nvim/lua/configs/nvim-notify.lua
 --
 
 -- https://github.com/rcarriga/nvim-notify
