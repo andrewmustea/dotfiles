@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/filetype.lua
+-- nvim/lua/filetypes.lua
 --
 
 -- manually set filetypes
