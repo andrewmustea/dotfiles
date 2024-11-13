@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/telescope.lua
+-- nvim/lua/configs/telescope.lua
 --
 
 -- https://github.com/nvim-telescope/telescope.nvim

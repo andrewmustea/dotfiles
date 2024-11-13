@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/nvim-treesitter.lua
+-- nvim/lua/configs/nvim-treesitter.lua
 --
 
 -- https://github.com/nvim-treesitter/nvim-treesitter

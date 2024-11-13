@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/coc.lua
+-- nvim/lua/configs/coc.lua
 --
 
 -- https://github.com/neoclide/coc.nvim

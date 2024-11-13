@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/ale.lua
+-- nvim/lua/configs/ale.lua
 --
 
 -- https://github.com/dense-analysis/ale

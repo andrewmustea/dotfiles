@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/indent-blankline.lua
+-- nvim/lua/configs/indent-blankline.lua
 --
 
 -- https://github.com/lukas-reineke/indent-blankline.nvim

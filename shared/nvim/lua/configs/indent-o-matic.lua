@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/indent-o-matic.lua
+-- nvim/lua/configs/indent-o-matic.lua
 --
 
 -- https://github.com/Darazaki/indent-o-matic

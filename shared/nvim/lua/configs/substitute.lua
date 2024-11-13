@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/substitute.lua
+-- nvim/lua/configs/substitute.lua
 --
 
 -- https://github.com/gbprod/substitute.nvim

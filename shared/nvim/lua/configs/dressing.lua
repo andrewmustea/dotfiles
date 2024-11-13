@@ -1,7 +1,7 @@
 #!/usr/bin/env lua
 
 --
--- nvim/lua/config/dressing.lua
+-- nvim/lua/configs/dressing.lua
 --
 
 -- https://github.com/stevearc/dressing.nvim
