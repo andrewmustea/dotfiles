@@ -6,21 +6,21 @@
 
 -- https://github.com/kyazdani42/nvim-tree.lua
 
+
+-- disable neovim's built-in file explorer
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 require("nvim-tree").setup({
   sort_by = "case_sensitive",
   view = {
-    adaptive_size = true,
-    mappings = {
-      list = {
-        { key = "u", action = "dir_up" }
-      },
-    },
+    adaptive_size = true
   },
   renderer = {
-    group_empty = true,
+    group_empty = true
   },
   filters = {
-    dotfiles = false,
+    dotfiles = false
   }
 })
 
