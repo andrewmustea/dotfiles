@@ -52,3 +52,13 @@ api.nvim_create_autocmd(
     end
   }
 )
+
+-- reset cursor to a vertical line when using iterm2
+if vim.env.TERM_PROGRAM == "iTerm.app" then
+  api.nvim_create_autocmd(
+    "VimLeave",
+    { pattern = "*",
+      command = "set guicursor=a:ver25"
+    }
+  )
+end
