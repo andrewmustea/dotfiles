@@ -4,79 +4,184 @@
 # ~/.bash_profile
 #
 
-# --------------------------------------------------
+
 # paths and environment variables
-# --------------------------------------------------
+# --------------------
 
-# add a directory to the front of PATH if the directory exists
-prepend_path() {
-  if [[ -d "$1" ]] && [[ ":${PATH}:" != *":${1}:"* ]]; then
-    export PATH="${1}${PATH:+":${PATH}"}"
+# remove given directories from a path string
+__path_remove() {
+  if (( $# < 2 )); then
+    echo "error: $0 needs a path string and at least one path to remove" 1>&2
+    echo "usage: $0 <path_string> <path>..." 1>&2
   fi
+
+  [[ -z "$1" ]] && return
+
+  local new_path=":${1}:"
+  for p in "${@:2}"; do
+    new_path="${new_path//":${p}:"/":"}"
+    [[ "${new_path}" == ":" ]] && return
+  done
+
+  echo "${new_path:1:-1}"
 }
 
-# add a directory to the end of PATH if the directory exists
-append_path() {
-  if [[ -d "$1" ]] && [[ ":${PATH}:" != *":${1}:"* ]]; then
-    export PATH="${PATH:+"${PATH}:"}${1}"
+# prepend given directories to a path string
+__path_prepend() {
+  if (( $# < 2 )); then
+    echo "error: $0 needs a path string and at least one path to prepend" 1>&2
+    echo "usage: $0 <path_string> <path>..." 1>&2
   fi
+
+  local old_path="$1"
+  local prepend
+  for p in "${@:2}"; do
+    if [[ -d "$p" ]] && [[ ":${prepend}:" != *":${p}:"* ]]; then
+      if [[ ":${old_path}:" == *":${p}:"* ]]; then
+        old_path="$(__path_remove "${old_path}" "$p")"
+      fi
+      prepend="${prepend:+"${prepend}:"}${p}"
+    fi
+  done
+
+  echo "${prepend:+"${prepend}:"}${old_path}"
 }
+
+# append given directories to a path string
+__path_append() {
+  if (( $# < 2 )); then
+    echo "error: $0 needs a path string and at least one path to append" 1>&2
+    echo "usage: $0 <path_string> <path>..." 1>&2
+  fi
+
+  local old_path="$1"
+  local append
+  for p in "${@:2}"; do
+    if [[ -d "$p" ]] && [[ ":${append}:" != *":${p}:"* ]]; then
+      if [[ ":${old_path}:" == *":${p}:"* ]]; then
+        old_path="$(__path_remove "${old_path}" "$p")"
+      fi
+      append="${append:+"${append}:"}${p}"
+    fi
+  done
+
+  echo "${old_path}${append:+":${append}"}"
+}
+
+# remove directories from a path
+remove_from_path() { PATH="$(__path_remove "${PATH}" "$@")"; export PATH; }
+remove_from_fpath() { FPATH="$(__path_remove "${FPATH}" "$@")"; export FPATH; }
+remove_from_infopath() { INFOPATH="$(__path_remove "${INFOPATH}" "$@")"; export INFOPATH; }
+remove_from_pythonpath() { PYTHONPATH="$(__path_remove "${PYTHONPATH}" "$@")"; export PYTHONPATH; }
+
+# prepend directories to a path if the directory exists
+prepend_path() { PATH="$(__path_prepend "${PATH}" "$@")"; export PATH; }
+prepend_fpath() { FPATH="$(__path_prepend "${FPATH}" "$@")"; export FPATH; }
+prepend_infopath() { INFOPATH="$(__path_prepend "${INFOPATH}" "$@")"; export INFOPATH; }
+prepend_pythonpath() { PYTHONPATH="$(__path_prepend "${PYTHONPATH}" "$@")"; export PYTHONPATH; }
+
+# append directories to a path if the directory exists
+append_path() { PATH="$(__path_append "${PATH}" "$@")"; export PATH; }
+append_fpath() { FPATH="$(__path_append "${FPATH}" "$@")"; export FPATH; }
+append_infopath() { INFOPATH="$(__path_append "${INFOPATH}" "$@")"; export INFOPATH; }
+append_pythonpath() { PYTHONPATH="$(__path_append "${PYTHONPATH}" "$@")"; export PYTHONPATH; }
+
+# xdg home directories
+export XDG_CACHE_HOME="${HOME}/.cache"
+export XDG_CONFIG_HOME="${HOME}/.config"
+export XDG_DATA_HOME="${HOME}/.local/share"
+export XDG_STATE_HOME="${HOME}/.local/state"
+
+# xdg runtime directory
+if pidof systemd >/dev/null 2>&1; then
+  export XDG_RUNTIME_DIR="/run/user/${UID}"
+else
+  mkdir --parents "/tmp/user/${UID}"
+  export XDG_RUNTIME_DIR="/tmp/user/${UID}"
+fi
+
+# command history
+export HISTCONTROL"=ignoredups"
+export HISTFILE="${XDG_STATE_HOME}/bash/history"
+export HISTFILESIZE=100000
+export HISTORY_IGNORE="history:pwd:ls:ll:la:l:dir:"
+export HISTSIZE=100000
+export HISTTIMEFORMAT="%F %T "
+
+
+# program paths
+# --------------------
 
 # homebrew
 if [[ -x /home/linuxbrew/.linuxbrew/bin/brew ]]; then
   export HOMEBREW_PREFIX="/home/linuxbrew/.linuxbrew"
   export HOMEBREW_CELLAR="${HOMEBREW_PREFIX}/Cellar"
-  export HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}/Homebrew"
-  export INFOPATH="${INFOPATH+${INFOPATH}:}${HOMEBREW_PREFIX}/share/info"
+  export HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}"
   prepend_path "${HOMEBREW_PREFIX}/sbin"
   prepend_path "${HOMEBREW_PREFIX}/bin"
+  prepend_infopath "${HOMEBREW_PREFIX}/share/info"
 fi
 
-# local bin
+# home local bin
 prepend_path "${HOME}/.local/bin"
+
+# cabal
+export CABAL_DIR="${XDG_DATA_HOME}/cabal"
+prepend_path "${CABAL_DIR}/bin"
 
 # cargo
 export CARGO_HOME="${XDG_DATA_HOME}/cargo"
 prepend_path "${CARGO_HOME}/bin"
 
+# docker
+export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker"
+
 # gcc
-export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+export GCC_COLORS="error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01"
+
+# gem
+export GEM_SPEC_CACHE="${XDG_CACHE_HOME}/gem"
 
 # go
 export GOPATH="${XDG_DATA_HOME}/go"
+prepend_path "${GOPATH}/bin"
 
 # gpg
 GPG_TTY="$(tty)"
 export GPG_TTY
 
 # less
+export LESS="-QR --no-vbell"
 export LESSHISTFILE="${XDG_STATE_HOME}/less/history"
-LESS_TERMCAP_mb="$(printf $'\E[01;31m')"
-LESS_TERMCAP_md="$(printf $'\E[01;38;5;74m')"
-LESS_TERMCAP_me="$(printf $'\E[0m')"
-LESS_TERMCAP_se="$(printf $'\E[0m')"
-LESS_TERMCAP_so="$(printf $'\E[38;5;246m')"
-LESS_TERMCAP_ue="$(printf $'\E[0m')"
-LESS_TERMCAP_us="$(printf $'\E[04;38;5;146m')"
-export LESS_TERMCAP_mb
-export LESS_TERMCAP_md
-export LESS_TERMCAP_me
-export LESS_TERMCAP_se
-export LESS_TERMCAP_so
-export LESS_TERMCAP_ue
-export LESS_TERMCAP_us
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;38;5;74m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[38;5;246m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[04;38;5;146m'
 
 # lesspipe
-[[ -x /usr/bin/lesspipe ]] && eval "$(SHELL=/bin/sh lesspipe)"
+hash lesspipe.sh &>/dev/null && eval "$(SHELL=/bin/sh lesspipe.sh)"
+
+# man
+export MANPAGER="less -QR --no-vbell"
 
 # npm
 export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npm/npmrc"
 
 # nvim
 if hash nvim &>/dev/null; then
-  export EDITOR='nvim'
+  export EDITOR="nvim"
 else
-  export EDITOR='vim'
+  export EDITOR="vim"
+fi
+
+# nvm
+export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
+if [[ -d "${NVM_DIR}" ]]; then
+  source "${NVM_DIR}/nvm.sh" || true
+  source "${NVM_DIR}/bash_completion" || true
 fi
 
 # pass
@@ -88,16 +193,26 @@ export PYLINTHOME="${XDG_CACHE_HOME}/pylint"
 # rustup
 export RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
 
-# --------------------------------------------------
+# stack
+export STACK_ROOT="${XDG_DATA_HOME}/stack"
+prepend_path "${STACK_ROOT}/bin"
+
+# wezterm
+export WEZTERM_CONFIG_FILE="${XDG_CONFIG_HOME}/wezterm/wezterm.lua"
+
+# wine
+export WINEPREFIX="${XDG_DATA_HOME}/wine"
+
+
 # git functions
-# --------------------------------------------------
+# --------------------
 
 # print the branch name of the current directory or a given one
-get-branch-name() {
+git_current_branch() {
   local dir="${PWD}"
   if (( $# > 1 )); then
     echo "error: too many arguments: $*" 1>&2
-    echo "usage: get-branch-name [branch]" 1>&2
+    echo "usage: $0 [branch]" 1>&2
     return 1
   elif (( $# == 1 )); then
     dir="$1"
@@ -107,14 +222,14 @@ get-branch-name() {
 }
 
 # run an interactive rebase starting at a given commit
-rebase-at-commit() {
+rebase_at_commit() {
   if (( $# == 0 )); then
     echo "error: missing commit-id" 1>&2
-    echo "usage: rebase-at-commit <commit-id>" 1>&2
+    echo "usage: $0 <commit-id>" 1>&2
     return 1
   elif (( $# > 1 )); then
     echo "error: too many arguments: $*" 1>&2
-    echo "usage: rebase-at-commit <commit-id>" 1>&2
+    echo "usage: $0 <commit-id>" 1>&2
     return 1
   fi
 
@@ -122,14 +237,14 @@ rebase-at-commit() {
 }
 
 # rebase a branch on a given remote without having to manually stash any changes
-rebase-remote() {
+rebase_remote() {
   if (( $# == 0 )); then
     echo "error: need remote name" 1>&2
-    echo "usage: rebase-remote <remote> [branch]" 1>&2
+    echo "usage: $0 <remote> [branch]" 1>&2
   fi
 
   local current_branch
-  current_branch="$(get-branch-name "$2")"
+  current_branch="$(git_current_branch "$2")"
   if [[ -z "${current_branch}" ]]; then
     return 1
   fi
@@ -148,22 +263,22 @@ rebase-remote() {
 }
 
 # add a pattern to .git/info/exclude
-add-exclude() {
+add_exclude() {
   local repo="${PWD}"
   if (( $# == 0 )); then
     echo "error: missing exclude argument" 1>&2
-    echo "usage: add-exclude <exclude-type> [directory]" 1>&2
+    echo "usage: $0 <exclude-type> [directory]" 1>&2
     return 1
   elif (( $# > 2 )); then
     echo "error: too many arguments: $*" 1>&2
-    echo "usage: add-exclude <exclude-type> [directory]" 1>&2
+    echo "usage: $0 <exclude-type> [directory]" 1>&2
     return 1
   elif (( $# == 2 )); then
     repo="$2"
   fi
 
   local exclude="${repo}/.git/info/exclude"
-  if [[ -z "${exclude}" ]]; then
+  if [[ ! -f "${exclude}" ]]; then
     echo "error: git exclude file not found: '${exclude}'" 1>&2
     return 1
   fi
@@ -177,23 +292,23 @@ add-exclude() {
 }
 
 # add '.vscode*' to .git/info/exclude
-add-exclude-vscode() {
+add_exclude_vscode() {
   local repo="${PWD}"
   if (( $# > 1 )); then
-    echo "error: too many arguments: $*" 1>&2
-    echo "usage: add-exclude-vscode [repository]" 1>&2
+    echo "error: too many arguments" 1>&2
+    echo "usage: $0 [repository]" 1>&2
     return 1
   elif (( $# == 1 )); then
     repo="$1"
   fi
-  add-exclude ".vscode*" "${repo}"
+  add_exclude ".vscode*" "${repo}"
 }
 
 # run a diff against the same branch on a remote
-diff-remote() {
+diff_remote() {
   if (( $# == 0 )); then
     echo "error: missing remote name" 1>&2
-    echo "usage: diff-remote <remote> [diff args]" 1>&2
+    echo "usage: $0 <remote> [diff args]" 1>&2
     return 1
   fi
 
@@ -202,14 +317,14 @@ diff-remote() {
     return 1
   fi
 
-  git diff "${1}/$(get-branch-name)" "${@:2}"
+  git diff "${1}/$(git_current_branch)" "${@:2}"
 }
 
 # run difftool against the same branch on a remote
-difftool-remote() {
+difftool_remote() {
   if (( $# == 0 )); then
     echo "error: missing remote name" 1>&2
-    echo "usage: difftool-remote <remote> [difftool args]" 1>&2
+    echo "usage: $0 <remote> [difftool args]" 1>&2
     return 1
   fi
 
@@ -218,16 +333,16 @@ difftool-remote() {
     return 1
   fi
 
-  git difftool "${1}/$(get-branch-name)" "${@:2}"
+  git difftool "${1}/$(git_current_branch)" "${@:2}"
 }
 
-# --------------------------------------------------
-# other functions
-# --------------------------------------------------
 
-# print PATH
-print-path() {
-  echo "${PATH//":"/"\n"}"
+# other functions
+# --------------------
+
+# print path directories separated by newlines
+print_path() {
+  echo "${1:-"${PATH}"}" | tr ':' '\n'
 }
 
 # find a process
@@ -235,51 +350,37 @@ psgrep() {
   pgrep "$@" | xargs --no-run-if-empty ps -fp
 }
 
-# find and kill a process
+# find and kill processes
 pskill() {
-  local pid
-  pid="$(pgrep "$@" | xargs -r ps --no-headers -fp | awk '{ print $2 }')"
-  echo "killing $1 (process ${pid})..."
-  kill -9 "${pid}"
+  kill -9 "$(psgrep "$@" | awk 'NR>1 { print $2 }')"
 }
 
-# uncompress files
-extract() {
-  usage() {
-    echo "usage: extract <file>" 1>&2
-    return 1
-  }
+# always return successfully when sourcing a file
+safe_source() {
+  source "$1" || true
+}
 
+# extract from a compressed file
+extract() {
   if (( $# == 0 )); then
     echo "error: missing file argument" 1>&2
-    usage
-  elif (( $# > 1 )); then
-    echo "error: too many arguments: $*" 1>&2
-    usage
-  elif [[ -d "$1" ]]; then
-    echo "error: directory given: $1" 1>&2
-    usage
-  elif ! [[ -f "$1" ]]; then
-    echo "error: file does not exist: $1" 1>&2
-    return 1
-  elif ! [[ -r "$1" ]]; then
-    echo "error: file not readable: $1" 1>&2
+    echo "usage: $0 <file> [options]" 1>&2
     return 1
   fi
 
   case "$1" in
-    *.tar.bz2) tar xvjf "$1" ;;
-    *.tar.gz) tar xvzf "$1" ;;
-    *.tar.xz) tar xvf "$1" ;;
-    *.bz2) bunzip2 "$1" ;;
-    *.rar) unrar x "$1" ;;
-    *.gz) gunzip "$1" ;;
-    *.tar) tar xvf "$1" ;;
-    *.tbz2) tar xvjf "$1" ;;
-    *.tgz) tar xvzf "$1" ;;
-    *.zip) unzip "$1" ;;
-    *.Z) uncompress "$1" ;;
-    *.7z) 7z x "$1" ;;
+    *.tar.bz2) tar xvjf "$@" ;;
+    *.tar.gz) tar xvzf "$@" ;;
+    *.tar.xz) tar xvf "$@" ;;
+    *.bz2) bunzip2 "$@" ;;
+    *.gz) gunzip "$@" ;;
+    *.rar) unrar x "$@" ;;
+    *.tar) tar xvf "$@" ;;
+    *.tbz2) tar xvjf "$@" ;;
+    *.tgz) tar xvzf "$@" ;;
+    *.zip) unzip "$@" ;;
+    *.Z) uncompress "$@" ;;
+    *.7z) 7z x "$@" ;;
     *)
       echo "error: unknown compressed file type '.${1#*.}'" 1>&2
       return 1
@@ -287,11 +388,9 @@ extract() {
   esac
 }
 
-# --------------------------------------------------
 # rc files
-# --------------------------------------------------
+# --------------------
 
 [[ -r "${HOME}/.bash_login" ]] && source "${HOME}/.bash_login"
 
 [[ -r "${HOME}/.bashrc" ]] && source "${HOME}/.bashrc"
-

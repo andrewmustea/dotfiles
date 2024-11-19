@@ -10,9 +10,9 @@ case "$-" in
   *) return ;;
 esac
 
-# --------------------------------------------------
-# programs
-# --------------------------------------------------
+
+# shell integrations
+# --------------------
 
 # fzf
 export FZF_ENV="${XDG_CONFIG_HOME}/fzf/fzf.bash"
@@ -28,9 +28,9 @@ fi
 # nala
 hash nala &>/dev/null && alias apt='nala'
 
-# --------------------------------------------------
+
 # projects
-# --------------------------------------------------
+# --------------------
 
 # local projects
 export PROJECTS="${HOME}/projects"
@@ -40,9 +40,9 @@ ascii_art="${PROJECTS}/ascii_art/ascii.sh"
 [[ -r "${ascii_art}" ]] && source "${ascii_art}"
 unset ascii_art
 
-# --------------------------------------------------
+
 # git aliases
-# --------------------------------------------------
+# --------------------
 
 # status
 alias gs='git status'
@@ -60,11 +60,13 @@ alias glp='git log --patch'
 alias gsh='git show'
 alias gshn='git show --name-only'
 alias gshs='git show --short'
-alias {gshm,git-show-message}='git show -s --format=%s'
+alias {gshm,git_show_message,git-show-message}='git show -s'
+alias {gsht,git_show_title,git-show-title}='git show -s --format=%s'
 
 # branch
 alias gb='git branch'
 alias gba='git branch -a'
+alias {gcb,cb,git-current-branch,current_branch,current-branch}='git_current_branch'
 
 # pull
 alias gp='git pull'
@@ -72,6 +74,7 @@ alias gpr='git pull --rebase'
 
 # reset
 alias gr='git reset'
+alias grh='git reset HEAD'
 
 # add
 alias ga='git add'
@@ -103,13 +106,20 @@ alias gmt='git mergetool'
 alias gr='git remote'
 alias grv='git remote -v'
 
-# rebase-remote
-alias rebase-origin='rebase-remote origin'
-alias rebase-upstream='rebase-remote upstream'
+# rebase_remote
+alias rebase-remote='rebase_remote'
+alias {rebase_origin,rebase-origin}='rebase_remote origin'
+alias {rebase_upstream,rebase-upstream}='rebase_remote upstream'
 
-# diff-remote
-alias diff-origin='diff-remote origin'
-alias diff-upstream='diff-remote upstream'
-alias difftool-origin='difftool-remote origin'
-alias difftool-upstream='difftool-remote upstream'
+# diff_remote
+alias diff-remote='diff_remote'
+alias difftool-remote='difftool_remote'
+alias {diff_origin,diff-origin}='diff_remote origin'
+alias {diff_upstream,diff-upstream}='diff_remote upstream'
+alias {difftool_origin,difftool-origin}='difftool_remote origin'
+alias {difftool_upstream,difftool-upstream}='difftool_remote upstream'
 
+# other custom functions
+alias {rbc,rebase-at-commit}='rebase_at_commit'
+alias add-exclude='add_exclude'
+alias add-exclude-vscode='add_exclude_vscode'
