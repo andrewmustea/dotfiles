@@ -392,6 +392,10 @@ copyfile() {
   if (( $# != 1 )); then
     echo "error: ${funcstack[-1]} needs exactly one file" 1>&2
     echo "usage: ${funcstack[-1]} <file>"
+    return 1
+  elif [[ ! -f "$1" ]]; then
+    echo "error: '$1' is not a file" 1>&2
+    return 1
   fi
   pbcopy < "$1"
 }
