@@ -61,6 +61,9 @@ alias dmesg='dmesg --color'
 # diff
 alias diffdir='diff -qr'
 
+# homebrew
+alias bu='brew update && brew upgrade -g'
+
 # ls
 alias ls='ls -Fh --color=auto'
 alias ll='ls -Fhl --color=auto'
@@ -76,6 +79,9 @@ alias {vd,nvd,nvimdiff}='nvim -d'
 alias {vo,vv}='nvim -O'
 alias nvim-remove-swap='rm -rf "${XDG_STATE_HOME}/nvim/swap/*"'
 
+# ohmyzsh
+alias ou='omz update'
+
 # permissions
 alias mx='chmod a+x'
 
@@ -83,6 +89,9 @@ alias mx='chmod a+x'
 alias {pip,pip3}='python3 -m pip'
 alias {pipi,pip3i}='python3 -m pip install --user'
 alias venv='python3 -m venv'
+
+# ripgrep
+alias rga='rg --no-ignore --no-ignore-files --hidden'
 
 # rsync
 alias rsync-copy='rsync -avzhP --partial'
