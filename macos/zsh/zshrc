@@ -86,6 +86,7 @@ alias ou='omz update'
 alias mx='chmod a+x'
 
 # python
+alias python='python3'
 alias {pip,pip3}='python3 -m pip'
 alias {pipi,pip3i}='python3 -m pip install --user'
 alias venv='python3 -m venv'
