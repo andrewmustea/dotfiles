@@ -11,8 +11,8 @@
 # remove given directories from a path string
 __path_remove() {
   if (( $# < 2 )); then
-    echo "error: $0 needs a path string and at least one path to remove" 1>&2
-    echo "usage: $0 <path_string> <path>..." 1>&2
+    echo "error: ${funcstack[-1]} needs a path string and at least one path to remove" 1>&2
+    echo "usage: ${funcstack[-1]} <path_string> <path>..." 1>&2
   fi
 
   [[ -z "$1" ]] && return
@@ -29,8 +29,8 @@ __path_remove() {
 # prepend given directories to a path string
 __path_prepend() {
   if (( $# < 2 )); then
-    echo "error: $0 needs a path string and at least one path to prepend" 1>&2
-    echo "usage: $0 <path_string> <path>..." 1>&2
+    echo "error: ${funcstack[-1]} needs a path string and at least one path to prepend" 1>&2
+    echo "usage: ${funcstack[-1]} <path_string> <path>..." 1>&2
   fi
 
   local old_path="$1"
@@ -50,8 +50,8 @@ __path_prepend() {
 # append given directories to a path string
 __path_append() {
   if (( $# < 2 )); then
-    echo "error: $0 needs a path string and at least one path to append" 1>&2
-    echo "usage: $0 <path_string> <path>..." 1>&2
+    echo "error: ${funcstack[-1]} needs a path string and at least one path to append" 1>&2
+    echo "usage: ${funcstack[-1]} <path_string> <path>..." 1>&2
   fi
 
   local old_path="$1"
@@ -206,7 +206,7 @@ git_current_branch() {
   local dir="${PWD}"
   if (( $# > 1 )); then
     echo "error: too many arguments: $*" 1>&2
-    echo "usage: $0 [branch]" 1>&2
+    echo "usage: ${funcstack[-1]} [branch]" 1>&2
     return 1
   elif (( $# == 1 )); then
     dir="$1"
@@ -219,11 +219,11 @@ git_current_branch() {
 rebase_at_commit() {
   if (( $# == 0 )); then
     echo "error: missing commit-id" 1>&2
-    echo "usage: $0 <commit-id>" 1>&2
+    echo "usage: ${funcstack[-1]} <commit-id>" 1>&2
     return 1
   elif (( $# > 1 )); then
     echo "error: too many arguments: $*" 1>&2
-    echo "usage: $0 <commit-id>" 1>&2
+    echo "usage: ${funcstack[-1]} <commit-id>" 1>&2
     return 1
   fi
 
@@ -234,7 +234,7 @@ rebase_at_commit() {
 rebase_remote() {
   if (( $# == 0 )); then
     echo "error: need remote name" 1>&2
-    echo "usage: $0 <remote> [branch]" 1>&2
+    echo "usage: ${funcstack[-1]} <remote> [branch]" 1>&2
   fi
 
   local current_branch
@@ -261,11 +261,11 @@ add_exclude() {
   local repo="${PWD}"
   if (( $# == 0 )); then
     echo "error: missing exclude argument" 1>&2
-    echo "usage: $0 <exclude-type> [directory]" 1>&2
+    echo "usage: ${funcstack[-1]} <exclude-type> [directory]" 1>&2
     return 1
   elif (( $# > 2 )); then
     echo "error: too many arguments: $*" 1>&2
-    echo "usage: $0 <exclude-type> [directory]" 1>&2
+    echo "usage: ${funcstack[-1]} <exclude-type> [directory]" 1>&2
     return 1
   elif (( $# == 2 )); then
     repo="$2"
@@ -290,7 +290,7 @@ add_exclude_vscode() {
   local repo="${PWD}"
   if (( $# > 1 )); then
     echo "error: too many arguments" 1>&2
-    echo "usage: $0 [repository]" 1>&2
+    echo "usage: ${funcstack[-1]} [repository]" 1>&2
     return 1
   elif (( $# == 1 )); then
     repo="$1"
@@ -302,7 +302,7 @@ add_exclude_vscode() {
 diff_remote() {
   if (( $# == 0 )); then
     echo "error: missing remote name" 1>&2
-    echo "usage: $0 <remote> [diff args]" 1>&2
+    echo "usage: ${funcstack[-1]} <remote> [diff args]" 1>&2
     return 1
   fi
 
@@ -318,7 +318,7 @@ diff_remote() {
 difftool_remote() {
   if (( $# == 0 )); then
     echo "error: missing remote name" 1>&2
-    echo "usage: $0 <remote> [difftool args]" 1>&2
+    echo "usage: ${funcstack[-1]} <remote> [difftool args]" 1>&2
     return 1
   fi
 
@@ -358,7 +358,7 @@ safe_source() {
 extract() {
   if (( $# == 0 )); then
     echo "error: missing file argument" 1>&2
-    echo "usage: $0 <file> [options]" 1>&2
+    echo "usage: ${funcstack[-1]} <file> [options]" 1>&2
     return 1
   fi
 
@@ -390,8 +390,8 @@ copy() {
 # copy a file's contents into the clipboard
 copyfile() {
   if (( $# != 1 )); then
-    echo "error: $0 needs exactly one file" 1>&2
-    echo "usage: $0 <file>"
+    echo "error: ${funcstack[-1]} needs exactly one file" 1>&2
+    echo "usage: ${funcstack[-1]} <file>"
   fi
   pbcopy < "$1"
 }
