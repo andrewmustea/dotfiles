@@ -410,3 +410,34 @@ copypath() {
   pwd | tr -d '\n' | pbcopy
 }
 
+# print useful network interface information
+ipinfo() {
+  ifconfig -v | awk '
+  /^(en)[0-9]+:/ {
+    iface = $1; active = 1; inet = ""; mac = ""
+  }
+  /^utun[0-9]+:/ {
+    iface = $1; vpn = 1; inet = ""; eiface = ""
+  }
+  /ether / { mac = $2 }
+  /inet / { inet = $2 }
+  /status: inactive/ { active = 0 }
+  /type: / && active {
+    type = $2
+    print iface
+    print "    inet: " inet
+    print "    type: " type
+    print "    mac: " mac
+    print ""
+    active = 0
+  }
+  /effective interface: / && vpn {
+    eiface = $3
+    print iface
+    print "    inet: " inet
+    print "    type: VPN"
+    print "    effective interface: " eiface
+    print ""
+    vpn = 0
+  }'
+}
