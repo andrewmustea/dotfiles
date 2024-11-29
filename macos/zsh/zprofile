@@ -402,6 +402,11 @@ copyfile() {
 
 # copy the current path into the clipboard
 copypath() {
-  pwd | pbcopy
+  if (( $# != 0 )); then
+    echo "error: ${funcstack[-1]} doesn't take any arguments"
+    echo "usage: ${funcstack[-1]}"
+    return 1
+  fi
+  pwd | tr -d '\n' | pbcopy
 }
 
