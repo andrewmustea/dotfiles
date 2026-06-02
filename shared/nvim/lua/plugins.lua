@@ -92,11 +92,39 @@ return {
       require("configs.lualine")
     end
   },
+  { "tzachar/highlight-undo.nvim",
+    cond = not_vscode,
+    config = true
+  },
+  { "catgoose/nvim-colorizer.lua",
+    event = "BufReadPre",
+    cond = not_vscode,
+    config = function()
+      require("configs.nvim-colorizer")
+    end
+  },
+  { "famiu/bufdelete.nvim",
+    cond = not_vscode
+  },
+  { "rmagatti/goto-preview",
+  event = "BufEnter",
+  dependencies = "rmagatti/logger.nvim",
+  cond = not_vscode,
+  config = function()
+    require("goto-preview").setup({
+      default_mappings = true
+    })
+  end
+  },
+  { "nacro90/numb.nvim",
+    cond = not_vscode,
+    config = true
+  },
 
   -- movement
   "tpope/vim-repeat",
   "wellle/targets.vim",
-  { "phaazon/hop.nvim",
+  { "smoka7/hop.nvim",
     config = true
   },
 
@@ -131,21 +159,19 @@ return {
     event = "CursorMoved",
     config = true
   },
+  { "smjonas/live-command.nvim",
+    cond = not_vscode,
+    config = function()
+      require("live-command").setup()
+    end,
+  },
 
   -- file settings
-  { "editorconfig/editorconfig-vim",
-    event = "BufReadPost"
-  },
   { "Darazaki/indent-o-matic",
     event = "BufReadPost",
-    dependencies = "editorconfig/editorconfig-vim",
     config = function()
       require("configs.indent-o-matic")
     end
-  },
-  { "pangloss/vim-javascript",
-    ft = "javascript",
-    cond = not_vscode
   },
   { "rust-lang/rust.vim",
     ft = "rust",
@@ -159,7 +185,6 @@ return {
     ft = "yaml",
     dependencies = {
       "nvim-telescope/telescope.nvim",
-      "nvim-treesitter/nvim-treesitter",
     },
     cond = not_vscode
   },
@@ -169,13 +194,9 @@ return {
     event = "DiffUpdated",
     cond = not_vscode
   },
-  { "rickhowe/spotdiff.vim",
-    event = "DiffUpdated",
-    cond = not_vscode
-  },
 
   -- tools
-  { "tversteeg/registers.nvim",
+  { url = "https://codeberg.org/fosk/registers.nvim.git",
     cmd = "Registers",
     keys = {
       { "\"", mode = { "n", "v" }, desc = "registers.nvim \"" },
@@ -200,26 +221,17 @@ return {
     cond = not_vscode,
     config = true
   },
+  { "jghauser/mkdir.nvim",
+    cond = not_vscode
+  },
 
   -- git
   { "lewis6991/gitsigns.nvim",
     cond = not_vscode,
     config = true
   },
-  { "tanvirtin/vgit.nvim",
-    event = { "CursorHold", "CmdlineEnter" },
-    dependencies = "nvim-lua/plenary.nvim",
-    cond = not_vscode,
-    config = function()
-      require("configs.vgit")
-    end
-  },
   { "samoshkin/vim-mergetool",
     cmd = "MergetoolStart",
-    cond = not_vscode
-  },
-  { "tpope/vim-fugitive",
-    event = "CmdlineEnter",
     cond = not_vscode
   },
   { "sindrets/diffview.nvim",
@@ -246,60 +258,27 @@ return {
       require("configs.coc")
     end
   },
-  { "dense-analysis/ale",
-    cond = not_vscode,
-    config = function()
-      require("configs.ale")
-    end
-  },
 
   -- treesitter
-  { "nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
+    {
+    "romus204/tree-sitter-manager.nvim",
+    dependencies = {},
     cond = not_vscode,
     config = function()
-      require("configs.nvim-treesitter")
+      require("configs.tree-sitter-manager")
     end
   },
-  { "RRethy/nvim-treesitter-endwise",
-    dependencies = "nvim-treesitter/nvim-treesitter",
-    cond = not_vscode
-  },
-  { "nvim-treesitter/playground",
-    cmd = "TSPlaygroundToggle",
-    dependencies = "nvim-treesitter/nvim-treesitter",
-    cond = not_vscode
-  },
-  { "nvim-treesitter/nvim-treesitter-textobjects",
-    dependencies = "nvim-treesitter/nvim-treesitter",
-    cond = not_vscode
-  },
-  { "nvim-treesitter/nvim-treesitter-refactor",
-    dependencies = "nvim-treesitter/nvim-treesitter",
-    cond = not_vscode
-  },
-  { "nvim-treesitter/nvim-treesitter-context",
-    dependencies = "nvim-treesitter/nvim-treesitter",
-    cond = not_vscode
-  },
-  { "theHamsta/nvim-treesitter-pairs",
-    dependencies = "nvim-treesitter/nvim-treesitter",
-    cond = not_vscode
-  },
-  { "m-demare/hlargs.nvim",
-    dependencies = "nvim-treesitter/nvim-treesitter",
+  { "kiyoon/treesitter-indent-object.nvim",
     cond = not_vscode,
-    config = function()
-      require("configs.hlargs")
-    end
+    keys = require("configs.treesitter-indent-object")
   },
-  { "lukas-reineke/indent-blankline.nvim",
-    dependencies = "nvim-treesitter/nvim-treesitter",
+  {
+    "kiyoon/indent-blankline-v2.nvim",
     cond = not_vscode,
-    main = "ibl",
+    event = "BufReadPost",
     config = function()
-      require("configs.indent-blankline")
-    end
+      require("configs.indent-blankline-v2")
+    end,
   },
 
   -- telescope
@@ -367,19 +346,5 @@ return {
     config = function()
       vim.keymap.set("n", "<bs>", ":edit #<cr>", { silent = true })
     end
-  },
-  { "jghauser/auto-pandoc.nvim",
-    ft = "markdown",
-    dependencies = "nvim-lua/plenary.nvim",
-    cond = not_vscode,
-    config = function()
-      require("auto-pandoc")
-    end
-  },
-  { "stsewd/sphinx.nvim",
-    build = ":UpdateRemotePlugins",
-    ft = "rst",
-    dependencies = "nvim-treesitter/nvim-treesitter",
-    cond = not_vscode
   }
 }

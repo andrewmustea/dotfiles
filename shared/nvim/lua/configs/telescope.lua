@@ -6,7 +6,6 @@
 
 -- https://github.com/nvim-telescope/telescope.nvim
 
-local api = vim.api
 local map = vim.keymap.set
 local telescope = require("telescope")
 

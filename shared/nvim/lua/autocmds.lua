@@ -4,9 +4,9 @@
 -- nvim/lua/autocmds.lua
 --
 
+local api = vim.api
 local bo  = vim.bo
 local fn  = vim.fn
-local api = vim.api
 
 -- abbreviation to split buffers vertically
 vim.cmd.cabbrev("vsb vert sb")
@@ -54,11 +54,13 @@ api.nvim_create_autocmd(
 )
 
 -- reset cursor to a vertical line when using iterm2
-if vim.env.TERM_PROGRAM == "iTerm.app" then
-  api.nvim_create_autocmd(
-    "VimLeave",
-    { pattern = "*",
-      command = "set guicursor=a:ver25"
-    }
-  )
-end
+-- if env.TERM_PROGRAM == "iTerm.app" then
+--   api.nvim_create_autocmd("VimLeave", {
+--     callback = function()
+--       -- Write directly to stdout: \27 is Escape
+--       -- [6 q is the VT sequence for a steady vertical bar
+--       io.write("\27[6 q")
+--     end,
+--   })
+-- end
+
