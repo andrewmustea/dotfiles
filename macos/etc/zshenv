@@ -9,7 +9,9 @@
 export XDG_CACHE_HOME="${HOME}/.cache"
 export XDG_CONFIG_HOME="${HOME}/.config"
 export XDG_DATA_HOME="${HOME}/.local/share"
+export XDG_RUNTIME_DIR="/tmp/xdg-runtime-${USER}"
 export XDG_STATE_HOME="${HOME}/.local/state"
+[[ -d "${XDG_RUNTIME_DIR}" ]] || mkdir -p -m 700 "${XDG_RUNTIME_DIR}"
 
 # zsh
 export ZDOTDIR="${XDG_CONFIG_HOME}/zsh"
@@ -17,6 +19,5 @@ export ZDOTDIR="${XDG_CONFIG_HOME}/zsh"
 # ohmyzsh
 export ZSH_CACHE_DIR="${XDG_CACHE_HOME}/oh-my-zsh"
 
-# increase file limit
+# increase file limit size
 ulimit -n 1000000
-

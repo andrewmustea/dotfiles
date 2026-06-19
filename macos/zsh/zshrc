@@ -11,9 +11,9 @@
 export ZSH="${ZDOTDIR}/ohmyzsh"
 export ZSH_THEME="black_sun"
 export VSCODE="codium"
-zstyle ':omz:update' mode reminder
+zstyle ":omz:update" mode reminder
 DISABLE_AUTO_TITLE="true"
-plugins=(command-not-found gitfast macos safe-paste vscode zsh-interactive-cd)
+plugins=(command-not-found gitfast macos rbenv safe-paste vscode zsh-interactive-cd)
 source "${ZSH}/oh-my-zsh.sh"
 
 
@@ -62,7 +62,7 @@ alias dmesg='dmesg --color'
 alias diffdir='diff -qr'
 
 # homebrew
-alias bu='brew update && brew upgrade -g'
+alias bu='brew update ; brew upgrade -g ; brew cleanup -s'
 
 # ls
 alias ls='ls -Fh --color=auto'
@@ -95,10 +95,10 @@ alias venv='python3 -m venv'
 alias rga='rg --no-ignore --no-ignore-files --hidden'
 
 # rsync
-alias rsync-copy='rsync -avzhP --partial'
-alias rsync-move='rsync -avzhP --partial --remove-source-files'
-alias rsync-update='rsync -avzhPu --partial -h'
-alias rsync-sync='rsync -avzhPu --delete --partial -h'
+alias rsync-copy='rsync -avzhP'
+alias rsync-move='rsync -avzhP --remove-source-files'
+alias rsync-update='rsync -avzhPu'
+alias rsync-sync='rsync -avzhPu --delete'
 
 # sudo
 alias sudo='sudo --preserve-env '

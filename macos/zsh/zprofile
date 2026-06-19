@@ -106,6 +106,9 @@ if [[ -x /opt/homebrew/bin/brew ]]; then
   unset hb_cnf_handler
 fi
 
+# ansible
+export ANSIBLE_HOME="${XDG_DATA_HOME}/ansible"
+
 # cabal
 export CABAL_DIR="${XDG_DATA_HOME}/cabal"
 prepend_path "${CABAL_DIR}/bin"
@@ -114,17 +117,17 @@ prepend_path "${CABAL_DIR}/bin"
 export CARGO_HOME="${XDG_DATA_HOME}/cargo"
 prepend_path "${CARGO_HOME}/bin"
 
+# claude
+export CLAUDE_CONFIG_DIR="${XDG_CONFIG_HOME}/claude"
+
 # docker
 export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker"
 
-# gcc
-export GCC_COLORS="error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01"
-
-# gem
-export GEM_SPEC_CACHE="${XDG_CACHE_HOME}/gem"
-
 # gnu coreutils
 prepend_path "${HOMEBREW_PREFIX}/opt/coreutils/libexec/gnubin"
+
+# golang
+export GOPATH="${XDG_DATA_HOME}/go"
 
 # gpg
 GPG_TTY="$(tty)"
@@ -160,7 +163,7 @@ export VISUAL="${EDITOR}"
 export SUDO_EDITOR="${EDITOR}"
 
 # nvm
-export NVM_DIR="${XDG_CONFIG_HOME}/nvm"
+export NVM_DIR="${XDG_DATA_HOME}/nvm"
 if [[ -d "${NVM_DIR}" ]]; then
   source "${NVM_DIR}/nvm.sh" || true
   source "${NVM_DIR}/bash_completion" || true
@@ -172,14 +175,37 @@ export PASSWORD_STORE_DIR="${XDG_DATA_HOME}/pass"
 # pex
 export PEX_ROOT="${XDG_CACHE_HOME}/pex"
 
+# pyenv
+export PYENV_ROOT="${XDG_DATA_HOME}/pyenv"
+
 # pylint
 export PYLINTHOME="${XDG_CACHE_HOME}/pylint"
 
 # python
 export IPYTHONDIR="${XDG_CONFIG_HOME}/ipython"
+export MPLCONFIGDIR="${XDG_CONFIG_HOME}/matplotlib"
+export PIP_CONFIG_FILE="${XDG_CONFIG_HOME}/pip/pip.conf"
 
-# rustup
+# ruby
+export BUNDLE_USER_CACHE="${XDG_CACHE_HOME}/bundle"
+export BUNDLE_USER_CONFIG="${XDG_CONFIG_HOME}/bundle"
+export BUNDLE_USER_PLUGIN="${XDG_DATA_HOME}/bundle"
+export GEM_HOME="${XDG_DATA_HOME}/gem"
+export GEM_SPEC_CACHE="${XDG_CACHE_HOME}/gem"
+export RBENV_ROOT="${XDG_DATA_HOME}/rbenv"
+prepend_path "${GEM_HOME}/bin"
+
+# rust
 export RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
+export LIBCLANG_PATH="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib"
+export DYLD_FALLBACK_LIBRARY_PATH="${LIBCLANG_PATH}:$(xcode-select -p)/usr/lib"
+export OPENCV_LINK_LIBS="opencv_core,opencv_imgproc,opencv_imgcodecs"
+export OPENCV_LINK_PATHS="/opt/homebrew/lib"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/opencv/lib/pkgconfig"
+export SDKROOT="$(xcrun --show-sdk-path)"
+
+# sonarlint
+export SONARLINT_USER_HOME="${XDG_DATA_HOME}/sonarlint"
 
 # stack
 export STACK_ROOT="${XDG_DATA_HOME}/stack"
@@ -403,7 +429,7 @@ copyfile() {
 # copy the current path into the clipboard
 copypath() {
   if (( $# != 0 )); then
-    echo "error: ${funcstack[-1]} doesn't take any arguments"
+    echo "error: ${funcstack[-1]} doesn't take any arguments" 1>&2
     echo "usage: ${funcstack[-1]}"
     return 1
   fi
@@ -423,7 +449,7 @@ ipinfo() {
   /inet / { inet = $2 }
   /status: inactive/ { active = 0 }
   /type: / && active {
-    type = $2
+    type = substr($0, index($0, $2))
     print iface
     print "    inet: " inet
     print "    type: " type
@@ -440,4 +466,9 @@ ipinfo() {
     print ""
     vpn = 0
   }'
+}
+
+# get a random port number
+random_port() {
+  od -An -N2 -tu2 < /dev/urandom | awk '{print 49152 + ($1 % (65536 - 49152))}'
 }
