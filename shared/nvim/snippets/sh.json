@@ -1,0 +1,12 @@
+[
+  {
+    "prefix": "ife",
+    "body": "if [[ ${1:condition} ]]; then\n\t${2}\nelse\n\t${0}\nfi",
+    "description": "if/else/fi block"
+  },
+  {
+    "prefix": "ifee",
+    "body": "if [[ ${1:condition} ]]; then\n\t${2}\nelif [[ ${3:condition} ]]; then\n\t${4}\nelse\n\t${0}\nfi",
+    "description": "if/elif/else/fi block"
+  }
+]

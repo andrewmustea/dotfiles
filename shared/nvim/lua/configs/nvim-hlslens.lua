@@ -14,15 +14,6 @@ require("hlslens").setup({
   end,
 })
 
-require("scrollbar").setup({
-  marks = {
-    Search = { color = "#8030e0"}
-  },
-  handlers = {
-    search = true
-  }
-})
-
 local kopts = { noremap = true, silent = true }
 
 map("n", "n", "<Cmd>execute('normal! ' . v:count1 . 'n')<CR><Cmd>lua require('hlslens').start()<CR>", kopts)

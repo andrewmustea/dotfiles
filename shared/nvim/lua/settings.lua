@@ -4,11 +4,9 @@
 -- nvim/lua/settings.lua
 --
 
-
 local g = vim.g
 local o = vim.o
 local wo = vim.wo
-
 
 -- session settings
 --------------------
@@ -30,11 +28,10 @@ if g.vscode == nil then
   o.undofile = true
 end
 
-
 -- ui
 --------------------
 
--- enable snytax highlighting
+-- disable legacy syntax engine (treesitter handles highlighting)
 o.syntax = "off"
 o.termguicolors = true
 
@@ -77,7 +74,6 @@ o.diffopt = "internal,filler,closeoff,vertical,hiddenoff"
 o.list = true
 o.listchars = "tab:» ,lead:⋅,trail:⋅"
 
-
 -- buffers
 --------------------
 
@@ -86,7 +82,6 @@ o.splitright = true
 
 -- don't save when switching buffers
 o.hidden = true
-
 
 -- search
 --------------------
@@ -101,7 +96,6 @@ o.incsearch = true
 
 -- wrap search at beginning or end of file
 o.wrapscan = true
-
 
 -- providers
 --------------------

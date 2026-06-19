@@ -23,14 +23,15 @@ require("scrollbar").setup({
       color = "#888888",
       cterm = nil,
       highlight = "Normal"
-    }
+    },
+    Search = { color = "#8030e0" },
   },
   handlers = {
     cursor = true,
     diagnostic = true,
     gitsigns = true,
     handle = true,
-    search = false
+    search = true,
   }
 })
 

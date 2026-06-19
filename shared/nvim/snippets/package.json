@@ -1,0 +1,11 @@
+{
+  "name": "custom-snippets",
+  "contributes": {
+    "snippets": [
+      {
+        "language": ["sh", "bash", "shellscript", "shell", "zsh"],
+        "path": "./sh.json"
+      }
+    ]
+  }
+}

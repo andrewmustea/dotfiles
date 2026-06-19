@@ -6,8 +6,6 @@
 
 -- https://github.com/kiyoon/indent-blankline-v2.nvim
 
-vim.opt.list = true
-
 require("indent_blankline").setup({
   space_char_blankline = " ",
   show_current_context = true,

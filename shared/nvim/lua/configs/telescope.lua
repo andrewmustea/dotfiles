@@ -111,7 +111,6 @@ telescope.setup({
 
 -- load extensions
 telescope.load_extension("changes")
-telescope.load_extension("coc")
 telescope.load_extension("color_names")
 telescope.load_extension("command_center")
 telescope.load_extension("command_palette")
@@ -140,7 +139,8 @@ map("n", "fm", function() return require("telescope.builtin").marks() end, opts)
 map("n", "fs", function() return require("telescope.builtin").search_history() end, opts)
 
 -- extension keybinds
-map("n", "fc", function() return require("telescope").extensions.coc.coc() end, opts)
+map("n", "fc", function() return require("telescope.builtin").diagnostics() end, opts)
+map("n", "fd", function() return require("telescope.builtin").lsp_definitions() end, opts)
 map("n", "fn", function() return require("telescope").extensions.notify.notify() end, opts)
 map("n", "fr", function() return require("telescope").extensions.file_browser.file_browser() end, opts)
 map("n", "ft", function() return require("telescope-tabs").list_tabs() end, opts)

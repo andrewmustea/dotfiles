@@ -4,162 +4,152 @@
 -- nvim/lua/plugins.lua
 --
 
-
 -- functions
 
 local function not_vscode()
   return vim.g.vscode == nil
 end
 
-
 -- plugins list
 
 return {
   -- libraries
-  { "nvim-lua/plenary.nvim",
-    lazy = true,
-    cond = not_vscode
-  },
-  { "kyazdani42/nvim-web-devicons",
+  { "nvim-lua/plenary.nvim", lazy = true, cond = not_vscode },
+  {
+    "kyazdani42/nvim-web-devicons",
     cond = not_vscode,
     config = function()
       require("nvim-web-devicons").get_icons()
-    end
+    end,
   },
-  { "stevearc/dressing.nvim",
+  {
+    "stevearc/dressing.nvim",
     cond = not_vscode,
     config = function()
       require("configs.dressing")
-    end
+    end,
   },
-  { "ibhagwan/fzf-lua",
-    lazy = true,
-    cond = not_vscode
-  },
+  { "ibhagwan/fzf-lua", lazy = true, cond = not_vscode },
 
   -- session info
-  { "chentoast/marks.nvim",
+  {
+    "chentoast/marks.nvim",
     cond = not_vscode,
     config = function()
       require("configs.marks")
-    end
+    end,
   },
-  { "dstein64/vim-startuptime",
-    cmd = "StartupTime"
-  },
+  { "dstein64/vim-startuptime", cmd = "StartupTime" },
 
   -- ui
-  { "andrewmustea/black_sun",
+  {
+    "andrewmustea/black_sun",
     cond = not_vscode,
     config = function()
       require("black_sun.black_sun")
     end,
-    priority = 1000
+    priority = 1000,
   },
-  { "petertriho/nvim-scrollbar",
+  {
+    "petertriho/nvim-scrollbar",
     dependencies = {
       "lewis6991/gitsigns.nvim",
-      "kevinhwang91/nvim-hlslens"
+      "kevinhwang91/nvim-hlslens",
     },
     cond = not_vscode,
     config = function()
       require("configs.nvim-scrollbar")
-    end
+    end,
   },
-  { "kevinhwang91/nvim-hlslens",
+  {
+    "kevinhwang91/nvim-hlslens",
     cond = not_vscode,
     config = function()
       require("configs.nvim-hlslens")
-    end
+    end,
   },
-  { "rcarriga/nvim-notify",
+  {
+    "rcarriga/nvim-notify",
     cond = not_vscode,
     config = function()
       require("configs.nvim-notify")
-    end
+    end,
   },
-  { "akinsho/bufferline.nvim",
+  {
+    "akinsho/bufferline.nvim",
     dependencies = "kyazdani42/nvim-web-devicons",
     cond = not_vscode,
     config = function()
       require("configs.bufferline")
-    end
+    end,
   },
-  { "nvim-lualine/lualine.nvim",
+  {
+    "nvim-lualine/lualine.nvim",
     dependencies = "kyazdani42/nvim-web-devicons",
     cond = not_vscode,
     config = function()
       require("configs.lualine")
-    end
+    end,
   },
-  { "tzachar/highlight-undo.nvim",
-    cond = not_vscode,
-    config = true
-  },
-  { "catgoose/nvim-colorizer.lua",
+  { "tzachar/highlight-undo.nvim", cond = not_vscode, config = true },
+  {
+    "catgoose/nvim-colorizer.lua",
     event = "BufReadPre",
     cond = not_vscode,
     config = function()
       require("configs.nvim-colorizer")
-    end
+    end,
   },
-  { "famiu/bufdelete.nvim",
-    cond = not_vscode
-  },
-  { "rmagatti/goto-preview",
-  event = "BufEnter",
-  dependencies = "rmagatti/logger.nvim",
-  cond = not_vscode,
-  config = function()
-    require("goto-preview").setup({
-      default_mappings = true
-    })
-  end
-  },
-  { "nacro90/numb.nvim",
+  { "famiu/bufdelete.nvim", cond = not_vscode },
+  {
+    "rmagatti/goto-preview",
+    event = "BufEnter",
+    dependencies = "rmagatti/logger.nvim",
     cond = not_vscode,
-    config = true
+    config = function()
+      require("goto-preview").setup({
+        default_mappings = true,
+      })
+    end,
   },
+  { "nacro90/numb.nvim", cond = not_vscode, config = true },
 
   -- movement
   "tpope/vim-repeat",
-  "wellle/targets.vim",
-  { "smoka7/hop.nvim",
-    config = true
+  {
+    "tpope/vim-endwise",
+    event = "InsertEnter",
+    cond = not_vscode,
   },
+  "wellle/targets.vim",
+  { "smoka7/hop.nvim", cond = not_vscode, config = true },
 
   -- text manipulation
-  "matze/vim-move",
-  { "gbprod/cutlass.nvim",
+  { "matze/vim-move", cond = not_vscode },
+  {
+    "gbprod/cutlass.nvim",
     config = function()
       require("configs.cutlass")
-    end
+    end,
   },
-  { "numToStr/Comment.nvim",
-    event = "CursorMoved",
-    config = true
-  },
-  { "gbprod/substitute.nvim",
+  { "numToStr/Comment.nvim", event = "CursorMoved", cond = not_vscode, config = true },
+  {
+    "gbprod/substitute.nvim",
     config = function()
       require("configs.substitute")
-    end
+    end,
   },
-  { "gbprod/yanky.nvim",
+  {
+    "gbprod/yanky.nvim",
     dependencies = "gbprod/substitute.nvim",
     config = function()
       require("configs.yanky")
-    end
+    end,
   },
-  { "windwp/nvim-autopairs",
-    event = "InsertEnter",
-    cond = not_vscode,
-    config = true
-  },
-  { "kylechui/nvim-surround",
-    event = "CursorMoved",
-    config = true
-  },
-  { "smjonas/live-command.nvim",
+  { "windwp/nvim-autopairs", event = "InsertEnter", cond = not_vscode, config = true },
+  { "kylechui/nvim-surround", event = "CursorMoved", config = true },
+  {
+    "smjonas/live-command.nvim",
     cond = not_vscode,
     config = function()
       require("live-command").setup()
@@ -167,110 +157,148 @@ return {
   },
 
   -- file settings
-  { "Darazaki/indent-o-matic",
+  {
+    "Darazaki/indent-o-matic",
     event = "BufReadPost",
     config = function()
       require("configs.indent-o-matic")
-    end
+    end,
   },
-  { "rust-lang/rust.vim",
-    ft = "rust",
-    cond = not_vscode
-  },
-  { "arrufat/vala.vim",
-    ft = "vala",
-    cond = not_vscode
-  },
-  { "cuducos/yaml.nvim",
+  { "rust-lang/rust.vim", ft = "rust", cond = not_vscode },
+  { "arrufat/vala.vim", ft = "vala", cond = not_vscode },
+  {
+    "cuducos/yaml.nvim",
     ft = "yaml",
     dependencies = {
       "nvim-telescope/telescope.nvim",
     },
-    cond = not_vscode
+    cond = not_vscode,
   },
 
   -- diff
-  { "AndrewRadev/linediff.vim",
-    event = "DiffUpdated",
-    cond = not_vscode
-  },
+  { "AndrewRadev/linediff.vim", event = "DiffUpdated", cond = not_vscode },
 
   -- tools
-  { url = "https://codeberg.org/fosk/registers.nvim.git",
+  {
+    url = "https://codeberg.org/fosk/registers.nvim.git",
     cmd = "Registers",
     keys = {
-      { "\"", mode = { "n", "v" }, desc = "registers.nvim \"" },
-      { "<C-r>", mode = "i", desc = "registers.nvim <C-r>" }
+      { '"', mode = { "n", "v" } },
+      { "<C-r>", mode = "i" },
     },
     cond = not_vscode,
-    config = true
+    config = true,
   },
-  { "akinsho/toggleterm.nvim",
-    event = "CmdlineEnter",
-    config = true
-  },
-  { "kyazdani42/nvim-tree.lua",
+  { "akinsho/toggleterm.nvim", event = "CmdlineEnter", config = true },
+  {
+    "kyazdani42/nvim-tree.lua",
     cmd = { "NvimTreeToggle", "Tree" },
     cond = not_vscode,
     config = function()
       require("configs.nvim-tree")
-    end
+    end,
   },
-  { "folke/todo-comments.nvim",
+  {
+    "folke/todo-comments.nvim",
     dependencies = "nvim-lua/plenary.nvim",
     cond = not_vscode,
-    config = true
+    config = true,
   },
-  { "jghauser/mkdir.nvim",
-    cond = not_vscode
-  },
+  { "jghauser/mkdir.nvim", cond = not_vscode },
 
   -- git
-  { "lewis6991/gitsigns.nvim",
-    cond = not_vscode,
-    config = true
-  },
-  { "samoshkin/vim-mergetool",
-    cmd = "MergetoolStart",
-    cond = not_vscode
-  },
-  { "sindrets/diffview.nvim",
-    event = "CmdlineEnter",
-    cond = not_vscode
-  },
-  { "NeogitOrg/neogit",
+  { "lewis6991/gitsigns.nvim", cond = not_vscode, config = true },
+  { "samoshkin/vim-mergetool", cmd = "MergetoolStart", cond = not_vscode },
+  { "sindrets/diffview.nvim", event = "CmdlineEnter", cond = not_vscode },
+  {
+    "NeogitOrg/neogit",
     event = "CmdlineEnter",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "sindrets/diffview.nvim",
-      "ibhagwan/fzf-lua"
+      "ibhagwan/fzf-lua",
     },
     cond = not_vscode,
-    config = true
+    config = true,
   },
 
   -- lsp and linting
-  { "neoclide/coc.nvim",
-    event = { "CursorHold", "CursorMoved" },
-    branch = "release",
+  { "williamboman/mason.nvim", cond = not_vscode, config = true },
+  {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    dependencies = "williamboman/mason.nvim",
     cond = not_vscode,
     config = function()
-      require("configs.coc")
-    end
+      require("configs.mason-tool-installer")
+    end,
+  },
+  { "williamboman/mason-lspconfig.nvim", dependencies = "williamboman/mason.nvim", cond = not_vscode },
+  {
+    "folke/lazydev.nvim",
+    ft = "lua",
+    cond = not_vscode,
+    config = function()
+      require("configs.lazydev")
+    end,
+  },
+  {
+    "neovim/nvim-lspconfig",
+    dependencies = "williamboman/mason-lspconfig.nvim",
+    cond = not_vscode,
+    config = function()
+      require("configs.lspconfig")
+    end,
+  },
+  {
+    "saghen/blink.cmp",
+    version = "1.*",
+    dependencies = "L3MON4D3/LuaSnip",
+    cond = not_vscode,
+    config = function()
+      require("configs.blink")
+    end,
+  },
+  {
+    "L3MON4D3/LuaSnip",
+    version = "2.*",
+    dependencies = "rafamadriz/friendly-snippets",
+    cond = not_vscode,
+    config = function()
+      require("luasnip.loaders.from_vscode").lazy_load()
+      require("luasnip.loaders.from_vscode").lazy_load({ paths = { vim.fn.stdpath("config") .. "/snippets" } })
+      require("luasnip").filetype_extend("bash", { "sh" })
+    end,
+  },
+  {
+    "stevearc/conform.nvim",
+    event = "BufWritePre",
+    cond = not_vscode,
+    config = function()
+      require("configs.conform")
+    end,
+  },
+  {
+    "mfussenegger/nvim-lint",
+    ft = { "gitcommit", "markdown", "yaml" },
+    cond = not_vscode,
+    config = function()
+      require("configs.nvim-lint")
+    end,
   },
 
   -- treesitter
-    {
+  {
     "romus204/tree-sitter-manager.nvim",
     dependencies = {},
     cond = not_vscode,
     config = function()
       require("configs.tree-sitter-manager")
-    end
+    end,
   },
-  { "kiyoon/treesitter-indent-object.nvim",
+  {
+    "kiyoon/treesitter-indent-object.nvim",
     cond = not_vscode,
-    keys = require("configs.treesitter-indent-object")
+    keys = require("configs.treesitter-indent-object"),
   },
   {
     "kiyoon/indent-blankline-v2.nvim",
@@ -282,16 +310,14 @@ return {
   },
 
   -- telescope
-  { "nvim-telescope/telescope-fzf-native.nvim",
-    build = "make",
-    lazy = true,
-    cond = not_vscode
-  },
-  { "nvim-telescope/telescope.nvim",
+  { "nvim-telescope/telescope-fzf-native.nvim", build = "make", lazy = true, cond = not_vscode },
+  {
+    "nvim-telescope/telescope.nvim",
     cmd = "Telescope",
     keys = {
       { "fb" },
       { "fc" },
+      { "fd" },
       { "ff" },
       { "fg" },
       { "fh" },
@@ -300,13 +326,12 @@ return {
       { "fr" },
       { "fs" },
       { "ft" },
-      { "fy" }
+      { "fy" },
     },
     branch = "0.1.x",
     dependencies = {
       "nvim-lua/plenary.nvim",
       "crispgm/telescope-heading.nvim",
-      "fannheyward/telescope-coc.nvim",
       "fcying/telescope-ctags-outline.nvim",
       "FeiyouG/command_center.nvim",
       "LinArcX/telescope-changes.nvim",
@@ -319,32 +344,31 @@ return {
       "nvim-telescope/telescope-file-browser.nvim",
       "nvim-telescope/telescope-fzf-native.nvim",
       "nvim-telescope/telescope-hop.nvim",
-      "smartpde/telescope-recent-files"
+      "smartpde/telescope-recent-files",
     },
     cond = not_vscode,
     config = function()
       require("configs.telescope")
-    end
+    end,
   },
 
   -- markdown and rst
-  { "iamcco/markdown-preview.nvim",
+  {
+    "iamcco/markdown-preview.nvim",
     build = "cd app && npm install && git restore .",
     ft = "markdown",
     cond = not_vscode,
     init = function()
       vim.g.mkdp_filetypes = { "markdown" }
-    end
+    end,
   },
-  { "ellisonleao/glow.nvim",
-    ft = "markdown",
-    cond = not_vscode
-  },
-  { "jghauser/follow-md-links.nvim",
+  { "ellisonleao/glow.nvim", ft = "markdown", cond = not_vscode },
+  {
+    "jghauser/follow-md-links.nvim",
     ft = "markdown",
     cond = not_vscode,
     config = function()
       vim.keymap.set("n", "<bs>", ":edit #<cr>", { silent = true })
-    end
-  }
+    end,
+  },
 }

@@ -10,15 +10,20 @@ vim.filetype.add({
     ["env"] = "sh",
     ["gitconfig"] = "gitconfig",
     ["profile"] = "sh",
-    ["vimrc"] = "vim"
+    ["vimrc"] = "vim",
   },
   pattern = {
     [".*/git/config"] = "gitconfig",
     [".*bash_profile"] = "sh",
     [".*bashrc"] = "sh",
     [".*luacheckrc"] = "lua",
-    [".*requirements.*%.txt"] = "config"
-  }
+    [".*requirements.*%.txt"] = "config",
+    [".*zlogin"] = "zsh",
+    [".*zlogout"] = "zsh",
+    [".*zprofile"] = "zsh",
+    [".*zshenv"] = "zsh",
+    [".*zshrc"] = "zsh",
+  },
 })
 
 -- zsh files should use bash treesitter syntax
