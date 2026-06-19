@@ -1,0 +1,54 @@
+# font
+font-family = "CaskaydiaCove Nerd Font Mono"
+font-size = 12
+
+# cursor
+cursor-style = bar
+cursor-style-blink = true
+
+# colors
+background = #0C0C0C
+foreground = #CCCCCC
+cursor-color = #52ad70
+selection-background = #B3D7FF
+
+# colorscheme
+palette = 0=#0C0C0C
+palette = 1=#C50F1F
+palette = 2=#13A10E
+palette = 3=#C19C00
+palette = 4=#0037DA
+palette = 5=#881798
+palette = 6=#3A96DD
+palette = 7=#CCCCCC
+palette = 8=#767676
+palette = 9=#E74856
+palette = 10=#16C60C
+palette = 11=#F9F1A5
+palette = 12=#3B78FF
+palette = 13=#B4009E
+palette = 14=#61D6D6
+palette = 15=#DDDDDD
+
+# keyboard
+macos-option-as-alt = true
+
+# window
+gtk-titlebar-style = tabs
+macos-titlebar-style = tabs
+window-colorspace = display-p3
+window-new-tab-position = end
+window-show-tab-bar = always
+
+# keybinds
+keybind = ctrl+tab=next_tab
+keybind = ctrl+shift+tab=previous_tab
+keybind = super+shift+up=scroll_to_top
+keybind = super+shift+down=scroll_to_bottom
+keybind = super+page_up=scroll_to_top
+keybind = super+page_down=scroll_to_bottom
+
+# other
+clipboard-trim-trailing-spaces = true
+quit-after-last-window-closed = true
+right-click-action = context-menu
