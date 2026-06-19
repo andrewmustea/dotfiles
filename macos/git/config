@@ -1,6 +1,9 @@
 [core]
 	editor = nvim
 	pager = delta
+	ignorecase = false
+	autocrlf = input
+	symlinks = true
 [credential]
 	guiPrompt = false
 	helper =
@@ -11,17 +14,21 @@
 	diffFilter = delta --color-only
 [add.interactive]
 	useBuiltin = false
-[url "https://"]
-	insteadOf = git://
+[fetch]
+	prune = true
 [push]
 	autoSetupRemote = true
+
+; diff
 [diff]
 	tool = nvimdiff
 	colorMoved = default
 [difftool]
 	prompt = false
 [difftool "nvimdiff"]
-	cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
+	cmd = nvim -d "${LOCAL}" "${REMOTE}"
+
+; merge
 [merge]
 	tool = nvim_mergetool
 	conflictstyle = diff3
@@ -31,8 +38,10 @@
 	keepBackup = false
 [mergetool "nvim_mergetool"]
 	cmd = nvim -f -c "MergetoolStart" "${MERGED}" "${BASE}" "${LOCAL}" "${REMOTE}"
+
+; pager
 [delta]
-	navigate = true  # use n and N to move between diff sections
+	navigate = true
 	light = false
 	features = pompous-panther
 [delta "pompous-panther"]
