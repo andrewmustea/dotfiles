@@ -1,0 +1,24 @@
+# shellcheck shell=bash
+
+#
+# zsh/.zprofile
+#
+
+
+# functions
+# --------------------
+
+# paths and environment variables
+if [[ -r "${XDG_CONFIG_HOME}/sh/paths.sh" ]]; then
+  source "${XDG_CONFIG_HOME}/sh/paths.sh" || true
+fi
+
+# general
+if [[ -r "${XDG_CONFIG_HOME}/sh/functions.sh" ]]; then
+  source "${XDG_CONFIG_HOME}/sh/functions.sh" || true
+fi
+
+# git
+if [[ -r "${XDG_CONFIG_HOME}/git/git-functions.sh" ]]; then
+  source "${XDG_CONFIG_HOME}/git/git-functions.sh" || true
+fi

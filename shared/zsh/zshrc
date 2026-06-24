@@ -1,0 +1,67 @@
+# shellcheck shell=bash
+
+#
+# zsh/.zshrc
+#
+
+
+# ohmyzsh
+# --------------------
+
+export ZSH="${ZDOTDIR}/ohmyzsh"
+export ZSH_THEME="black_sun"
+export VSCODE="codium"
+zstyle ":omz:update" mode reminder
+DISABLE_AUTO_TITLE="true"
+plugins=(command-not-found gitfast macos pip rbenv safe-paste vscode zsh-interactive-cd)
+source "${ZSH}/oh-my-zsh.sh"
+
+
+# history
+# --------------------
+
+# command history
+export HISTFILE="${XDG_STATE_HOME}/zsh/history"
+export HISTFILESIZE=1000000
+export HISTORY_IGNORE="history:pwd:ls:ll:la:l:dir:"
+export HISTSIZE=1000000
+export SAVEHIST=1000000
+
+# history options
+setopt extended_history
+setopt hist_ignore_dups
+setopt hist_reduce_blanks
+setopt inc_append_history
+unsetopt share_history
+
+
+# shell integration
+# --------------------
+
+# fzf
+if (( $+commands[fzf] )); then
+  export FZF_DEFAULT_OPTS="\
+  --color=fg:#888888,hl:#b030a0 \
+  --color=fg+:#bbbbbb,bg+:#151a1e,hl+:#36a3d9 \
+  --color=info:#508040,prompt:#8030e0,pointer:#f06722 \
+  --color=marker:#0040bb,spinner:#b02828,header:#0078c8"
+  if (( $+commands[fd] )); then
+    export FZF_DEFAULT_COMMAND="command fd -HIi --type file"
+    export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
+  fi
+  source <(fzf --zsh)
+fi
+
+
+# aliases
+# --------------------
+
+# general aliases
+if [[ -r "${XDG_CONFIG_HOME}/sh/aliases.sh" ]]; then
+  source "${XDG_CONFIG_HOME}/sh/aliases.sh" || true
+fi
+
+# git aliases
+if [[ -r "${XDG_CONFIG_HOME}/git/git-aliases.sh" ]]; then
+  source "${XDG_CONFIG_HOME}/git/git-aliases.sh" || true
+fi
