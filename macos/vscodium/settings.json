@@ -1,0 +1,297 @@
+{
+  "[c]": {
+    "editor.defaultFormatter": "xaver.clang-format"
+  },
+  "[cpp]": {
+    "editor.defaultFormatter": "xaver.clang-format"
+  },
+  "[git-commit]": {
+    "editor.rulers": [
+      50,
+      72
+    ]
+  },
+  "[java]": {
+    "editor.defaultFormatter": "xaver.clang-format",
+    "editor.rulers": [
+      100
+    ]
+  },
+  "[json]": {
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.rulers": []
+  },
+  "[jsonc]": {
+    "editor.quickSuggestions": {
+      "strings": true
+    },
+    "editor.rulers": []
+  },
+  "[pip-requirements]": {
+    "editor.rulers": []
+  },
+  "[plaintext]": {
+    "editor.rulers": []
+  },
+  "[python]": {
+    "editor.formatOnType": true,
+    "editor.rulers": [
+      120
+    ],
+    "editor.tabSize": 4,
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer",
+    "editor.rulers": [
+      100
+    ],
+    "editor.tabSize": 4
+  },
+  "[xml]": {
+    "editor.rulers": []
+  },
+  "application.shellEnvironmentResolutionTimeout": 30,
+  "basedpyright.analysis.inlayHints.callArgumentNames": false,
+  "basedpyright.analysis.inlayHints.variableTypes": false,
+  "basedpyright.analysis.useTypingExtensions": true,
+  "cSpell.userWords": [
+    "apdisk",
+    "arcname",
+    "basedpyright",
+    "buildpath",
+    "celerybeat",
+    "cproject",
+    "dbnavigator",
+    "donotpresent",
+    "dotenv",
+    "ehthumbs",
+    "elpa",
+    "eshell",
+    "factorypath",
+    "Flycheck",
+    "flymake",
+    "fseventsd",
+    "gcno",
+    "gitlint",
+    "hotplug",
+    "htmlcov",
+    "ipynb",
+    "ktutil",
+    "lastdir",
+    "lineinfile",
+    "mbps",
+    "mkdocs",
+    "mpeltonen",
+    "Mustea",
+    "netrwhist",
+    "NOPASSWD",
+    "nosetests",
+    "numpy",
+    "objc",
+    "opencv",
+    "osascript",
+    "oscrypto",
+    "pbxproj",
+    "pbxuser",
+    "perspectivev",
+    "pgrep",
+    "pkill",
+    "plutil",
+    "pybuilder",
+    "pycache",
+    "pydevproject",
+    "pyenv",
+    "pylint",
+    "pyobjc",
+    "pytest",
+    "Qube",
+    "reftex",
+    "replstate",
+    "ropeproject",
+    "sbteclipse",
+    "scrapy",
+    "sdist",
+    "shellcheck",
+    "SHLVL",
+    "Sonarlint",
+    "Spyder",
+    "spyderproject",
+    "spyproject",
+    "stdlib",
+    "texlipse",
+    "timemachine",
+    "tombi",
+    "UART",
+    "userspace",
+    "usertoken",
+    "venv",
+    "virtualenv",
+    "webassets",
+    "Webstorm",
+    "xccheckout",
+    "xcodeproj",
+    "xcscmblueprint",
+    "xcshareddata",
+    "xcuserdata",
+    "xcworkspace",
+    "xcworkspacedata",
+    "xlib",
+    "Xlipse"
+  ],
+  "clang-format.fallbackStyle": "Google",
+  "cmake.configureOnOpen": false,
+  "csharp.suppressDotnetInstallWarning": true,
+  "database-client.autoSync": true,
+  "dependi.python.enabled": false,
+  "dependi.python.indexServerURL": "https://pypi.apple.com/simple",
+  "diffEditor.codeLens": true,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "editor.accessibilitySupport": "off",
+  "editor.foldingMaximumRegions": 10000,
+  "editor.fontFamily": "'Consolas NF', 'Consolas NF Book', 'Inconsolata LGC Nerd Font', Consolas, monospace",
+  "editor.fontLigatures": true,
+  "editor.fontWeight": "normal",
+  "editor.mouseWheelScrollSensitivity": 0.25,
+  "editor.quickSuggestions": {
+    "comments": "on",
+    "strings": "on"
+  },
+  "editor.renderWhitespace": "all",
+  "editor.rulers": [
+    80
+  ],
+  "editor.suggestSelection": "first",
+  "editor.tabSize": 2,
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
+  },
+  "files.associations": {
+    "*.in": "pip-requirements"
+  },
+  "files.eol": "\n",
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.factorypath": true,
+    "**/.project": true,
+    "**/.settings": true
+  },
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "git.autofetch": true,
+  "git.detectSubmodules": false,
+  "git.detectSubmodulesLimit": 0,
+  "git.ignoreSubmodules": true,
+  "git.openRepositoryInParentFolders": "never",
+  "liveServer.settings.AdvanceCustomBrowserCmdLine": "",
+  "liveServer.settings.CustomBrowser": "firefox",
+  "python.languageServer": "Jedi",
+  "python.pythonPath": "python3",
+  "redhat.telemetry.enabled": false,
+  "security.workspace.trust.untrustedFiles": "open",
+  "sonarlint.disableTelemetry": true,
+  "terminal.integrated.allowChords": true,
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.cursorStyle": "line",
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.defaultProfile.windows": "WSL",
+  "terminal.integrated.enableMultiLinePasteWarning": "never",
+  "terminal.integrated.env.osx": {
+    "PIP_INDEX_URL": "https://pypi.apple.com/simple",
+    "SONARLINT_USER_HOME": "${HOME}/.config/sonarlint"
+  },
+  "terminal.integrated.fontFamily": "'Consolas NF', 'CaskaydiaCove Nerd Font', 'CaskaydiaCove NF Mono'",
+  "terminal.integrated.fontWeight": "normal",
+  "terminal.integrated.fontWeightBold": "normal",
+  "terminal.integrated.profiles.linux": {
+    "bash": {
+      "args": [
+        "--login"
+      ],
+      "icon": "terminal-bash",
+      "path": "bash"
+    },
+    "tmux": {
+      "icon": "terminal-tmux",
+      "path": "tmux"
+    },
+    "zsh": {
+      "path": "zsh"
+    }
+  },
+  "terminal.integrated.profiles.windows": {
+    "Command Prompt": {
+      "args": [],
+      "icon": "terminal-cmd",
+      "path": [
+        "${env:windir}\\Sysnative\\cmd.exe",
+        "${env:windir}\\System32\\cmd.exe"
+      ]
+    },
+    "Git Bash": {
+      "source": "Git Bash"
+    },
+    "PowerShell": {
+      "icon": "terminal-powershell",
+      "source": "PowerShell"
+    },
+    "WSL": {
+      "args": [
+        "--shell-type",
+        "login"
+      ],
+      "path": "C:\\Windows\\System32\\wsl.exe"
+    }
+  },
+  "vscode-neovim.logOutputToConsole": true,
+  "vscode-neovim.neovimInitVimPaths.darwin": "~/.config/nvim/init.lua",
+  "vscode-neovim.neovimInitVimPaths.linux": "~/.config/nvim/init.lua",
+  "vscode-neovim.neovimInitVimPaths.win32": "~/.config/nvim/init.lua",
+  "vscode-neovim.useWSL": true,
+  "window.commandCenter": true,
+  "window.titleBarStyle": "custom",
+  "workbench.editor.preferHistoryBasedLanguageDetection": true,
+  "workbench.startupEditor": "newUntitledFile",
+  "rust-analyzer.runnables.extraEnv": {
+    "DYLD_FALLBACK_LIBRARY_PATH": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib:/Applications/Xcode.app/Contents/Developer/usr/lib",
+    "LIBCLANG_PATH": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib",
+    "OPENCV_LINK_LIBS": "opencv_core,opencv_imgproc,opencv_imgcodecs",
+    "OPENCV_LINK_PATHS": "/opt/homebrew/lib",
+    "PKG_CONFIG_PATH": "/opt/homebrew/opt/opencv/lib/pkgconfig"
+  },
+  "rust-analyzer.server.extraEnv": {
+    "DYLD_FALLBACK_LIBRARY_PATH": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib:/Applications/Xcode.app/Contents/Developer/usr/lib",
+    "LIBCLANG_PATH": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib",
+    "OPENCV_LINK_LIBS": "opencv_core,opencv_imgproc,opencv_imgcodecs",
+    "OPENCV_LINK_PATHS": "/opt/homebrew/lib",
+    "PKG_CONFIG_PATH": "/opt/homebrew/opt/opencv/lib/pkgconfig"
+  },
+  "terminal.integrated.initialHint": false,
+  "custom-ui-style.external.imports": [
+    "file:///Users/andrewmustea/Library/Application%20Support/VSCodium/User/globalStorage/why-trv.neovim-statusline/statusline.css",
+    "file:///Users/andrewmustea/.vscode-oss/extensions/why-trv.neovim-statusline-0.2.1-universal/assets/statusline.min.js"
+  ],
+  "vscode-neovim.neovimExecutablePaths.darwin": "/Users/andrewmustea/.local/lib/nvim_0.11.6/bin/nvim",
+  "workbench.colorTheme": "Dark Modern",
+  "sonarlint.rules": {
+    "python:S1135": {
+      "level": "off"
+    },
+    "python:S116": {
+      "level": "off"
+    },
+    "python:S5443": {
+      "level": "off"
+    },
+    "python:S8572": {
+      "level": "off"
+    }
+  },
+  "claudeCode.claudeProcessWrapper": "/opt/homebrew/bin/apple-claude-code",
+  "claudeCode.disableLoginPrompt": true,
+  "claudeCode.preferredLocation": "panel",
+  "sonarlint.ls.vmargs": "-DSONARLINT_USER_HOME=/Users/andrewmustea/.local/share/sonarlint"
+}
