@@ -1,10 +1,9 @@
-#!/bin/bash
+# shellcheck shell=bash
 
 #
 # ~/.bash_logout
 #
 
-if (( SHLVL == 1 )) && [[ -x /usr/bin/clear_console ]]; then
-  /usr/bin/clear_console -q
+if (( SHLVL == 1 )) && command -v clear_console &>/dev/null; then
+  clear_console -q
 fi
-
