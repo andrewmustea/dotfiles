@@ -13,6 +13,12 @@ if [[ -r "${XDG_CONFIG_HOME}/sh/paths.sh" ]]; then
   source "${XDG_CONFIG_HOME}/sh/paths.sh" || true
 fi
 
+# zsh fpath
+remove-from-fpath() { FPATH="$(_path_remove "${FPATH}" "$@")"; export FPATH; }
+prepend-fpath() { FPATH="$(_path_prepend "${FPATH}" "$@")"; export FPATH; }
+append-fpath() { FPATH="$(_path_append "${FPATH}" "$@")"; export FPATH; }
+[[ -n "${HOMEBREW_PREFIX}" ]] && prepend-fpath "${HOMEBREW_PREFIX}/share/zsh/site-functions"
+
 # general
 if [[ -r "${XDG_CONFIG_HOME}/sh/functions.sh" ]]; then
   source "${XDG_CONFIG_HOME}/sh/functions.sh" || true

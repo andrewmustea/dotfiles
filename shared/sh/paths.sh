@@ -69,42 +69,18 @@ _path_append() {
 
 # remove directories from a path
 remove-from-path() { PATH="$(_path_remove "${PATH}" "$@")"; export PATH; }
-remove-from-fpath() { FPATH="$(_path_remove "${FPATH}" "$@")"; export FPATH; }
 remove-from-infopath() { INFOPATH="$(_path_remove "${INFOPATH}" "$@")"; export INFOPATH; }
 remove-from-pythonpath() { PYTHONPATH="$(_path_remove "${PYTHONPATH}" "$@")"; export PYTHONPATH; }
 
 # prepend directories to a path if the directory exists
 prepend-path() { PATH="$(_path_prepend "${PATH}" "$@")"; export PATH; }
-prepend-fpath() {
-  FPATH="$(_path_prepend "${FPATH}" "$@")"
-  export FPATH
-}
-prepend-infopath() {
-  INFOPATH="$(_path_prepend "${INFOPATH}" "$@")"
-  export INFOPATH
-}
-prepend-pythonpath() {
-  PYTHONPATH="$(_path_prepend "${PYTHONPATH}" "$@")"
-  export PYTHONPATH
-}
+prepend-infopath() { INFOPATH="$(_path_prepend "${INFOPATH}" "$@")"; export INFOPATH; }
+prepend-pythonpath() { PYTHONPATH="$(_path_prepend "${PYTHONPATH}" "$@")";  export PYTHONPATH; }
 
 # append directories to a path if the directory exists
-append-path() {
-  PATH="$(_path_append "${PATH}" "$@")"
-  export PATH
-}
-append-fpath() {
-  FPATH="$(_path_append "${FPATH}" "$@")"
-  export FPATH
-}
-append-infopath() {
-  INFOPATH="$(_path_append "${INFOPATH}" "$@")"
-  export INFOPATH
-}
-append-pythonpath() {
-  PYTHONPATH="$(_path_append "${PYTHONPATH}" "$@")"
-  export PYTHONPATH
-}
+append-path() { PATH="$(_path_append "${PATH}" "$@")"; export PATH; }
+append-infopath() { INFOPATH="$(_path_append "${INFOPATH}" "$@")"; export INFOPATH; }
+append-pythonpath() { PYTHONPATH="$(_path_append "${PYTHONPATH}" "$@")"; export PYTHONPATH; }
 
 # package managers and binary paths
 # --------------------
@@ -117,10 +93,10 @@ if command -v brew &>/dev/null; then
   export HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}"
   prepend-path "${HOMEBREW_PREFIX}/sbin"
   prepend-path "${HOMEBREW_PREFIX}/bin"
-  prepend-fpath "${HOMEBREW_PREFIX}/share/zsh/site-functions"
   prepend-infopath "${HOMEBREW_PREFIX}/share/info"
-  if [[ -f "${HOMEBREW_PREFIX}/Library/Taps/homebrew/homebrew-command-not-found/handler.sh" ]]; then
-    source "${HOMEBREW_PREFIX}/Library/Taps/homebrew/homebrew-command-not-found/handler.sh" || true
+  HOMEBREW_COMMAND_NOT_FOUND_HANDLER="$(brew --repository)/Library/Homebrew/command-not-found/handler.sh"
+  if [[ -f "${HOMEBREW_COMMAND_NOT_FOUND_HANDLER}" ]]; then
+    source "${HOMEBREW_COMMAND_NOT_FOUND_HANDLER}";
   fi
 fi
 
