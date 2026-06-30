@@ -36,6 +36,7 @@ macos-option-as-alt = true
 # window
 gtk-titlebar-style = tabs
 macos-titlebar-style = tabs
+tab-inherit-working-directory = false
 window-colorspace = display-p3
 window-new-tab-position = end
 window-show-tab-bar = always
@@ -49,6 +50,8 @@ keybind = super+page_up=scroll_to_top
 keybind = super+page_down=scroll_to_bottom
 
 # other
+clipboard-paste-protection = false
 clipboard-trim-trailing-spaces = true
+confirm-close-surface = false
 quit-after-last-window-closed = true
 right-click-action = context-menu
