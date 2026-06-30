@@ -20,13 +20,13 @@ alias glp='git log --patch'
 # show
 alias gsh='git show'
 alias gshn='git show --name-only'
-alias {gshm,git-show-message}='git show -s'
+alias {gshm,git-show-message}='git log -1 --pretty=%B'
 alias {gsht,git-show-title}='git show -s --format=%s'
 
 # branch
 alias gb='git branch'
 alias gba='git branch -a'
-alias {gcb,git-current-branch}='git_current_branch'
+alias gcb='git-current-branch'
 
 # pull
 alias gp='git pull'
@@ -62,20 +62,15 @@ alias gmt='git mergetool'
 alias gr='git remote'
 alias grv='git remote -v'
 
-# rebase_remote
-alias rebase-remote='rebase_remote'
-alias {rebase_origin,rebase-origin}='rebase_remote origin'
-alias {rebase_upstream,rebase-upstream}='rebase_remote upstream'
+# rebase-remote
+alias rebase-origin='rebase-remote origin'
+alias rebase-upstream='rebase-remote upstream'
 
-# diff_remote
-alias diff-remote='diff_remote'
-alias difftool-remote='difftool_remote'
-alias {diff_origin,diff-origin}='diff_remote origin'
-alias {diff_upstream,diff-upstream}='diff_remote upstream'
-alias {difftool_origin,difftool-origin}='difftool_remote origin'
-alias {difftool_upstream,difftool-upstream}='difftool_remote upstream'
+# diff-remote
+alias diff-origin='diff-remote origin'
+alias diff-upstream='diff-remote upstream'
+alias difftool-origin='difftool-remote origin'
+alias difftool-upstream='difftool-remote upstream'
 
 # other custom functions
-alias {rbc,rebase-at-commit}='rebase_at_commit'
-alias add-exclude='add_exclude'
-alias add-exclude-vscode='add_exclude_vscode'
+alias rbc='rebase-at-commit'
