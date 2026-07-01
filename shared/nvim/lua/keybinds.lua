@@ -15,6 +15,13 @@ map("i", "<C-a>", "<Home>")
 map("c", "<C-a>", "<Home>", { noremap = true })
 map("c", "<C-e>", "<End>", { noremap = true })
 
+-- change without yanking
+map({ "n", "v" }, "c", '"_c')
+map("n", "C", '"_C')
+-- re-expose nvim-surround's cs/cS immediately (avoids timeoutlen delay from c remap)
+map("n", "cs", "<Plug>(nvim-surround-change)")
+map("n", "cS", "<Plug>(nvim-surround-change-line)")
+
 -- search for visual selection
 map("v", "//", "y/\\V<C-R>=escape(@\",'/')<CR><CR>")
 
