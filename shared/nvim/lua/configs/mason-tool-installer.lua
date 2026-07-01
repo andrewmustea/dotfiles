@@ -15,7 +15,6 @@ require("mason-tool-installer").setup({
     "markdownlint",
     "prettier",
     "ruff",
-    "shfmt",
     "stylua",
     "yamllint",
   },

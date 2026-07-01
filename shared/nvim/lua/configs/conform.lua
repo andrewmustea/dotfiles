@@ -20,18 +20,12 @@ require("conform").setup({
     markdown = { "prettier" },
     python = { "ruff" },
     rust = { "rustfmt" },
-    sh = { "shfmt" },
     toml = { "taplo" },
     typescript = { "prettier" },
     yaml = { "prettier" },
   },
   format_on_save = {
     timeout_ms = 500,
-    lsp_format = "fallback",
-  },
-  formatters = {
-    shfmt = {
-      prepend_args = { "-i", "2", "-ci", "-bn" },
-    },
+    lsp_format = "never",
   },
 })
