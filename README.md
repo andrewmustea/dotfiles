@@ -27,3 +27,7 @@ Configs and scripts I use that are shared between unix environments.
 ## [`ubuntu/`](ubuntu/)
 
 Configs I use to set up my Ubuntu environment.
+
+## [`wsl/`](wsl/)
+
+Configs I use to set up my wsl environment.
