@@ -119,5 +119,18 @@ require("mason-lspconfig").setup({
         single_file_support = false,
       })
     end,
+
+    ["bashls"] = function()
+      lspconfig.bashls.setup({
+        capabilities = capabilities,
+        on_attach = on_attach,
+        filetypes = { "sh", "zsh" },
+        settings = {
+          bashIde = {
+            shellcheckArguments = "--shell=bash",
+          },
+        },
+      })
+    end,
   },
 })
