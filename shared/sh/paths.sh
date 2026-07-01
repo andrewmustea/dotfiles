@@ -96,6 +96,7 @@ if command -v brew &>/dev/null; then
   prepend-infopath "${HOMEBREW_PREFIX}/share/info"
   HOMEBREW_COMMAND_NOT_FOUND_HANDLER="$(brew --repository)/Library/Homebrew/command-not-found/handler.sh"
   if [[ -f "${HOMEBREW_COMMAND_NOT_FOUND_HANDLER}" ]]; then
+    # shellcheck source=/dev/null
     source "${HOMEBREW_COMMAND_NOT_FOUND_HANDLER}";
   fi
 fi
@@ -176,7 +177,9 @@ export SUDO_EDITOR="${EDITOR}"
 # nvm
 export NVM_DIR="${XDG_DATA_HOME}/nvm"
 if [[ -d "${NVM_DIR}" ]]; then
+  # shellcheck source=/dev/null
   source "${NVM_DIR}/nvm.sh" || true
+  # shellcheck source=/dev/null
   source "${NVM_DIR}/bash_completion" || true
 fi
 
