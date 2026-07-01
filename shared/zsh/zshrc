@@ -14,7 +14,7 @@ export VSCODE="codium"
 zstyle ":omz:update" mode reminder
 DISABLE_AUTO_TITLE="true"
 plugins=(command-not-found gitfast macos pip rbenv safe-paste vscode zsh-interactive-cd)
-source "${ZSH}/oh-my-zsh.sh"
+builtin source "${ZSH}/oh-my-zsh.sh"
 
 
 # history
@@ -49,7 +49,12 @@ if (( $+commands[fzf] )); then
     export FZF_DEFAULT_COMMAND="command fd -HIi --type file"
     export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
   fi
-  source <(fzf --zsh)
+  builtin source <(fzf --zsh)
+fi
+
+# ghostty
+if [[ -n "${GHOSTTY_RESOURCES_DIR}" ]]; then
+  builtin source "${GHOSTTY_RESOURCES_DIR}/shell-integration/zsh/ghostty-integration"
 fi
 
 
@@ -58,10 +63,10 @@ fi
 
 # general aliases
 if [[ -r "${XDG_CONFIG_HOME}/sh/aliases.sh" ]]; then
-  source "${XDG_CONFIG_HOME}/sh/aliases.sh" || true
+  builtin source "${XDG_CONFIG_HOME}/sh/aliases.sh" || true
 fi
 
 # git aliases
 if [[ -r "${XDG_CONFIG_HOME}/git/git-aliases.sh" ]]; then
-  source "${XDG_CONFIG_HOME}/git/git-aliases.sh" || true
+  builtin source "${XDG_CONFIG_HOME}/git/git-aliases.sh" || true
 fi
