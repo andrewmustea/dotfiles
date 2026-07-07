@@ -55,3 +55,4 @@ clipboard-trim-trailing-spaces = true
 confirm-close-surface = false
 quit-after-last-window-closed = true
 right-click-action = context-menu
+term = xterm-256color
