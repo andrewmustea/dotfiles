@@ -42,6 +42,11 @@ else
   alias l='ls -CFhG'
 fi
 
+# markdownlint
+if ! command -v markdownlint &>/dev/null && command -v markdownlint-cli2 &>/dev/null; then
+  alias markdownlint='markdownlint-cli2'
+fi
+
 # mkdir
 alias mkdir='mkdir -p'
 
