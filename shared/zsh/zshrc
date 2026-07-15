@@ -53,10 +53,12 @@ if (( $+commands[fzf] )); then
 fi
 
 # ghostty
-if [[ -n "${GHOSTTY_RESOURCES_DIR}" ]]; then
-  builtin source "${GHOSTTY_RESOURCES_DIR}/shell-integration/zsh/ghostty-integration"
-fi
+[[ -n "${GHOSTTY_RESOURCES_DIR}" ]] \
+  && builtin source "${GHOSTTY_RESOURCES_DIR}/shell-integration/zsh/ghostty-integration"
 
+# uv
+(( $+commands[uv] ))  && eval "$(uv generate-shell-completion zsh)"
+(( $+commands[uvx] )) && eval "$(uvx --generate-shell-completion zsh)"
 
 # aliases
 # --------------------
