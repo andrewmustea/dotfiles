@@ -109,6 +109,8 @@ prepend-path "${HOME}/.local/bin"
 
 # ansible
 export ANSIBLE_HOME="${XDG_DATA_HOME}/ansible"
+export ANSIBLE_LOCAL_TEMP_DIR="${ANSIBLE_HOME}/tmp"
+export ANSIBLE_SSH_CONTROL_PATH_DIR="${ANSIBLE_HOME}/cp"
 
 # cargo
 export CARGO_HOME="${XDG_DATA_HOME}/cargo"
@@ -163,6 +165,7 @@ export MANPAGER="less -QR --no-vbell"
 
 # npm
 export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npm/npmrc"
+export npm_config_cache="${XDG_CACHE_HOME}/npm"
 prepend-path "${XDG_DATA_HOME}/npm/bin"
 
 # nvim
