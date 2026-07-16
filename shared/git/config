@@ -4,11 +4,9 @@
 	ignorecase = false
 	autocrlf = input
 	symlinks = true
+	eol = lf
 [credential]
 	guiPrompt = false
-	helper =
-	helper = /usr/local/bin/git-credential-manager
-	credentialStore = gpg
 [init]
 	defaultBranch = main
 [interactive]
