@@ -1,0 +1,255 @@
+{
+  "global": {
+    "check_for_updates_on_startup": false,
+    "show_in_menu_bar": false
+  },
+  "profiles": [
+    {
+      "complex_modifications": {
+        "rules": [
+          {
+            "description": "Forward delete (Ctrl-delete)",
+            "manipulators": [
+              {
+                "from": {
+                  "key_code": "delete_or_backspace",
+                  "modifiers": {
+                    "mandatory": ["left_control"],
+                    "optional": ["caps_lock"]
+                  }
+                },
+                "to": [{ "key_code": "delete_forward" }],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "Command+E Opens Finder",
+            "manipulators": [
+              {
+                "conditions": [
+                  {
+                    "bundle_identifiers": [
+                      "^com\\.microsoft\\.rdc$",
+                      "^com\\.microsoft\\.rdc\\.",
+                      "^net\\.sf\\.cord$",
+                      "^com\\.thinomenon\\.RemoteDesktopConnection$",
+                      "^com\\.itap-mobile\\.qmote$",
+                      "^com\\.nulana\\.remotixmac$",
+                      "^com\\.p5sys\\.jump\\.mac\\.viewer$",
+                      "^com\\.p5sys\\.jump\\.mac\\.viewer\\.",
+                      "^com\\.teamviewer\\.TeamViewer$",
+                      "^com\\.vmware\\.horizon$",
+                      "^com\\.2X\\.Client\\.Mac$",
+                      "^com\\.OpenText\\.Exceed-TurboX-Client$",
+                      "^com\\.realvnc\\.vncviewer$",
+                      "^com\\.citrix\\.receiver\\.icaviewer",
+                      "^com\\.vmware\\.fusion$",
+                      "^com\\.vmware\\.horizon$",
+                      "^com\\.vmware\\.view$",
+                      "^com\\.parallels\\.desktop$",
+                      "^com\\.parallels\\.vm$",
+                      "^com\\.parallels\\.desktop\\.console$",
+                      "^org\\.virtualbox\\.app\\.VirtualBoxVM$",
+                      "^com\\.citrix\\.XenAppViewer$",
+                      "^com\\.vmware\\.proxyApp\\.",
+                      "^com\\.parallels\\.winapp\\.",
+                      "^com\\.utmapp\\.UTM$"
+                    ],
+                    "type": "frontmost_application_unless"
+                  }
+                ],
+                "from": {
+                  "key_code": "e",
+                  "modifiers": { "mandatory": ["command"] }
+                },
+                "to": [{ "shell_command": "open -a 'Finder.app'" }],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "Control+Esc Opens Launchpad",
+            "manipulators": [
+              {
+                "conditions": [
+                  {
+                    "bundle_identifiers": [
+                      "^com\\.microsoft\\.rdc$",
+                      "^com\\.microsoft\\.rdc\\.",
+                      "^net\\.sf\\.cord$",
+                      "^com\\.thinomenon\\.RemoteDesktopConnection$",
+                      "^com\\.itap-mobile\\.qmote$",
+                      "^com\\.nulana\\.remotixmac$",
+                      "^com\\.p5sys\\.jump\\.mac\\.viewer$",
+                      "^com\\.p5sys\\.jump\\.mac\\.viewer\\.",
+                      "^com\\.teamviewer\\.TeamViewer$",
+                      "^com\\.vmware\\.horizon$",
+                      "^com\\.2X\\.Client\\.Mac$",
+                      "^com\\.OpenText\\.Exceed-TurboX-Client$",
+                      "^com\\.realvnc\\.vncviewer$",
+                      "^com\\.citrix\\.receiver\\.icaviewer",
+                      "^com\\.vmware\\.fusion$",
+                      "^com\\.vmware\\.horizon$",
+                      "^com\\.vmware\\.view$",
+                      "^com\\.parallels\\.desktop$",
+                      "^com\\.parallels\\.vm$",
+                      "^com\\.parallels\\.desktop\\.console$",
+                      "^org\\.virtualbox\\.app\\.VirtualBoxVM$",
+                      "^com\\.citrix\\.XenAppViewer$",
+                      "^com\\.vmware\\.proxyApp\\.",
+                      "^com\\.parallels\\.winapp\\.",
+                      "^com\\.utmapp\\.UTM$"
+                    ],
+                    "type": "frontmost_application_unless"
+                  }
+                ],
+                "from": {
+                  "key_code": "escape",
+                  "modifiers": { "mandatory": ["control"] }
+                },
+                "to": [
+                  {
+                    "key_code": "launchpad",
+                    "modifiers": []
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          }
+        ]
+      },
+      "devices": [
+        {
+          "identifiers": { "is_keyboard": true },
+          "manipulate_caps_lock_led": false,
+          "simple_modifications": [
+            {
+              "from": { "apple_vendor_top_case_key_code": "keyboard_fn" },
+              "to": [{ "key_code": "left_control" }]
+            },
+            {
+              "from": { "key_code": "left_control" },
+              "to": [{ "apple_vendor_top_case_key_code": "keyboard_fn" }]
+            }
+          ]
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "product_id": 666,
+            "vendor_id": 1452
+          },
+          "simple_modifications": [
+            {
+              "from": { "apple_vendor_top_case_key_code": "keyboard_fn" },
+              "to": [{ "key_code": "left_control" }]
+            },
+            {
+              "from": { "key_code": "left_control" },
+              "to": [{ "apple_vendor_top_case_key_code": "keyboard_fn" }]
+            }
+          ]
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "product_id": 666,
+            "vendor_id": 76
+          },
+          "simple_modifications": [
+            {
+              "from": { "apple_vendor_top_case_key_code": "keyboard_fn" },
+              "to": [{ "key_code": "left_control" }]
+            },
+            {
+              "from": { "key_code": "left_control" },
+              "to": [{ "apple_vendor_top_case_key_code": "keyboard_fn" }]
+            }
+          ]
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "product_id": 325,
+            "vendor_id": 9494
+          },
+          "simple_modifications": [
+            {
+              "from": { "key_code": "left_command" },
+              "to": [{ "key_code": "left_option" }]
+            },
+            {
+              "from": { "key_code": "left_option" },
+              "to": [{ "key_code": "left_command" }]
+            }
+          ]
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "product_id": 541,
+            "vendor_id": 1452
+          },
+          "simple_modifications": [
+            {
+              "from": { "apple_vendor_top_case_key_code": "keyboard_fn" },
+              "to": [{ "key_code": "left_control" }]
+            },
+            {
+              "from": { "key_code": "left_control" },
+              "to": [{ "apple_vendor_top_case_key_code": "keyboard_fn" }]
+            }
+          ]
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "product_id": 6921,
+            "vendor_id": 6940
+          },
+          "simple_modifications": [
+            {
+              "from": { "key_code": "left_command" },
+              "to": [{ "key_code": "left_option" }]
+            },
+            {
+              "from": { "key_code": "left_option" },
+              "to": [{ "key_code": "left_command" }]
+            }
+          ]
+        },
+        {
+          "identifiers": {
+            "is_keyboard": true,
+            "product_id": 8195,
+            "vendor_id": 16700
+          },
+          "simple_modifications": [
+            {
+              "from": { "key_code": "left_command" },
+              "to": [{ "key_code": "left_option" }]
+            },
+            {
+              "from": { "key_code": "left_option" },
+              "to": [{ "key_code": "left_command" }]
+            }
+          ]
+        }
+      ],
+      "name": "Default profile",
+      "selected": true,
+      "simple_modifications": [
+        {
+          "from": { "key_code": "caps_lock" },
+          "to": [{ "key_code": "escape" }]
+        }
+      ],
+      "virtual_hid_keyboard": {
+        "country_code": 0,
+        "keyboard_type_v2": "ansi"
+      }
+    }
+  ]
+}
