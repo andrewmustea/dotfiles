@@ -20,8 +20,15 @@ builtin source "${ZSH}/oh-my-zsh.sh"
 # history
 # --------------------
 
+# cache
+export ZSH_CACHE="${XDG_CACHE_HOME}/zsh"
+export ZSH_COMPDUMP="${ZSH_CACHE}/zcompdump-${SHORT_HOST:-${HOST}}-${ZSH_VERSION}"
+[[ -d "${ZSH_CACHE}" ]] || mkdir -p "${ZSH_CACHE}"
+
 # command history
-export HISTFILE="${XDG_STATE_HOME}/zsh/history"
+export ZSH_STATE="${XDG_STATE_HOME}/zsh"
+export HISTFILE="${ZSH_STATE}/history"
+[[ -d "${ZSH_STATE}" ]] || mkdir -p "${ZSH_STATE}"
 export HISTFILESIZE=1000000
 export HISTORY_IGNORE="history:pwd:ls:ll:la:l:dir:"
 export HISTSIZE=1000000
