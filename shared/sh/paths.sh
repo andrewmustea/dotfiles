@@ -219,10 +219,5 @@ export RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
 # tldr
 export TLDR_CACHE_DIR="${XDG_CACHE_HOME}/tldr"
 
-# tombi
-if command -v tombi &>/dev/null; then
-  eval "$(tombi completion zsh)"
-fi
-
 # wine
 export WINEPREFIX="${XDG_DATA_HOME}/wine"

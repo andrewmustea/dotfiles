@@ -28,3 +28,4 @@ fi
 if [[ -r "${XDG_CONFIG_HOME}/git/git-functions.sh" ]]; then
   source "${XDG_CONFIG_HOME}/git/git-functions.sh" || true
 fi
+
